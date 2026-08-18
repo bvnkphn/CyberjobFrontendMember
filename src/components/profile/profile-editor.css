@@ -52,11 +52,6 @@
 .profile-form { padding: 38px 40px 36px; }
 .profile-form h1 { display: none; }
 .profile-form-area > form > h1 { display: none; }
-.section-content-heading { margin-bottom: 14px; padding: 20px 24px; border: 1px solid var(--line); border-radius: var(--radius); display: flex; align-items: center; justify-content: space-between; gap: 16px; background: #fff; box-shadow: 0 8px 30px rgb(17 28 67 / 5%); }
-.section-content-heading span { color: var(--blue); font-size: 12px; font-weight: 700; }
-.section-content-heading h2 { margin: 2px 0 0; color: var(--navy); font-size: 21px; }
-.section-content-heading strong { padding: 6px 10px; border-radius: 999px; background: #fff4dc; color: #966100; font-size: 12px; white-space: nowrap; }
-.section-content-heading strong.complete { background: #e8fff4; color: #087d4c; }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 28px; }
 .field { display: grid; gap: 8px; min-width: 0; font-size: 14px; font-weight: 600; }
 .field b, .gender-field b { color: var(--red); }
@@ -179,7 +174,7 @@
 @media (max-width: 620px) {
   .brand { font-size: 19px; } .profile-sidebar { grid-template-columns: 1fr; } .mobile-section-picker { grid-column: auto; }
   .profile-page-heading { gap: 12px; } .profile-page-heading h1 { font-size: 26px; } .profile-page-heading p { font-size: 12px; }
-  .profile-back-link { min-height: 34px; } .section-content-heading { padding: 16px; align-items: flex-start; }
+  .profile-back-link { min-height: 34px; }
   .completion-card { padding: 18px; } .completion-main { justify-content: space-between; }
   .progress-ring { width: 70px; height: 70px; font-size: 20px; } .completion-card p { margin-top: 12px; }
   .profile-form { padding: 25px 18px 24px; } .profile-form h1 { font-size: 21px; margin-bottom: 28px; } .desired-job-form { padding-top: 34px; }
