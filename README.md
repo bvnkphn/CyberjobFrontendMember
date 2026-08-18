@@ -6,7 +6,7 @@
 หน้า `/` จะ redirect มายังหน้านี้โดยอัตโนมัติ
 
 - ขอบเขตปัจจุบันเป็น UX/UI และ local interaction เท่านั้น ยังไม่เรียก Backend API
-- Sidebar สลับระหว่างข้อมูลส่วนบุคคลและลักษณะงานที่ต้องการได้โดยไม่เปลี่ยน route
+- Sidebar สลับระหว่างข้อมูลส่วนบุคคล ลักษณะงานที่ต้องการ และประวัติการศึกษาได้โดยไม่เปลี่ยน route
 - Desktop ใช้ sidebar คู่กับฟอร์ม 2 คอลัมน์
 - Tablet ย้ายการ์ดขึ้นด้านบนและเปลี่ยนเมนูหัวข้อเป็นแนวนอน
 - Mobile เปลี่ยนฟอร์มเป็นคอลัมน์เดียวและทำปุ่มบันทึกเต็มความกว้าง
@@ -18,6 +18,7 @@
 src/app/profile/edit/page.tsx              route และ page composition
 src/components/profile/profile-editor.tsx  form state และ semantic markup
 src/components/profile/desired-job-form.tsx ฟอร์มลักษณะงานที่ต้องการ
+src/components/profile/education-form.tsx   ฟอร์มประวัติการศึกษาแบบเพิ่มได้สูงสุด 3 รายการ
 src/components/profile/profile-editor.css  responsive layout และ visual tokens
 src/components/header.tsx                  navigation และ account menu
 src/components/footer.tsx                  site footer

@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { Icon, type IconName } from "../icons";
 import { DesiredJobForm } from "./desired-job-form";
+import { EducationForm } from "./education-form";
 import "./profile-editor.css";
 
 type ProfileSection = {
@@ -46,7 +47,7 @@ function Field({ label, required, children, className = "" }: FieldProps) {
 }
 
 export function ProfileEditor() {
-  const [activeSection, setActiveSection] = useState<"personal" | "desired-job">("personal");
+  const [activeSection, setActiveSection] = useState<"personal" | "desired-job" | "education">("personal");
   const [gender, setGender] = useState("male");
   const [saved, setSaved] = useState(false);
 
@@ -77,13 +78,14 @@ export function ProfileEditor() {
           <nav className="section-nav" aria-label="หัวข้อแก้ไขประวัติ">
             {sections.map(({ icon, label, action }, index) => (
               <button
-                className={(index === 0 && activeSection === "personal") || (index === 1 && activeSection === "desired-job") ? "active" : ""}
+                className={(index === 0 && activeSection === "personal") || (index === 1 && activeSection === "desired-job") || (index === 2 && activeSection === "education") ? "active" : ""}
                 type="button"
                 onClick={() => {
                   if (index === 0) setActiveSection("personal");
                   if (index === 1) setActiveSection("desired-job");
+                  if (index === 2) setActiveSection("education");
                 }}
-                aria-current={(index === 0 && activeSection === "personal") || (index === 1 && activeSection === "desired-job") ? "page" : undefined}
+                aria-current={(index === 0 && activeSection === "personal") || (index === 1 && activeSection === "desired-job") || (index === 2 && activeSection === "education") ? "page" : undefined}
                 key={label}
               >
                 <Icon name={icon} />
@@ -94,7 +96,9 @@ export function ProfileEditor() {
           </nav>
         </aside>
 
-        {activeSection === "desired-job" ? (
+        {activeSection === "education" ? (
+          <EducationForm onSubmit={submit} saved={saved} />
+        ) : activeSection === "desired-job" ? (
           <DesiredJobForm onSubmit={submit} saved={saved} />
         ) : (
         <form className="profile-form" onSubmit={submit} id="personal">
