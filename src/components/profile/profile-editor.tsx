@@ -97,6 +97,7 @@ export function ProfileEditor() {
   const [completedSections, setCompletedSections] = useState<Set<ProfileSectionId>>(new Set());
   const [gender, setGender] = useState("male");
   const [saved, setSaved] = useState(false);
+  const completion = Math.round((completedSections.size / sections.length) * 100);
 
   useEffect(() => {
     getProfile()
@@ -135,13 +136,17 @@ export function ProfileEditor() {
         <aside className="profile-sidebar" aria-label="ส่วนของประวัติ">
           <section className="completion-card">
             <div className="completion-main">
-              <div className="progress-ring" aria-label="ความสมบูรณ์ของประวัติ 70 เปอร์เซ็นต์">
-                <span>70%</span>
+              <div
+                className="progress-ring"
+                style={{ "--progress": `${completion * 3.6}deg` } as React.CSSProperties}
+                aria-label={`ความสมบูรณ์ของประวัติ ${completion} เปอร์เซ็นต์`}
+              >
+                <span>{completion}%</span>
               </div>
               <Link className="profile-shortcut" href="/profile"><Icon name="user" /> หน้าโปรไฟล์</Link>
             </div>
             <p>ความสมบูรณ์ของประวัติ</p>
-            <small>ผ่านการตรวจสอบแล้ว</small>
+            <small>{completion === 100 ? "กรอกข้อมูลครบทุกหัวข้อแล้ว" : `กรอกครบ ${completedSections.size} จาก ${sections.length} หัวข้อ`}</small>
           </section>
 
           <label className="mobile-section-picker">

@@ -21,7 +21,9 @@
 .profile-sidebar { display: grid; gap: 14px; }
 .completion-card { padding: 28px 20px 24px; text-align: center; color: #fff; background: var(--navy-dark); border-radius: var(--radius); }
 .completion-main { display: flex; align-items: center; justify-content: center; gap: 16px; }
-.progress-ring { width: 84px; height: 84px; margin: auto; border: 5px solid var(--green); border-radius: 50%; display: grid; place-items: center; font-size: 24px; font-weight: 800; }
+.progress-ring { --progress: 0deg; width: 84px; height: 84px; margin: auto; border-radius: 50%; display: grid; place-items: center; position: relative; background: conic-gradient(var(--green) var(--progress), rgba(255, 255, 255, .2) 0); font-size: 24px; font-weight: 800; }
+.progress-ring::before { content: ""; position: absolute; inset: 5px; border-radius: inherit; background: var(--navy-dark); }
+.progress-ring span { position: relative; z-index: 1; }
 .completion-main .progress-ring { flex: 0 0 auto; margin: 0; }
 .profile-shortcut { min-height: 40px; padding: 0 12px; border: 1px solid rgb(255 255 255 / 55%); border-radius: 6px; display: inline-flex; align-items: center; gap: 7px; color: #fff; font-size: 13px; font-weight: 600; }
 .profile-shortcut:hover { border-color: #fff; background: rgb(255 255 255 / 10%); }
