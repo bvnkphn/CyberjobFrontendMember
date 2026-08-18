@@ -6,7 +6,7 @@
 หน้า `/` จะ redirect มายังหน้านี้โดยอัตโนมัติ
 
 - ขอบเขตปัจจุบันเป็น UX/UI และ local interaction เท่านั้น ยังไม่เรียก Backend API
-- Sidebar สลับระหว่างข้อมูลส่วนบุคคล ลักษณะงานที่ต้องการ ประวัติการศึกษา ประวัติการฝึกงาน/ทำงาน และประกาศนียบัตรได้โดยไม่เปลี่ยน route
+- Sidebar สลับระหว่างข้อมูลส่วนบุคคล ลักษณะงานที่ต้องการ ประวัติการศึกษา ประวัติการฝึกงาน/ทำงาน ประกาศนียบัตร และความสามารถทางภาษาได้โดยไม่เปลี่ยน route
 - Desktop ใช้ sidebar คู่กับฟอร์ม 2 คอลัมน์
 - Tablet ย้ายการ์ดขึ้นด้านบนและเปลี่ยนเมนูหัวข้อเป็นแนวนอน
 - Mobile เปลี่ยนฟอร์มเป็นคอลัมน์เดียวและทำปุ่มบันทึกเต็มความกว้าง
@@ -21,6 +21,7 @@ src/components/profile/desired-job-form.tsx ฟอร์มลักษณะง
 src/components/profile/education-form.tsx   ฟอร์มประวัติการศึกษาแบบเพิ่มได้สูงสุด 3 รายการ
 src/components/profile/work-experience-form.tsx ฟอร์มประวัติฝึกงาน/ทำงานแบบเพิ่มได้สูงสุด 3 รายการ
 src/components/profile/certificate-form.tsx ฟอร์มอัปโหลดและจัดการประกาศนียบัตร
+src/components/profile/language-form.tsx    ฟอร์มภาษาและระดับทักษะ เพิ่มได้สูงสุด 5 ภาษา
 src/components/profile/profile-editor.css  responsive layout และ visual tokens
 src/components/header.tsx                  navigation และ account menu
 src/components/footer.tsx                  site footer

@@ -115,6 +115,9 @@
 .certificate-item > button { border: 0; background: transparent; color: var(--red); cursor: pointer; }
 .certificate-save-row { min-height: 90px; margin-top: 24px; padding-top: 22px; border-top: 1px solid var(--line); }
 .certificate-save-row .save-button:disabled { background: #aeb8c7; cursor: not-allowed; box-shadow: none; }
+.language-select { margin-bottom: 24px; }
+.language-levels { padding: 20px; display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; border-radius: 8px; background: #f7f9fc; }
+.language-skill span { color: #596372; font-size: 13px; }
 .site-footer { background: linear-gradient(135deg,#1738be,#08175e); color: #fff; }
 .footer-main { max-width: 1440px; margin: auto; padding: 72px 65px 60px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 80px; }
 .brand-inverted { color: #fff; }
@@ -145,6 +148,7 @@
   .experience-grid { grid-template-columns: 1fr; gap: 20px; } .experience-grid .full { grid-column: auto; } .period-field > div { gap: 10px; }
   .certificate-form { padding: 25px 18px 24px; } .certificate-dropzone { min-height: 200px; padding: 24px 16px; }
   .certificate-item { grid-template-columns: 1fr auto; } .certificate-item label { grid-column: 1 / -1; } .certificate-file-name { max-width: 230px; }
+  .language-levels { grid-template-columns: 1fr 1fr; padding: 16px; }
   .date-grid { grid-template-columns: 1fr; gap: 10px; } .segmented { width: 100%; } .save-row { min-height: 105px; } .save-button { width: 100%; }
   .education-form > .save-row { min-height: 82px; }
   .footer-links { grid-template-columns: 1fr 1fr; gap: 32px 20px; } .footer-bottom div { flex-wrap: wrap; gap: 12px 20px; }

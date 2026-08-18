@@ -6,6 +6,7 @@ import { DesiredJobForm } from "./desired-job-form";
 import { EducationForm } from "./education-form";
 import { WorkExperienceForm } from "./work-experience-form";
 import { CertificateForm } from "./certificate-form";
+import { LanguageForm } from "./language-form";
 import "./profile-editor.css";
 
 type ProfileSection = {
@@ -49,7 +50,7 @@ function Field({ label, required, children, className = "" }: FieldProps) {
 }
 
 export function ProfileEditor() {
-  const [activeSection, setActiveSection] = useState<"personal" | "desired-job" | "education" | "work-experience" | "certificate">("personal");
+  const [activeSection, setActiveSection] = useState<"personal" | "desired-job" | "education" | "work-experience" | "certificate" | "language">("personal");
   const [gender, setGender] = useState("male");
   const [saved, setSaved] = useState(false);
 
@@ -80,7 +81,7 @@ export function ProfileEditor() {
           <nav className="section-nav" aria-label="หัวข้อแก้ไขประวัติ">
             {sections.map(({ icon, label, action }, index) => (
               <button
-                className={(index === 0 && activeSection === "personal") || (index === 1 && activeSection === "desired-job") || (index === 2 && activeSection === "education") || (index === 3 && activeSection === "work-experience") || (index === 4 && activeSection === "certificate") ? "active" : ""}
+                className={(index === 0 && activeSection === "personal") || (index === 1 && activeSection === "desired-job") || (index === 2 && activeSection === "education") || (index === 3 && activeSection === "work-experience") || (index === 4 && activeSection === "certificate") || (index === 5 && activeSection === "language") ? "active" : ""}
                 type="button"
                 onClick={() => {
                   if (index === 0) setActiveSection("personal");
@@ -88,8 +89,9 @@ export function ProfileEditor() {
                   if (index === 2) setActiveSection("education");
                   if (index === 3) setActiveSection("work-experience");
                   if (index === 4) setActiveSection("certificate");
+                  if (index === 5) setActiveSection("language");
                 }}
-                aria-current={(index === 0 && activeSection === "personal") || (index === 1 && activeSection === "desired-job") || (index === 2 && activeSection === "education") || (index === 3 && activeSection === "work-experience") || (index === 4 && activeSection === "certificate") ? "page" : undefined}
+                aria-current={(index === 0 && activeSection === "personal") || (index === 1 && activeSection === "desired-job") || (index === 2 && activeSection === "education") || (index === 3 && activeSection === "work-experience") || (index === 4 && activeSection === "certificate") || (index === 5 && activeSection === "language") ? "page" : undefined}
                 key={label}
               >
                 <Icon name={icon} />
@@ -100,7 +102,9 @@ export function ProfileEditor() {
           </nav>
         </aside>
 
-        {activeSection === "certificate" ? (
+        {activeSection === "language" ? (
+          <LanguageForm onSubmit={submit} saved={saved} />
+        ) : activeSection === "certificate" ? (
           <CertificateForm onSubmit={submit} saved={saved} />
         ) : activeSection === "work-experience" ? (
           <WorkExperienceForm onSubmit={submit} saved={saved} />
