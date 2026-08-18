@@ -27,6 +27,8 @@ src/components/icons.tsx                   local SVG icon set
 
 รันโปรเจกต์ด้วย `npm install` แล้วใช้ `npm run dev` จากนั้นตรวจ production build ด้วย `npm run build`
 
+หน้า Gate สำหรับ onboarding หลังสมัครสมาชิกอยู่ที่ `http://localhost:3000/gate` และเป็น UX/UI mock ที่พร้อมเชื่อม API ภายหลัง
+
 Next.js frontend สำหรับสมาชิก ใช้ `NEXT_PUBLIC_API_URL` เชื่อมต่อ REST API
 
 ```bash
