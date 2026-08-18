@@ -23,7 +23,11 @@ export function ProfileDashboard() {
 
   useEffect(() => { getProfile().then(setProfile).catch(() => undefined); }, []);
 
-  const name = profile?.firstName || profile?.lastName ? `${profile?.firstName ?? ""} ${profile?.lastName ?? ""}`.trim() : "ผู้ใช้งาน CyberJob";
+  const personal = profile?.personal ?? {};
+  const firstName = profile?.firstName ?? (typeof personal.firstName === "string" ? personal.firstName : "");
+  const lastName = profile?.lastName ?? (typeof personal.lastName === "string" ? personal.lastName : "");
+  const name = firstName || lastName ? `${firstName} ${lastName}`.trim() : "ผู้ใช้งาน CyberJob";
+  const email = profile?.email ?? "สมาชิก CyberJob";
   const completion = profile?.completion ?? 0;
 
   const submitModal = (event: FormEvent<HTMLFormElement>) => {
@@ -39,7 +43,7 @@ export function ProfileDashboard() {
 
         <section className="dashboard-user-card">
           <div className="avatar" aria-hidden="true">{name.charAt(0)}</div>
-          <div><strong>{name}</strong><span>สมาชิก CyberJob</span></div>
+          <div><strong>{name}</strong><span>{email}</span></div>
         </section>
 
         <section className="resume-summary">
@@ -62,7 +66,7 @@ export function ProfileDashboard() {
             <button type="button" className={item.danger ? "danger" : ""} onClick={() => setExpanded(expanded === item.modal ? null : item.modal)} aria-expanded={expanded === item.modal}>
               <Icon name={item.icon} /><span>{item.label}</span><b aria-hidden="true">{expanded === item.modal ? "⌃" : "⌄"}</b>
             </button>
-            {expanded === item.modal && <SettingsDropdown setting={item.modal} saved={saved} onCancel={() => setExpanded(null)} onSubmit={submitModal} />}
+            {expanded === item.modal && <SettingsDropdown setting={item.modal} email={profile?.email ?? ""} saved={saved} onCancel={() => setExpanded(null)} onSubmit={submitModal} />}
           </div>)}
         </section>
       </div>
@@ -70,12 +74,12 @@ export function ProfileDashboard() {
   );
 }
 
-function SettingsDropdown({ setting, saved, onCancel, onSubmit }: { setting: Exclude<ModalName, null>; saved: boolean; onCancel: () => void; onSubmit: (event: FormEvent<HTMLFormElement>) => void }) {
+function SettingsDropdown({ setting, email, saved, onCancel, onSubmit }: { setting: Exclude<ModalName, null>; email: string; saved: boolean; onCancel: () => void; onSubmit: (event: FormEvent<HTMLFormElement>) => void }) {
   return (
     <div className="settings-dropdown">
       <form onSubmit={onSubmit}>
         {setting === "privacy" && <PrivacySettings />}
-        {setting === "email" && <EmailSettings />}
+        {setting === "email" && <EmailSettings email={email} />}
         {setting === "password" && <PasswordSettings />}
         {setting === "delete" && <DeleteSettings />}
         <footer>
@@ -92,8 +96,8 @@ function PrivacySettings() {
   return <><fieldset className="modal-options"><legend>การแสดงผลโปรไฟล์</legend><label><input type="radio" name="privacy" value="public" defaultChecked /><span><strong>สาธารณะ</strong><small>ผู้ประกอบการสามารถค้นหาโปรไฟล์ของคุณได้</small></span></label><label><input type="radio" name="privacy" value="private" /><span><strong>ส่วนตัว</strong><small>แสดงเฉพาะบริษัทที่คุณสมัครงาน</small></span></label></fieldset><fieldset className="toggle-settings"><legend>การตั้งค่าบัญชีและข้อมูล</legend><label><span>อนุญาตให้แนะนำงานที่เหมาะสม</span><input type="checkbox" defaultChecked /></label><label><span>แจ้งเตือนงานใหม่</span><input type="checkbox" defaultChecked /></label></fieldset></>;
 }
 
-function EmailSettings() {
-  return <div className="modal-fields"><label>อีเมลปัจจุบัน<input value="member@example.com" readOnly /></label><label>รหัสผ่านปัจจุบัน<input type="password" required placeholder="กรอกรหัสผ่าน" /></label><label>อีเมลใหม่<input type="email" required placeholder="กรอกอีเมลใหม่" /></label><label>ยืนยันอีเมลใหม่<input type="email" required placeholder="กรอกอีเมลใหม่อีกครั้ง" /></label><p className="modal-note">ระบบจะส่งลิงก์ยืนยันไปยังอีเมลใหม่</p></div>;
+function EmailSettings({ email }: { email: string }) {
+  return <div className="modal-fields"><label>อีเมลปัจจุบัน<input value={email} placeholder="ยังไม่มีข้อมูลอีเมล" readOnly /></label><label>รหัสผ่านปัจจุบัน<input type="password" required placeholder="กรอกรหัสผ่าน" /></label><label>อีเมลใหม่<input type="email" required placeholder="กรอกอีเมลใหม่" /></label><label>ยืนยันอีเมลใหม่<input type="email" required placeholder="กรอกอีเมลใหม่อีกครั้ง" /></label><p className="modal-note">ระบบจะส่งลิงก์ยืนยันไปยังอีเมลใหม่</p></div>;
 }
 
 function PasswordSettings() {

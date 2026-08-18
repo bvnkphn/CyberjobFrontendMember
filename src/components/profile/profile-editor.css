@@ -12,6 +12,7 @@
 .mobile-menu-button { display: none; margin-left: auto; border-radius: 6px; }
 .mobile-menu-button svg { width: 24px; }
 .account-menu { position: absolute; top: 49px; right: 0; min-width: 218px; padding: 8px 18px; background: #fff; border-radius: 6px; box-shadow: 0 12px 30px rgb(12 28 66 / 18%); }
+.account-menu > header { padding: 10px 0 12px; border-bottom: 1px solid #ececec; display: grid; gap: 2px; }.account-menu > header strong { color: var(--navy); font-size: 13px; }.account-menu > header span { max-width: 210px; color: var(--muted); font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .account-menu a { display: flex; align-items: center; gap: 14px; height: 47px; border-bottom: 1px solid #ececec; font-size: 15px; white-space: nowrap; }
 .account-menu a:last-child { border: 0; }
 .account-menu svg { width: 21px; }

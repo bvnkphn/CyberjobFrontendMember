@@ -3,6 +3,7 @@ import { useRef, useState, type FormEvent } from "react";
 type WorkExperienceFormProps = {
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   saved: boolean;
+  initialData?: Record<string, unknown>;
 };
 
 type WorkRecord = { id: number };
@@ -62,8 +63,9 @@ function WorkExperienceCard({ index, canDelete, onDelete }: { index: number; can
   );
 }
 
-export function WorkExperienceForm({ onSubmit, saved }: WorkExperienceFormProps) {
-  const [records, setRecords] = useState<WorkRecord[]>([{ id: 0 }]);
+export function WorkExperienceForm({ onSubmit, saved, initialData = {} }: WorkExperienceFormProps) {
+  const initialCount = Math.max(1, ...[1, 2, 3].filter((index) => initialData[`workExperience${index}Company`]));
+  const [records, setRecords] = useState<WorkRecord[]>(Array.from({ length: initialCount }, (_, id) => ({ id })));
 
   const addRecord = () => {
     setRecords((current) => current.length < 3 ? [...current, { id: Math.max(...current.map(({ id }) => id)) + 1 }] : current);

@@ -3,17 +3,20 @@ import { useRef, useState, type ChangeEvent, type DragEvent, type FormEvent } fr
 type CertificateFormProps = {
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   saved: boolean;
+  initialData?: Record<string, unknown>;
 };
 
-type CertificateFile = { id: number; file: File; title: string };
+type CertificateFile = { id: number; fileName: string; fileSize: number; fileType: string; title: string };
 
 const acceptedTypes = ["application/pdf", "image/jpeg", "image/png"];
 const maxFileSize = 10 * 1024 * 1024;
 
-export function CertificateForm({ onSubmit, saved }: CertificateFormProps) {
+export function CertificateForm({ onSubmit, saved, initialData = {} }: CertificateFormProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const nextId = useRef(0);
-  const [files, setFiles] = useState<CertificateFile[]>([]);
+  const [files, setFiles] = useState<CertificateFile[]>(() => [1, 2, 3, 4, 5]
+    .filter((index) => initialData[`certificate${index}FileName`])
+    .map((index) => ({ id: nextId.current++, title: String(initialData[`certificate${index}Title`] ?? ""), fileName: String(initialData[`certificate${index}FileName`] ?? ""), fileSize: Number(initialData[`certificate${index}FileSize`] ?? 0), fileType: String(initialData[`certificate${index}FileType`] ?? "") })));
   const [error, setError] = useState("");
   const [dragging, setDragging] = useState(false);
 
@@ -28,7 +31,7 @@ export function CertificateForm({ onSubmit, saved }: CertificateFormProps) {
     setError("");
     setFiles((current) => [
       ...current,
-      ...candidates.map((file) => ({ id: nextId.current++, file, title: file.name.replace(/\.[^.]+$/, "") })),
+      ...candidates.map((file) => ({ id: nextId.current++, fileName: file.name, fileSize: file.size, fileType: file.type, title: file.name.replace(/\.[^.]+$/, "") })),
     ]);
   };
 
@@ -79,11 +82,11 @@ export function CertificateForm({ onSubmit, saved }: CertificateFormProps) {
               <span className="visually-hidden">ชื่อประกาศนียบัตรลำดับที่ {index + 1}</span>
               <input name={`certificate${index + 1}Title`} value={item.title} onChange={(event) => updateTitle(item.id, event.target.value)} placeholder="ชื่อประกาศนียบัตร" required />
             </label>
-            <input type="hidden" name={`certificate${index + 1}FileName`} value={item.file.name} />
-            <input type="hidden" name={`certificate${index + 1}FileSize`} value={item.file.size} />
-            <input type="hidden" name={`certificate${index + 1}FileType`} value={item.file.type} />
-            <span className="certificate-file-name"><i aria-hidden="true">▤</i>{item.file.name}</span>
-            <button type="button" onClick={() => removeFile(item.id)} aria-label={`ลบไฟล์ ${item.file.name}`}>ลบ</button>
+            <input type="hidden" name={`certificate${index + 1}FileName`} value={item.fileName} />
+            <input type="hidden" name={`certificate${index + 1}FileSize`} value={item.fileSize} />
+            <input type="hidden" name={`certificate${index + 1}FileType`} value={item.fileType} />
+            <span className="certificate-file-name"><i aria-hidden="true">▤</i>{item.fileName}</span>
+            <button type="button" onClick={() => removeFile(item.id)} aria-label={`ลบไฟล์ ${item.fileName}`}>ลบ</button>
           </div>
         ))}
       </section>

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Brand } from "./brand";
 import { Icon, type IconName } from "./icons";
-import { ensureDemoSession, getProfile, hasAccessToken, logout } from "@/lib/member-api";
+import { ensureDemoSession, getProfile, hasAccessToken, logout, type MemberProfile } from "@/lib/member-api";
 import "./profile/profile-editor.css";
 
 const accountLinks: [IconName, string, string][] = [
@@ -17,7 +17,10 @@ export function Header() {
   const router = useRouter();
   const [navOpen, setNavOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
-  useEffect(() => { void ensureDemoSession(); }, []);
+  const [profile, setProfile] = useState<MemberProfile | null>(null);
+  useEffect(() => { ensureDemoSession().then(() => getProfile().then(setProfile).catch(() => undefined)); }, []);
+  const personal = profile?.personal ?? {};
+  const accountName = [profile?.firstName ?? personal.firstName, profile?.lastName ?? personal.lastName].filter((value) => typeof value === "string" && value.trim()).join(" ");
 
   const openResume = async (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
@@ -46,7 +49,7 @@ export function Header() {
       <button type="button" className="language-button">ภาษาไทย <Icon name="chevron" /></button>
     </nav>
     <div className="account-wrap"><button className="account-button" type="button" aria-label="เปิดเมนูบัญชี" aria-expanded={accountOpen} onClick={() => setAccountOpen(!accountOpen)}><Icon name="user" /></button>
-      {accountOpen && <nav className="account-menu" aria-label="เมนูบัญชี">{accountLinks.map(([icon,label,href]) => <Link className={icon === "logout" ? "danger" : ""} href={href} onClick={icon === "logout" ? signOut : undefined} key={label}><Icon name={icon} />{label}</Link>)}</nav>}
+      {accountOpen && <nav className="account-menu" aria-label="เมนูบัญชี"><header><strong>{accountName || "ผู้ใช้งาน CyberJob"}</strong><span>{profile?.email ?? window.localStorage.getItem("memberEmail") ?? "สมาชิก CyberJob"}</span></header>{accountLinks.map(([icon,label,href]) => <Link className={icon === "logout" ? "danger" : ""} href={href} onClick={icon === "logout" ? signOut : undefined} key={label}><Icon name={icon} />{label}</Link>)}</nav>}
     </div>
   </div></header>;
 }

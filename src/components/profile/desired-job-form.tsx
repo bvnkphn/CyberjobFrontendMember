@@ -3,6 +3,7 @@ import { useState, type FormEvent } from "react";
 type DesiredJobFormProps = {
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   saved: boolean;
+  initialData?: Record<string, unknown>;
 };
 
 const salaryOptions = [
@@ -20,10 +21,12 @@ type RepeatableInputGroupProps = {
   namePrefix: string;
   firstPlaceholder: string;
   addLabel: string;
+  initialData: Record<string, unknown>;
 };
 
-function RepeatableInputGroup({ label, hint, namePrefix, firstPlaceholder, addLabel }: RepeatableInputGroupProps) {
-  const [items, setItems] = useState([0]);
+function RepeatableInputGroup({ label, hint, namePrefix, firstPlaceholder, addLabel, initialData }: RepeatableInputGroupProps) {
+  const initialCount = Math.max(1, ...[1, 2, 3].filter((index) => initialData[`${namePrefix}${index}`]));
+  const [items, setItems] = useState(Array.from({ length: initialCount }, (_, id) => id));
 
   const addItem = () => {
     setItems((current) => current.length < 3 ? [...current, Math.max(...current) + 1] : current);
@@ -65,15 +68,15 @@ function RepeatableInputGroup({ label, hint, namePrefix, firstPlaceholder, addLa
   );
 }
 
-export function DesiredJobForm({ onSubmit, saved }: DesiredJobFormProps) {
+export function DesiredJobForm({ onSubmit, saved, initialData = {} }: DesiredJobFormProps) {
   return (
     <form className="profile-form desired-job-form" onSubmit={onSubmit} id="desired-job">
       <h1 className="visually-hidden">ลักษณะงานที่ต้องการ</h1>
 
       <div className="desired-job-fields">
-        <RepeatableInputGroup label="ตำแหน่ง" hint="ระบุอย่างน้อย 1 ตำแหน่ง" namePrefix="desiredPosition" firstPlaceholder="เช่น นักออกแบบ UX/UI" addLabel="เพิ่มตำแหน่ง" />
+        <RepeatableInputGroup label="ตำแหน่ง" hint="ระบุอย่างน้อย 1 ตำแหน่ง" namePrefix="desiredPosition" firstPlaceholder="เช่น นักออกแบบ UX/UI" addLabel="เพิ่มตำแหน่ง" initialData={initialData} />
 
-        <RepeatableInputGroup label="ประเภทงาน" hint="ระบุอย่างน้อย 1 ประเภท" namePrefix="desiredJobType" firstPlaceholder="เช่น งานคอมพิวเตอร์/ไอที" addLabel="เพิ่มประเภทงาน" />
+        <RepeatableInputGroup label="ประเภทงาน" hint="ระบุอย่างน้อย 1 ประเภท" namePrefix="desiredJobType" firstPlaceholder="เช่น งานคอมพิวเตอร์/ไอที" addLabel="เพิ่มประเภทงาน" initialData={initialData} />
 
         <label className="field">
           <span>เงินเดือนที่ต้องการ</span>

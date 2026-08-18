@@ -3,6 +3,7 @@ import { useRef, useState, type FormEvent } from "react";
 type EducationFormProps = {
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   saved: boolean;
+  initialData?: Record<string, unknown>;
 };
 
 type EducationStatus = "studying" | "graduated";
@@ -87,8 +88,9 @@ function EducationCard({ record, index, canDelete, onStatusChange, onReset, onDe
   );
 }
 
-export function EducationForm({ onSubmit, saved }: EducationFormProps) {
-  const [records, setRecords] = useState<EducationRecord[]>([{ id: 0, status: "studying" }]);
+export function EducationForm({ onSubmit, saved, initialData = {} }: EducationFormProps) {
+  const initialCount = Math.max(1, ...[1, 2, 3].filter((index) => initialData[`education${index}Institution`]));
+  const [records, setRecords] = useState<EducationRecord[]>(Array.from({ length: initialCount }, (_, index) => ({ id: index, status: initialData[`education${index + 1}Status`] === "graduated" ? "graduated" : "studying" })));
 
   const updateStatus = (id: number, status: EducationStatus) => {
     setRecords((current) => current.map((record) => record.id === id ? { ...record, status } : record));

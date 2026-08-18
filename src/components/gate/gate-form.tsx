@@ -1,7 +1,7 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import { saveGate, skipGate } from "@/lib/member-api";
+import { FormEvent, useEffect, useState } from "react";
+import { getProfile, saveGate, skipGate } from "@/lib/member-api";
 import "../profile/profile-editor.css";
 import "./gate.css";
 
@@ -19,6 +19,25 @@ const jobCategories = [
 export function GateForm() {
   const [privacy, setPrivacy] = useState<"public" | "private">("public");
   const [status, setStatus] = useState<"idle" | "saved" | "skipped">("idle");
+
+  useEffect(() => {
+    getProfile().then((profile) => {
+      const form = document.querySelector<HTMLFormElement>(".gate-card");
+      if (!form) return;
+      const values: Record<string, unknown> = {
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        address: profile.address,
+        jobCategory1: profile.desiredJobCategories?.[0],
+        jobCategory2: profile.desiredJobCategories?.[1],
+      };
+      for (const [name, value] of Object.entries(values)) {
+        const field = form.elements.namedItem(name);
+        if ((field instanceof HTMLInputElement || field instanceof HTMLSelectElement || field instanceof HTMLTextAreaElement) && value != null) field.value = String(value);
+      }
+      setPrivacy(profile.privacy);
+    }).catch(() => undefined);
+  }, []);
 
   // UX-only interaction: replace with the onboarding API mutation later.
   const submit = async (event: FormEvent<HTMLFormElement>) => {

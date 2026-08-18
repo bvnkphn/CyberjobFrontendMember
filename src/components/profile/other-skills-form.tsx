@@ -3,10 +3,12 @@ import { useState, type FormEvent } from "react";
 type OtherSkillsFormProps = {
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   saved: boolean;
+  initialData?: Record<string, unknown>;
 };
 
-export function OtherSkillsForm({ onSubmit, saved }: OtherSkillsFormProps) {
-  const [skills, setSkills] = useState([0]);
+export function OtherSkillsForm({ onSubmit, saved, initialData = {} }: OtherSkillsFormProps) {
+  const initialCount = Math.max(1, ...[1, 2, 3, 4, 5].filter((index) => initialData[`specialty${index}`]));
+  const [skills, setSkills] = useState(Array.from({ length: initialCount }, (_, id) => id));
 
   const addSkill = () => {
     setSkills((current) => current.length < 5 ? [...current, Math.max(...current) + 1] : current);

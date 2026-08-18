@@ -96,15 +96,40 @@ function Field({ label, required, children, className = "" }: FieldProps) {
 export function ProfileEditor() {
   const [activeSection, setActiveSection] = useState<ProfileSectionId>("personal");
   const [completedSections, setCompletedSections] = useState<Set<ProfileSectionId>>(new Set());
+  const [profile, setProfile] = useState<MemberProfile | null>(null);
   const [gender, setGender] = useState("male");
   const [saved, setSaved] = useState(false);
   const completion = Math.round((completedSections.size / sections.length) * 100);
+  const activeDataValue = profile?.[apiSections[activeSection] as keyof MemberProfile];
+  const initialData = activeDataValue && typeof activeDataValue === "object" && !Array.isArray(activeDataValue) ? activeDataValue as Record<string, unknown> : {};
 
   useEffect(() => {
     getProfile()
-      .then((profile) => setCompletedSections(completedFromProfile(profile)))
+      .then((loadedProfile) => { setProfile(loadedProfile); setCompletedSections(completedFromProfile(loadedProfile)); })
       .catch(() => undefined);
   }, []);
+
+  useEffect(() => {
+    if (!profile) return;
+    const section = profile[apiSections[activeSection] as keyof MemberProfile];
+    if (!section || typeof section !== "object" || Array.isArray(section)) return;
+    const frame = window.requestAnimationFrame(() => {
+      const form = document.querySelector<HTMLFormElement>(".profile-form-area form");
+      if (!form) return;
+      for (const [name, value] of Object.entries(section)) {
+        const field = form.elements.namedItem(name);
+        if (field instanceof HTMLInputElement) {
+          if (field.type === "checkbox") field.checked = value === true || value === "on";
+          else if (field.type !== "file") field.value = String(value ?? "");
+        } else if (field instanceof HTMLSelectElement || field instanceof HTMLTextAreaElement) {
+          field.value = String(value ?? "");
+        }
+      }
+      const savedGender = (section as Record<string, unknown>).gender;
+      if (activeSection === "personal" && typeof savedGender === "string") setGender(savedGender);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [activeSection, profile]);
 
   const refreshActiveSectionStatus = (form: HTMLFormElement) => {
     const fields = requiredSectionFields[activeSection];
@@ -122,7 +147,18 @@ export function ProfileEditor() {
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      await saveProfileSection(apiSections[activeSection], formDataToObject(event.currentTarget));
+      const data = formDataToObject(event.currentTarget);
+      const result = await saveProfileSection(apiSections[activeSection], data) as { updatedAt?: string };
+      setProfile((current) => current ? {
+        ...current,
+        [apiSections[activeSection]]: data,
+        ...(activeSection === "personal" ? {
+          firstName: typeof data.firstName === "string" ? data.firstName : current.firstName,
+          lastName: typeof data.lastName === "string" ? data.lastName : current.lastName,
+          address: typeof data.address === "string" ? data.address : current.address,
+        } : {}),
+        updatedAt: result.updatedAt ?? current.updatedAt,
+      } : current);
       setCompletedSections((current) => new Set(current).add(activeSection));
       setSaved(true);
       window.setTimeout(() => setSaved(false), 2500);
@@ -183,17 +219,17 @@ export function ProfileEditor() {
           if (form) refreshActiveSectionStatus(form);
         }}>
         {activeSection === "other-skills" ? (
-          <OtherSkillsForm onSubmit={submit} saved={saved} />
+          <OtherSkillsForm key={`other-${profile?.updatedAt ?? "new"}`} initialData={initialData} onSubmit={submit} saved={saved} />
         ) : activeSection === "language" ? (
-          <LanguageForm onSubmit={submit} saved={saved} />
+          <LanguageForm key={`language-${profile?.updatedAt ?? "new"}`} initialData={initialData} onSubmit={submit} saved={saved} />
         ) : activeSection === "certificate" ? (
-          <CertificateForm onSubmit={submit} saved={saved} />
+          <CertificateForm key={`certificate-${profile?.updatedAt ?? "new"}`} initialData={initialData} onSubmit={submit} saved={saved} />
         ) : activeSection === "work-experience" ? (
-          <WorkExperienceForm onSubmit={submit} saved={saved} />
+          <WorkExperienceForm key={`work-${profile?.updatedAt ?? "new"}`} initialData={initialData} onSubmit={submit} saved={saved} />
         ) : activeSection === "education" ? (
-          <EducationForm onSubmit={submit} saved={saved} />
+          <EducationForm key={`education-${profile?.updatedAt ?? "new"}`} initialData={initialData} onSubmit={submit} saved={saved} />
         ) : activeSection === "desired-job" ? (
-          <DesiredJobForm onSubmit={submit} saved={saved} />
+          <DesiredJobForm key={`desired-${profile?.updatedAt ?? "new"}`} initialData={initialData} onSubmit={submit} saved={saved} />
         ) : (
         <form className="profile-form" onSubmit={submit} id="personal">
           <h1>ข้อมูลส่วนบุคคล</h1>

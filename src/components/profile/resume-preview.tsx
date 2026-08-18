@@ -83,6 +83,7 @@ export function ResumePreview() {
           </header>
 
           <div className="resume-contact">
+            <span>{text(profile?.email, "ยังไม่ระบุอีเมล")}</span>
             <span>{text(personal.phone, "ยังไม่ระบุเบอร์โทร")}</span>
             <span>{text(personal.lineId, "ยังไม่ระบุ LINE ID")}</span>
             <span>{text(profile?.address ?? personal.address, "ยังไม่ระบุที่อยู่")}</span>

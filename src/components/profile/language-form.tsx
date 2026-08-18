@@ -3,6 +3,7 @@ import { useRef, useState, type FormEvent } from "react";
 type LanguageFormProps = {
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   saved: boolean;
+  initialData?: Record<string, unknown>;
 };
 
 type LanguageRecord = { id: number };
@@ -58,8 +59,9 @@ function LanguageCard({ index, canDelete, onDelete }: { index: number; canDelete
   );
 }
 
-export function LanguageForm({ onSubmit, saved }: LanguageFormProps) {
-  const [records, setRecords] = useState<LanguageRecord[]>([{ id: 0 }]);
+export function LanguageForm({ onSubmit, saved, initialData = {} }: LanguageFormProps) {
+  const initialCount = Math.max(1, ...[1, 2, 3, 4, 5].filter((index) => initialData[`language${index}Name`]));
+  const [records, setRecords] = useState<LanguageRecord[]>(Array.from({ length: initialCount }, (_, id) => ({ id })));
 
   const addRecord = () => {
     setRecords((current) => current.length < 5 ? [...current, { id: Math.max(...current.map(({ id }) => id)) + 1 }] : current);

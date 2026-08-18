@@ -94,12 +94,14 @@ export function saveProfileSection(section: string, data: Record<string, unknown
 }
 
 export type MemberProfile = {
+  email: string | null;
   firstName: string | null;
   lastName: string | null;
   completion: number;
   privacy: "public" | "private";
   updatedAt: string;
   address: string | null;
+  desiredJobCategories: string[];
   personal: Record<string, unknown>;
   desiredJob: Record<string, unknown>;
   educations: Record<string, unknown> | unknown[];
