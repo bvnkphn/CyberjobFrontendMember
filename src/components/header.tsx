@@ -23,7 +23,7 @@ export function Header() {
     event.preventDefault();
     setNavOpen(false);
     await ensureDemoSession();
-    if (!hasAccessToken()) { router.push("/register"); return; }
+    if (!hasAccessToken()) { router.push("/"); return; }
     try {
       const profile = await getProfile();
       router.push(profile.completion > 0 ? "/profile/preview" : "/profile/edit");

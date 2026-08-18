@@ -46,3 +46,20 @@ npm run dev
 ```
 
 Production: `docker build -t cyberjob-frontend-member .`
+# CyberJob Frontend Member
+
+## เริ่ม Development ครั้งแรก
+
+วาง `CyberJobFrontendMember` และ `CyberJobBackendMember` ไว้ในโฟลเดอร์แม่เดียวกัน เปิด Docker Desktop แล้วรันจากโฟลเดอร์ Frontend:
+
+```powershell
+npm run dev:setup
+```
+
+คำสั่งนี้จะสร้างไฟล์ environment สำหรับ Development, ติดตั้ง dependencies, เปิด PostgreSQL และ Backend, รัน migrations และเปิด Frontend ที่ `http://localhost:3000` โดยใช้บัญชี Demo อัตโนมัติจนกว่าจะกด Logout
+
+ครั้งถัดไปที่ติดตั้ง dependencies แล้ว สามารถข้ามการติดตั้งซ้ำได้:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\setup-dev.ps1 -SkipInstall
+```
