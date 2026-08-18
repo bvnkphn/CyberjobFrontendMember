@@ -58,7 +58,7 @@ if (-not $backendReady) {
   throw "Backend was not ready within 60 seconds. Review the logs above"
 }
 
-docker compose -f $composeFile --project-directory $backendPath exec -T api npm run migration:run
+docker compose -f $composeFile --project-directory $backendPath exec -T api ./node_modules/.bin/typeorm migration:run -d dist/typeorm.config.js
 Write-Host "Ready: http://localhost:3000 (Demo account is automatic until Logout)" -ForegroundColor Green
 Write-Host "Press Ctrl+C to stop Frontend; Docker services remain running"
 Set-Location -LiteralPath $frontendPath
