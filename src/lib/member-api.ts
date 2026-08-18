@@ -9,7 +9,8 @@ export function hasAccessToken() { return Boolean(getAccessToken()); }
 type AuthSession = { accessToken: string; user: { id: string; email: string; isDemo: boolean } };
 
 export async function ensureDemoSession() {
-  if (typeof window === "undefined" || getAccessToken() || window.localStorage.getItem("demoSessionDisabled") === "true") return null;
+  if (typeof window === "undefined" || process.env.NODE_ENV !== "development" || getAccessToken() || window.sessionStorage.getItem("demoSessionDisabled") === "true") return null;
+  window.localStorage.removeItem("demoSessionDisabled");
   const response = await fetch(`${API_URL}/auth/demo`, { method: "POST", headers: { "Content-Type": "application/json" } });
   if (!response.ok) return null;
   const session = await response.json() as AuthSession;
@@ -21,7 +22,8 @@ export async function ensureDemoSession() {
 export function logout() {
   window.localStorage.removeItem("accessToken");
   window.localStorage.removeItem("memberEmail");
-  window.localStorage.setItem("demoSessionDisabled", "true");
+  window.localStorage.removeItem("demoSessionDisabled");
+  window.sessionStorage.setItem("demoSessionDisabled", "true");
 }
 
 export async function login(email: string, password: string) {
@@ -29,7 +31,7 @@ export async function login(email: string, password: string) {
   if (!response.ok) throw new Error("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
   const session = await response.json() as AuthSession;
   window.localStorage.setItem("accessToken", session.accessToken);
-  window.localStorage.removeItem("demoSessionDisabled");
+  window.sessionStorage.removeItem("demoSessionDisabled");
   return session;
 }
 
@@ -38,11 +40,11 @@ export async function register(email: string, password: string) {
   if (!response.ok) throw new Error("ไม่สามารถสมัครสมาชิกได้");
   const session = await response.json() as AuthSession;
   window.localStorage.setItem("accessToken", session.accessToken);
-  window.localStorage.removeItem("demoSessionDisabled");
+  window.sessionStorage.removeItem("demoSessionDisabled");
   return session;
 }
 
-async function request<T>(path: string, init: RequestInit): Promise<T> {
+async function request<T>(path: string, init: RequestInit, retried = false): Promise<T> {
   if (!getAccessToken()) await ensureDemoSession();
   const token = getAccessToken();
   const response = await fetch(`${API_URL}${path}`, {
@@ -53,6 +55,12 @@ async function request<T>(path: string, init: RequestInit): Promise<T> {
       ...init.headers,
     },
   });
+
+  if (response.status === 401 && process.env.NODE_ENV === "development" && !retried && window.sessionStorage.getItem("demoSessionDisabled") !== "true") {
+    window.localStorage.removeItem("accessToken");
+    await ensureDemoSession();
+    return request<T>(path, init, true);
+  }
 
   if (!response.ok) {
     const payload = await response.json().catch(() => null) as { message?: string | string[] } | null;
