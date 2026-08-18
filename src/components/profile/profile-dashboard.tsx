@@ -18,7 +18,7 @@ const settings: { icon: IconName; label: string; modal: Exclude<ModalName, null>
 
 export function ProfileDashboard() {
   const [profile, setProfile] = useState<MemberProfile | null>(null);
-  const [modal, setModal] = useState<ModalName>(null);
+  const [expanded, setExpanded] = useState<ModalName>(null);
   const [saved, setSaved] = useState(false);
 
   useEffect(() => { getProfile().then(setProfile).catch(() => undefined); }, []);
@@ -29,7 +29,7 @@ export function ProfileDashboard() {
   const submitModal = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSaved(true);
-    window.setTimeout(() => { setSaved(false); setModal(null); }, 900);
+    window.setTimeout(() => { setSaved(false); setExpanded(null); }, 900);
   };
 
   return (
@@ -58,37 +58,32 @@ export function ProfileDashboard() {
 
         <section className="settings-card">
           <h2><span aria-hidden="true">⚙</span> ตั้งค่า</h2>
-          {settings.map((item) => (
-            <button type="button" className={item.danger ? "danger" : ""} onClick={() => setModal(item.modal)} key={item.modal}>
-              <Icon name={item.icon} /><span>{item.label}</span><b aria-hidden="true">›</b>
+          {settings.map((item) => <div className="settings-item" key={item.modal}>
+            <button type="button" className={item.danger ? "danger" : ""} onClick={() => setExpanded(expanded === item.modal ? null : item.modal)} aria-expanded={expanded === item.modal}>
+              <Icon name={item.icon} /><span>{item.label}</span><b aria-hidden="true">{expanded === item.modal ? "⌃" : "⌄"}</b>
             </button>
-          ))}
+            {expanded === item.modal && <SettingsDropdown setting={item.modal} saved={saved} onCancel={() => setExpanded(null)} onSubmit={submitModal} />}
+          </div>)}
         </section>
       </div>
-
-      {modal && <SettingsModal modal={modal} saved={saved} onClose={() => setModal(null)} onSubmit={submitModal} />}
     </main>
   );
 }
 
-function SettingsModal({ modal, saved, onClose, onSubmit }: { modal: Exclude<ModalName, null>; saved: boolean; onClose: () => void; onSubmit: (event: FormEvent<HTMLFormElement>) => void }) {
-  const titles = { privacy: "ตั้งค่าความเป็นส่วนตัว", email: "เปลี่ยนอีเมล", password: "เปลี่ยนรหัสผ่าน", delete: "ลบบัญชีถาวร" };
+function SettingsDropdown({ setting, saved, onCancel, onSubmit }: { setting: Exclude<ModalName, null>; saved: boolean; onCancel: () => void; onSubmit: (event: FormEvent<HTMLFormElement>) => void }) {
   return (
-    <div className="settings-overlay" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
-      <section className="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-title">
-        <header><h2 id="settings-title">{titles[modal]}</h2><button type="button" onClick={onClose} aria-label="ปิด">×</button></header>
-        <form onSubmit={onSubmit}>
-          {modal === "privacy" && <PrivacySettings />}
-          {modal === "email" && <EmailSettings />}
-          {modal === "password" && <PasswordSettings />}
-          {modal === "delete" && <DeleteSettings />}
-          <footer>
-            <button type="button" className="modal-cancel" onClick={onClose}>ยกเลิก</button>
-            <button type="submit" className={`primary-button ${modal === "delete" ? "delete-button" : ""}`}>{modal === "delete" ? "ลบบัญชีของฉัน" : "บันทึก"}</button>
-          </footer>
-          {saved && <p className="modal-status" role="status">บันทึกการตั้งค่าตัวอย่างแล้ว</p>}
-        </form>
-      </section>
+    <div className="settings-dropdown">
+      <form onSubmit={onSubmit}>
+        {setting === "privacy" && <PrivacySettings />}
+        {setting === "email" && <EmailSettings />}
+        {setting === "password" && <PasswordSettings />}
+        {setting === "delete" && <DeleteSettings />}
+        <footer>
+          <button type="button" className="modal-cancel" onClick={onCancel}>ยกเลิก</button>
+          <button type="submit" className={`primary-button ${setting === "delete" ? "delete-button" : ""}`}>{setting === "delete" ? "ลบบัญชีของฉัน" : "บันทึก"}</button>
+        </footer>
+        {saved && <p className="modal-status" role="status">บันทึกการตั้งค่าตัวอย่างแล้ว</p>}
+      </form>
     </div>
   );
 }
