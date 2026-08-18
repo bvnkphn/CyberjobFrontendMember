@@ -5,6 +5,7 @@ import { Icon, type IconName } from "../icons";
 import { DesiredJobForm } from "./desired-job-form";
 import { EducationForm } from "./education-form";
 import { WorkExperienceForm } from "./work-experience-form";
+import { CertificateForm } from "./certificate-form";
 import "./profile-editor.css";
 
 type ProfileSection = {
@@ -48,7 +49,7 @@ function Field({ label, required, children, className = "" }: FieldProps) {
 }
 
 export function ProfileEditor() {
-  const [activeSection, setActiveSection] = useState<"personal" | "desired-job" | "education" | "work-experience">("personal");
+  const [activeSection, setActiveSection] = useState<"personal" | "desired-job" | "education" | "work-experience" | "certificate">("personal");
   const [gender, setGender] = useState("male");
   const [saved, setSaved] = useState(false);
 
@@ -79,15 +80,16 @@ export function ProfileEditor() {
           <nav className="section-nav" aria-label="หัวข้อแก้ไขประวัติ">
             {sections.map(({ icon, label, action }, index) => (
               <button
-                className={(index === 0 && activeSection === "personal") || (index === 1 && activeSection === "desired-job") || (index === 2 && activeSection === "education") || (index === 3 && activeSection === "work-experience") ? "active" : ""}
+                className={(index === 0 && activeSection === "personal") || (index === 1 && activeSection === "desired-job") || (index === 2 && activeSection === "education") || (index === 3 && activeSection === "work-experience") || (index === 4 && activeSection === "certificate") ? "active" : ""}
                 type="button"
                 onClick={() => {
                   if (index === 0) setActiveSection("personal");
                   if (index === 1) setActiveSection("desired-job");
                   if (index === 2) setActiveSection("education");
                   if (index === 3) setActiveSection("work-experience");
+                  if (index === 4) setActiveSection("certificate");
                 }}
-                aria-current={(index === 0 && activeSection === "personal") || (index === 1 && activeSection === "desired-job") || (index === 2 && activeSection === "education") || (index === 3 && activeSection === "work-experience") ? "page" : undefined}
+                aria-current={(index === 0 && activeSection === "personal") || (index === 1 && activeSection === "desired-job") || (index === 2 && activeSection === "education") || (index === 3 && activeSection === "work-experience") || (index === 4 && activeSection === "certificate") ? "page" : undefined}
                 key={label}
               >
                 <Icon name={icon} />
@@ -98,7 +100,9 @@ export function ProfileEditor() {
           </nav>
         </aside>
 
-        {activeSection === "work-experience" ? (
+        {activeSection === "certificate" ? (
+          <CertificateForm onSubmit={submit} saved={saved} />
+        ) : activeSection === "work-experience" ? (
           <WorkExperienceForm onSubmit={submit} saved={saved} />
         ) : activeSection === "education" ? (
           <EducationForm onSubmit={submit} saved={saved} />

@@ -93,6 +93,28 @@
 .period-field legend b { color: var(--red); }
 .period-field > div { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .period-field select { width: 100%; height: 44px; padding: 0 38px 0 14px; border: 1px solid var(--line); border-radius: 7px; background: #fff; color: var(--ink); }
+.certificate-form { padding: 38px 40px 30px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+.certificate-form > h1 { margin: 0 0 24px; color: var(--navy); font-size: 18px; }
+.certificate-form > h1 b { color: var(--red); }
+.certificate-dropzone { min-height: 220px; padding: 30px; border: 1px dashed #aeb8c7; border-radius: 9px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: #fafbfc; transition: border-color .15s,background .15s; }
+.certificate-dropzone.dragging { border-color: var(--blue); background: var(--blue-soft); }
+.upload-icon { width: 48px; height: 48px; margin-bottom: 14px; border-radius: 50%; display: grid; place-items: center; background: var(--navy-dark); color: #fff; font-size: 28px; }
+.certificate-dropzone strong { color: var(--ink); }
+.certificate-dropzone small { margin: 5px 0 16px; color: #7d8693; }
+.certificate-dropzone button { min-height: 38px; padding: 0 22px; border: 0; border-radius: 6px; background: var(--navy-dark); color: #fff; font-weight: 600; cursor: pointer; }
+.certificate-error { margin: 10px 0 0; color: var(--red); font-size: 13px; }
+.certificate-list { margin-top: 24px; }
+.certificate-list h2 { margin: 0 0 10px; display: flex; justify-content: space-between; color: #606a77; font-size: 13px; font-weight: 500; }
+.certificate-list h2 span { color: #9299a3; font-weight: 400; }
+.certificate-empty { margin: 0; padding: 18px; border: 1px solid var(--line); border-radius: 7px; color: #9299a3; text-align: center; font-size: 13px; }
+.certificate-item { min-height: 54px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 7px; display: grid; grid-template-columns: minmax(170px,1fr) auto auto; align-items: center; gap: 12px; background: #f7f8fa; }
+.certificate-item + .certificate-item { margin-top: 8px; }
+.certificate-item input { width: 100%; height: 38px; padding: 0 12px; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
+.certificate-file-name { max-width: 240px; display: flex; align-items: center; gap: 8px; color: #576170; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.certificate-file-name i { font-style: normal; }
+.certificate-item > button { border: 0; background: transparent; color: var(--red); cursor: pointer; }
+.certificate-save-row { min-height: 90px; margin-top: 24px; padding-top: 22px; border-top: 1px solid var(--line); }
+.certificate-save-row .save-button:disabled { background: #aeb8c7; cursor: not-allowed; box-shadow: none; }
 .site-footer { background: linear-gradient(135deg,#1738be,#08175e); color: #fff; }
 .footer-main { max-width: 1440px; margin: auto; padding: 72px 65px 60px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 80px; }
 .brand-inverted { color: #fff; }
@@ -121,6 +143,8 @@
   .education-card-header { align-items: flex-start; } .education-card-header div { flex-direction: column; }
   .education-grid { grid-template-columns: 1fr; gap: 20px; } .education-grid .full { grid-column: auto; } .education-segmented { width: 100%; }
   .experience-grid { grid-template-columns: 1fr; gap: 20px; } .experience-grid .full { grid-column: auto; } .period-field > div { gap: 10px; }
+  .certificate-form { padding: 25px 18px 24px; } .certificate-dropzone { min-height: 200px; padding: 24px 16px; }
+  .certificate-item { grid-template-columns: 1fr auto; } .certificate-item label { grid-column: 1 / -1; } .certificate-file-name { max-width: 230px; }
   .date-grid { grid-template-columns: 1fr; gap: 10px; } .segmented { width: 100%; } .save-row { min-height: 105px; } .save-button { width: 100%; }
   .education-form > .save-row { min-height: 82px; }
   .footer-links { grid-template-columns: 1fr 1fr; gap: 32px 20px; } .footer-bottom div { flex-wrap: wrap; gap: 12px 20px; }

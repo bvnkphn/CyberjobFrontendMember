@@ -1,0 +1,94 @@
+import { useRef, useState, type ChangeEvent, type DragEvent, type FormEvent } from "react";
+
+type CertificateFormProps = {
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  saved: boolean;
+};
+
+type CertificateFile = { id: number; file: File; title: string };
+
+const acceptedTypes = ["application/pdf", "image/jpeg", "image/png"];
+const maxFileSize = 10 * 1024 * 1024;
+
+export function CertificateForm({ onSubmit, saved }: CertificateFormProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const nextId = useRef(0);
+  const [files, setFiles] = useState<CertificateFile[]>([]);
+  const [error, setError] = useState("");
+  const [dragging, setDragging] = useState(false);
+
+  const addFiles = (selectedFiles: FileList | File[]) => {
+    const candidates = Array.from(selectedFiles);
+    const invalid = candidates.find((file) => !acceptedTypes.includes(file.type) || file.size > maxFileSize);
+    if (invalid) {
+      setError("รองรับเฉพาะไฟล์ PDF, JPG, PNG และขนาดไม่เกิน 10 MB");
+      return;
+    }
+
+    setError("");
+    setFiles((current) => [
+      ...current,
+      ...candidates.map((file) => ({ id: nextId.current++, file, title: file.name.replace(/\.[^.]+$/, "") })),
+    ]);
+  };
+
+  const selectFiles = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) addFiles(event.target.files);
+    event.target.value = "";
+  };
+
+  const dropFiles = (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setDragging(false);
+    addFiles(event.dataTransfer.files);
+  };
+
+  const updateTitle = (id: number, title: string) => {
+    setFiles((current) => current.map((item) => item.id === id ? { ...item, title } : item));
+  };
+
+  const removeFile = (id: number) => setFiles((current) => current.filter((item) => item.id !== id));
+
+  return (
+    <form className="certificate-form" onSubmit={onSubmit}>
+      <h1>ประกาศนียบัตร/วุฒิบัตร <b aria-hidden="true">*</b></h1>
+      <input ref={inputRef} className="visually-hidden" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple onChange={selectFiles} />
+
+      <div
+        className={`certificate-dropzone ${dragging ? "dragging" : ""}`}
+        onDragEnter={(event) => { event.preventDefault(); setDragging(true); }}
+        onDragOver={(event) => event.preventDefault()}
+        onDragLeave={() => setDragging(false)}
+        onDrop={dropFiles}
+      >
+        <div className="upload-icon" aria-hidden="true">↥</div>
+        <strong>ลากและวางไฟล์ที่นี่ หรือคลิกเพื่อเลือกไฟล์</strong>
+        <small>รองรับไฟล์ PDF, JPG, PNG ขนาดสูงสุด 10 MB</small>
+        <button type="button" onClick={() => inputRef.current?.click()}>เลือกไฟล์</button>
+      </div>
+
+      {error && <p className="certificate-error" role="alert">{error}</p>}
+
+      <section className="certificate-list" aria-live="polite">
+        <h2>ไฟล์ Certificate ทั้งหมด <span>{files.length} รายการ</span></h2>
+        {files.length === 0 ? (
+          <p className="certificate-empty">ยังไม่มีไฟล์ประกาศนียบัตร</p>
+        ) : files.map((item, index) => (
+          <div className="certificate-item" key={item.id}>
+            <label>
+              <span className="visually-hidden">ชื่อประกาศนียบัตรลำดับที่ {index + 1}</span>
+              <input value={item.title} onChange={(event) => updateTitle(item.id, event.target.value)} placeholder="ชื่อประกาศนียบัตร" required />
+            </label>
+            <span className="certificate-file-name"><i aria-hidden="true">▤</i>{item.file.name}</span>
+            <button type="button" onClick={() => removeFile(item.id)} aria-label={`ลบไฟล์ ${item.file.name}`}>ลบ</button>
+          </div>
+        ))}
+      </section>
+
+      <div className="save-row certificate-save-row">
+        <button className="primary-button save-button" type="submit" disabled={files.length === 0}>บันทึก</button>
+        {saved && <p className="save-message" role="status">บันทึกตัวอย่างเรียบร้อยแล้ว</p>}
+      </div>
+    </form>
+  );
+}
