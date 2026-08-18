@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { Icon, type IconName } from "../icons";
+import { DesiredJobForm } from "./desired-job-form";
 import "./profile-editor.css";
 
 type ProfileSection = {
@@ -45,6 +46,7 @@ function Field({ label, required, children, className = "" }: FieldProps) {
 }
 
 export function ProfileEditor() {
+  const [activeSection, setActiveSection] = useState<"personal" | "desired-job">("personal");
   const [gender, setGender] = useState("male");
   const [saved, setSaved] = useState(false);
 
@@ -74,15 +76,27 @@ export function ProfileEditor() {
 
           <nav className="section-nav" aria-label="หัวข้อแก้ไขประวัติ">
             {sections.map(({ icon, label, action }, index) => (
-              <a className={index === 0 ? "active" : ""} href={index === 0 ? "#personal" : "#coming-soon"} key={label}>
+              <button
+                className={(index === 0 && activeSection === "personal") || (index === 1 && activeSection === "desired-job") ? "active" : ""}
+                type="button"
+                onClick={() => {
+                  if (index === 0) setActiveSection("personal");
+                  if (index === 1) setActiveSection("desired-job");
+                }}
+                aria-current={(index === 0 && activeSection === "personal") || (index === 1 && activeSection === "desired-job") ? "page" : undefined}
+                key={label}
+              >
                 <Icon name={icon} />
                 <span>{label}</span>
                 {action && <em>{action}</em>}
-              </a>
+              </button>
             ))}
           </nav>
         </aside>
 
+        {activeSection === "desired-job" ? (
+          <DesiredJobForm onSubmit={submit} saved={saved} />
+        ) : (
         <form className="profile-form" onSubmit={submit} id="personal">
           <h1>ข้อมูลส่วนบุคคล</h1>
           <div className="form-grid">
@@ -145,6 +159,7 @@ export function ProfileEditor() {
             {saved && <p className="save-message" role="status">บันทึกตัวอย่างเรียบร้อยแล้ว</p>}
           </div>
         </form>
+        )}
       </div>
     </main>
   );
