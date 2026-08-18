@@ -4,6 +4,7 @@
 .resume-toolbar { width: min(900px,100%); margin: 0 auto 16px; padding: 8px; border: 1px solid var(--line); border-radius: 10px; display: flex; justify-content: flex-end; gap: 4px; background: rgb(255 255 255 / 85%); }
 .resume-toolbar button { min-height: 40px; padding: 0 14px; border: 0; border-radius: 6px; background: transparent; color: #606a77; cursor: pointer; }
 .resume-toolbar button:hover { background: #e8edf5; color: var(--blue); }
+.resume-toolbar button:disabled { color: #a7afbb; cursor: wait; }
 .resume-loading { text-align: center; color: #66717f; }
 .resume-paper { width: min(900px,100%); min-height: 1160px; margin: auto; padding: 54px 60px; background: #fff; color: #26303d; box-shadow: 0 5px 20px rgb(23 39 72 / 14%); }
 .resume-header { display: flex; align-items: center; gap: 22px; }

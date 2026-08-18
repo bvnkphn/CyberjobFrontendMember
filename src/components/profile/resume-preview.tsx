@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getProfile, type MemberProfile } from "@/lib/member-api";
 import { Icon } from "../icons";
 import { ProfilePageHeading } from "./profile-page-heading";
@@ -13,6 +13,8 @@ const record = (value: unknown) => value && !Array.isArray(value) && typeof valu
 export function ResumePreview() {
   const [profile, setProfile] = useState<MemberProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [downloading, setDownloading] = useState(false);
+  const resumeRef = useRef<HTMLElement>(null);
 
   useEffect(() => { getProfile().then(setProfile).catch(() => undefined).finally(() => setLoading(false)); }, []);
 
@@ -32,17 +34,49 @@ export function ResumePreview() {
     document.title = previousTitle;
   };
 
+  const downloadPdf = async () => {
+    if (!resumeRef.current || downloading) return;
+    setDownloading(true);
+    try {
+      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([import("html2canvas"), import("jspdf")]);
+      const canvas = await html2canvas(resumeRef.current, { scale: 2, useCORS: true, backgroundColor: "#ffffff" });
+      const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4", compress: true });
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const imageHeight = (canvas.height * pageWidth) / canvas.width;
+      const image = canvas.toDataURL("image/jpeg", 0.94);
+      let remainingHeight = imageHeight;
+      let offset = 0;
+
+      pdf.addImage(image, "JPEG", 0, offset, pageWidth, imageHeight, undefined, "FAST");
+      remainingHeight -= pageHeight;
+      while (remainingHeight > 0) {
+        offset -= pageHeight;
+        pdf.addPage();
+        pdf.addImage(image, "JPEG", 0, offset, pageWidth, imageHeight, undefined, "FAST");
+        remainingHeight -= pageHeight;
+      }
+
+      const safeName = fullName.replace(/[\\/:*?"<>|]/g, "-").trim() || "CyberJob";
+      pdf.save(`Resume-${safeName}.pdf`);
+    } catch {
+      window.alert("ไม่สามารถสร้างไฟล์ PDF ได้ กรุณาลองใหม่อีกครั้ง");
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   return (
     <main className="resume-preview-page">
       <div className="resume-preview-layout">
         <ProfilePageHeading title="ดู Resume" description="ตรวจสอบข้อมูลก่อนพิมพ์หรือบันทึกเป็น PDF" />
         <div className="resume-toolbar">
           <button type="button" onClick={printResume}><span aria-hidden="true">⎙</span> พิมพ์</button>
-          <button type="button" onClick={printResume}><span aria-hidden="true">⇩</span> ดาวน์โหลดเป็น PDF</button>
+          <button type="button" onClick={downloadPdf} disabled={loading || downloading}><span aria-hidden="true">⇩</span> {downloading ? "กำลังสร้าง PDF..." : "ดาวน์โหลดเป็น PDF"}</button>
         </div>
 
         {loading ? <p className="resume-loading">กำลังโหลด Resume...</p> : (
-        <article className="resume-paper">
+        <article className="resume-paper" ref={resumeRef}>
           <header className="resume-header">
             <div className="resume-avatar" aria-hidden="true">{fullName.charAt(0)}</div>
             <div><h1>{fullName}</h1><p>{text(desired.desiredPosition1, "ตำแหน่งงานที่ต้องการ")}</p></div>
