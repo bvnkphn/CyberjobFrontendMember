@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Brand } from "./brand";
 import { Icon, type IconName } from "./icons";
 import { ensureDemoSession, getProfile, hasAccessToken, logout } from "@/lib/member-api";
+import "./profile/profile-editor.css";
 
 const accountLinks: [IconName, string, string][] = [
   ["user", "โปรไฟล์", "/profile"], ["edit", "แก้ไขประวัติ", "/profile/edit"],

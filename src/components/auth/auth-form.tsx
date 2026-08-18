@@ -44,11 +44,9 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
       <section className="auth-card">
         <header><span>{isLogin ? "ยินดีต้อนรับกลับ" : "เริ่มต้นใช้งาน CyberJob"}</span><h1>{isLogin ? "เข้าสู่ระบบ" : "สมัครสมาชิก"}</h1><p>{isLogin ? "เข้าสู่ระบบเพื่อจัดการ Resume และการสมัครงาน" : "สร้างบัญชีเพื่อฝากประวัติและค้นหาโอกาสงานที่เหมาะกับคุณ"}</p></header>
 
-        {isLogin && <aside className="demo-account"><strong>บัญชี Demo</strong><span>user@test.com</span><span>รหัสผ่าน: usertest555</span></aside>}
-
         <form onSubmit={submit}>
-          <label><span>อีเมล</span><input name="email" type="email" autoComplete="email" placeholder="กรอกอีเมล" defaultValue={isLogin ? "user@test.com" : ""} required /></label>
-          <label><span>รหัสผ่าน</span><div className="password-input"><input name="password" type={showPassword ? "text" : "password"} autoComplete={isLogin ? "current-password" : "new-password"} placeholder="อย่างน้อย 8 ตัวอักษร" defaultValue={isLogin ? "usertest555" : ""} minLength={8} required /><button type="button" onClick={() => setShowPassword((current) => !current)}>{showPassword ? "ซ่อน" : "แสดง"}</button></div></label>
+          <label><span>อีเมล</span><input name="email" type="email" autoComplete="email" placeholder="กรอกอีเมล" required /></label>
+          <label><span>รหัสผ่าน</span><div className="password-input"><input name="password" type={showPassword ? "text" : "password"} autoComplete={isLogin ? "current-password" : "new-password"} placeholder="อย่างน้อย 8 ตัวอักษร" minLength={8} required /><button type="button" onClick={() => setShowPassword((current) => !current)}>{showPassword ? "ซ่อน" : "แสดง"}</button></div></label>
           {!isLogin && <label><span>ยืนยันรหัสผ่าน</span><input name="confirmPassword" type={showPassword ? "text" : "password"} autoComplete="new-password" placeholder="กรอกรหัสผ่านอีกครั้ง" minLength={8} required /></label>}
           {isLogin ? <div className="auth-options"><label><input type="checkbox" /> จดจำฉัน</label><Link href="/forgot-password">ลืมรหัสผ่าน?</Link></div> : <label className="auth-consent"><input type="checkbox" required /> ฉันยอมรับ <Link href="/terms">ข้อกำหนดการใช้งาน</Link> และ <Link href="/privacy">นโยบายความเป็นส่วนตัว</Link></label>}
           {error && <p className="auth-error" role="alert">{error}</p>}
