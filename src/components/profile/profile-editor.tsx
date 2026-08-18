@@ -28,7 +28,7 @@ const sections: ProfileSection[] = [
   { id: "work-experience", icon: "edit", label: "ประวัติการฝึกงาน/ทำงาน", action: "เพิ่ม" },
   { id: "certificate", icon: "trophy", label: "อบรมประกาศนียบัตร", action: "เพิ่ม" },
   { id: "language", icon: "globe", label: "ความสามารถทางภาษา", action: "เพิ่ม" },
-  { id: "other-skills", icon: "skills", label: "ความสามารถอื่นๆ" },
+  { id: "other-skills", icon: "skills", label: "ความสามารถอื่นๆ", action: "เพิ่ม" },
 ];
 
 const thaiMonths = [
@@ -56,6 +56,7 @@ const requiredSectionFields: Partial<Record<ProfileSectionId, string[]>> = {
   ],
   certificate: ["certificate1Title", "certificate1FileName"],
   language: ["language1Name"],
+  "other-skills": ["specialty1"],
 };
 
 function hasRequiredValues(data: unknown, fields: string[]) {
