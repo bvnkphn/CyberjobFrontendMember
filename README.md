@@ -3,6 +3,7 @@
 ## Profile edit UX/UI
 
 เปิดหน้า `http://localhost:3000/profile/edit` เพื่อดูต้นแบบหน้าแก้ไขประวัติผู้สมัคร
+หน้า `/` จะ redirect มายังหน้านี้โดยอัตโนมัติ
 
 - ขอบเขตปัจจุบันเป็น UX/UI และ local interaction เท่านั้น ยังไม่เรียก Backend API
 - Desktop ใช้ sidebar คู่กับฟอร์ม 2 คอลัมน์

@@ -87,10 +87,10 @@ export function ProfileEditor() {
           <h1>ข้อมูลส่วนบุคคล</h1>
           <div className="form-grid">
             <Field label="ชื่อ" required>
-              <input name="firstName" autoComplete="given-name" placeholder="your name" required />
+              <input name="firstName" autoComplete="given-name" placeholder="กรอกชื่อ" required />
             </Field>
             <Field label="นามสกุล" required>
-              <input name="lastName" autoComplete="family-name" placeholder="your surname" required />
+              <input name="lastName" autoComplete="family-name" placeholder="กรอกนามสกุล" required />
             </Field>
 
             <fieldset className="field gender-field">
