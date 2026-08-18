@@ -29,11 +29,6 @@ export function GateForm() {
     <main className="gate-page">
       <div className="gate-layout">
         <section className="gate-intro">
-          <div className="gate-step" aria-label="ขั้นตอนสุดท้าย">
-            <span className="complete" />
-            <span className="complete" />
-            <span className="current" />
-          </div>
           <p className="gate-eyebrow">ตั้งค่าโปรไฟล์เริ่มต้น</p>
           <h1>ใกล้สำเร็จแล้ว</h1>
           <p>กรอกข้อมูลสั้น ๆ เพื่อให้ CyberJob แนะนำงานที่เหมาะกับคุณได้ดียิ่งขึ้น</p>

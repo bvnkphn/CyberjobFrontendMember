@@ -1,9 +1,5 @@
 .gate-page { min-height: 1000px; padding: 80px 32px 120px; background: var(--background); }
 .gate-layout { max-width: 920px; margin: auto; }
-.gate-step { margin-bottom: 18px; display: flex; align-items: center; justify-content: center; gap: 7px; }
-.gate-step span { width: 8px; height: 8px; border-radius: 50%; background: #d7dce4; }
-.gate-step .complete { background: var(--green); }
-.gate-step .current { width: 24px; border-radius: 10px; background: var(--blue); }
 .gate-intro { max-width: 620px; margin: 0 auto 28px; text-align: center; }
 .gate-eyebrow { margin: 0 0 8px; color: var(--blue); font-size: 13px; font-weight: 800; letter-spacing: .08em; }
 .gate-intro h1 { margin: 0; color: var(--navy); font-size: clamp(28px,4vw,38px); }
