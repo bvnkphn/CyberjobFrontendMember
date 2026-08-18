@@ -21,8 +21,10 @@
 .profile-page-heading { grid-column: 1 / -1; min-height: 58px; display: flex; align-items: flex-start; gap: 18px; }
 .profile-page-heading h1 { margin: 0; color: var(--navy); font-size: 34px; }
 .profile-page-heading p { margin: 3px 0 0; color: var(--muted); font-size: 14px; }
-.profile-page-heading button { min-height: 38px; padding: 0 13px; border: 1px solid var(--line); border-radius: 6px; display: inline-flex; align-items: center; gap: 7px; background: #fff; color: #536071; cursor: pointer; }
-.profile-page-heading button:hover { border-color: var(--blue); color: var(--blue); }
+.profile-back-link { min-height: 38px; display: inline-flex; align-items: center; gap: 7px; color: #536071; font-size: 14px; }
+.profile-back-link span { font-size: 19px; transition: transform .15s; }
+.profile-back-link:hover { color: var(--blue); }
+.profile-back-link:hover span { transform: translateX(-3px); }
 .profile-form-area { min-width: 0; width: 100%; }
 .profile-form-area > form { width: 100%; }
 .profile-sidebar { position: sticky; top: 24px; display: grid; gap: 14px; }
@@ -177,7 +179,7 @@
 @media (max-width: 620px) {
   .brand { font-size: 19px; } .profile-sidebar { grid-template-columns: 1fr; } .mobile-section-picker { grid-column: auto; }
   .profile-page-heading { gap: 12px; } .profile-page-heading h1 { font-size: 26px; } .profile-page-heading p { font-size: 12px; }
-  .profile-page-heading button { padding: 0 10px; } .section-content-heading { padding: 16px; align-items: flex-start; }
+  .profile-back-link { min-height: 34px; } .section-content-heading { padding: 16px; align-items: flex-start; }
   .completion-card { padding: 18px; } .completion-main { justify-content: space-between; }
   .progress-ring { width: 70px; height: 70px; font-size: 20px; } .completion-card p { margin-top: 12px; }
   .profile-form { padding: 25px 18px 24px; } .profile-form h1 { font-size: 21px; margin-bottom: 28px; } .desired-job-form { padding-top: 34px; }

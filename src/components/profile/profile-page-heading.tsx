@@ -1,20 +1,22 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import type { MouseEvent } from "react";
 
 export function ProfilePageHeading({ title, description, fallbackHref = "/profile" }: { title: string; description?: string; fallbackHref?: string }) {
   const router = useRouter();
 
-  const goBack = () => {
+  const goBack = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
     if (window.history.length > 1) router.back();
     else router.push(fallbackHref);
   };
 
   return (
     <header className="profile-page-heading">
-      <button type="button" onClick={goBack} aria-label="ย้อนกลับไปหน้าก่อนหน้า">
+      <a className="profile-back-link" href={fallbackHref} onClick={goBack} aria-label="ย้อนกลับไปหน้าก่อนหน้า">
         <span aria-hidden="true">←</span> ย้อนกลับ
-      </button>
+      </a>
       <div><h1>{title}</h1>{description && <p>{description}</p>}</div>
     </header>
   );
