@@ -1,10 +1,12 @@
-.gate-page { min-height: 1000px; padding: 80px 32px 120px; background: var(--background); }
+.gate-page { min-height: 1000px; padding: 68px 32px 120px; background: radial-gradient(circle at 50% 0,#fff 0,#f5f7fb 360px); }
 .gate-layout { max-width: 920px; margin: auto; }
 .gate-intro { max-width: 620px; margin: 0 auto 28px; text-align: center; }
 .gate-eyebrow { margin: 0 0 8px; color: var(--blue); font-size: 13px; font-weight: 800; letter-spacing: .08em; }
 .gate-intro h1 { margin: 0; color: var(--navy); font-size: clamp(28px,4vw,38px); }
-.gate-intro > p:last-child { margin: 8px 0 0; color: #697383; line-height: 1.65; }
-.gate-card { padding: 38px 40px 32px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+.gate-intro > p:not(.gate-eyebrow) { margin: 8px 0 0; color: #697383; line-height: 1.65; }
+.gate-steps { width: 270px; margin: 20px auto 0; display: grid; grid-template-columns: 24px 1fr 24px; align-items: center; gap: 8px; }.gate-steps span { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: #dfe5ee; color: #718096; font-size: 11px; font-weight: 800; }.gate-steps span.done,.gate-steps span.active { background: var(--blue); color: #fff; }.gate-steps i { height: 2px; background: var(--blue); }.gate-steps strong { grid-column: 1 / -1; color: #758090; font-size: 11px; font-weight: 500; }
+.gate-card { padding: 0 40px 32px; border: 1px solid var(--line); border-radius: 14px; background: #fff; box-shadow: 0 16px 50px rgb(17 28 67 / 8%); overflow: hidden; }
+.gate-card-heading { margin: 0 -40px 32px; padding: 24px 40px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 20px; background: #fbfcff; }.gate-card-heading span { color: var(--blue); font-size: 11px; font-weight: 700; }.gate-card-heading h2 { margin: 2px 0 0; color: var(--navy); font-size: 20px; }.gate-card-heading p { color: var(--muted); font-size: 12px; }.gate-card-heading b { color: var(--red); }
 .gate-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 20px; }
 .gate-card .field textarea { min-height: 112px; }
 .gate-fieldset { margin: 0; padding: 0; border: 0; }
@@ -29,6 +31,7 @@
   .gate-page { min-height: auto; padding: 34px 18px 70px; }
   .gate-intro { margin-bottom: 20px; }
   .gate-card { padding: 25px 18px 22px; }
+  .gate-card-heading { margin: -25px -18px 24px; padding: 20px 18px; align-items: flex-start; }.gate-card-heading p { margin-top: 4px; }
   .gate-grid, .gate-job-grid { grid-template-columns: 1fr; }
   .gate-grid { gap: 20px; }
   .gate-actions { display: grid; }

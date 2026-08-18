@@ -1,7 +1,7 @@
-.resume-preview-page { min-height: 1100px; padding: 48px 24px 120px; background: #f4f6fa; }
+.resume-preview-page { min-height: 1100px; padding: 54px 24px 120px; background: radial-gradient(circle at 50% 0,#fff 0,#f4f6fa 340px); }
 .resume-preview-layout { width: min(1100px, 100%); margin: auto; }
 .resume-preview-layout > .profile-page-heading { margin-bottom: 20px; }
-.resume-toolbar { width: min(900px,100%); margin: 0 auto 20px; display: flex; justify-content: flex-end; gap: 12px; }
+.resume-toolbar { width: min(900px,100%); margin: 0 auto 16px; padding: 8px; border: 1px solid var(--line); border-radius: 10px; display: flex; justify-content: flex-end; gap: 4px; background: rgb(255 255 255 / 85%); }
 .resume-toolbar button { min-height: 40px; padding: 0 14px; border: 0; border-radius: 6px; background: transparent; color: #606a77; cursor: pointer; }
 .resume-toolbar button:hover { background: #e8edf5; color: var(--blue); }
 .resume-loading { text-align: center; color: #66717f; }

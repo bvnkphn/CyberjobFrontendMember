@@ -55,9 +55,14 @@ export function GateForm() {
           <p className="gate-eyebrow">ตั้งค่าโปรไฟล์เริ่มต้น</p>
           <h1>ใกล้สำเร็จแล้ว</h1>
           <p>กรอกข้อมูลสั้น ๆ เพื่อให้ CyberJob แนะนำงานที่เหมาะกับคุณได้ดียิ่งขึ้น</p>
+          <div className="gate-steps" aria-label="ขั้นตอนการสมัคร">
+            <span className="done">1</span><i /><span className="active">2</span>
+            <strong>สร้างบัญชีแล้ว · ตั้งค่าโปรไฟล์</strong>
+          </div>
         </section>
 
         <form className="gate-card" onSubmit={submit}>
+        <header className="gate-card-heading"><div><span>ใช้เวลาประมาณ 2 นาที</span><h2>ข้อมูลสำหรับแนะนำงาน</h2></div><p><b>*</b> ข้อมูลที่จำเป็น</p></header>
         <div className="gate-grid">
           <label className="field">
             <span>ชื่อ <b aria-hidden="true">*</b></span>

@@ -35,7 +35,7 @@ export function ProfileDashboard() {
   return (
     <main className="dashboard-page">
       <div className="dashboard-layout">
-        <h1>โปรไฟล์</h1>
+        <header className="dashboard-heading"><span>บัญชีของฉัน</span><h1>โปรไฟล์</h1><p>จัดการ Resume และการตั้งค่าบัญชีของคุณได้จากที่นี่</p></header>
 
         <section className="dashboard-user-card">
           <div className="avatar" aria-hidden="true">{name.charAt(0)}</div>

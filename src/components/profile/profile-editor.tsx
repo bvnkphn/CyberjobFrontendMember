@@ -134,7 +134,7 @@ export function ProfileEditor() {
   return (
     <main className="profile-page">
       <div className="profile-layout">
-        <ProfilePageHeading title="แก้ไข Resume" />
+        <ProfilePageHeading title="แก้ไข Resume" description="เติมข้อมูลแต่ละส่วนให้ครบ เพื่อเพิ่มโอกาสให้ผู้ประกอบการค้นพบคุณ" />
         <aside className="profile-sidebar" aria-label="ส่วนของประวัติ">
           <section className="completion-card">
             <div className="completion-main">
@@ -182,6 +182,10 @@ export function ProfileEditor() {
           const form = (event.target as HTMLElement).closest("form");
           if (form) refreshActiveSectionStatus(form);
         }}>
+        <header className="section-content-heading">
+          <div><span>กำลังแก้ไข</span><h2>{sections.find(({ id }) => id === activeSection)?.label}</h2></div>
+          <strong className={completedSections.has(activeSection) ? "complete" : ""}>{completedSections.has(activeSection) ? "ข้อมูลครบแล้ว" : "ยังกรอกไม่ครบ"}</strong>
+        </header>
         {activeSection === "other-skills" ? (
           <OtherSkillsForm onSubmit={submit} saved={saved} />
         ) : activeSection === "language" ? (
