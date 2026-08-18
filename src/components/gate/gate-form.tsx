@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { Brand } from "../brand";
+import "../profile/profile-editor.css";
 import "./gate.css";
 
 const jobCategories = [
@@ -27,22 +27,19 @@ export function GateForm() {
 
   return (
     <main className="gate-page">
-      <header className="gate-header">
-        <Brand />
-        <div className="gate-step" aria-label="ขั้นตอนสุดท้าย">
-          <span className="complete" />
-          <span className="complete" />
-          <span className="current" />
-        </div>
-      </header>
+      <div className="gate-layout">
+        <section className="gate-intro">
+          <div className="gate-step" aria-label="ขั้นตอนสุดท้าย">
+            <span className="complete" />
+            <span className="complete" />
+            <span className="current" />
+          </div>
+          <p className="gate-eyebrow">ตั้งค่าโปรไฟล์เริ่มต้น</p>
+          <h1>ใกล้สำเร็จแล้ว</h1>
+          <p>กรอกข้อมูลสั้น ๆ เพื่อให้ CyberJob แนะนำงานที่เหมาะกับคุณได้ดียิ่งขึ้น</p>
+        </section>
 
-      <section className="gate-intro">
-        <p className="gate-eyebrow">ตั้งค่าโปรไฟล์เริ่มต้น</p>
-        <h1>ใกล้สำเร็จแล้ว</h1>
-        <p>กรอกข้อมูลสั้น ๆ เพื่อให้ CyberJob แนะนำงานที่เหมาะกับคุณได้ดียิ่งขึ้น</p>
-      </section>
-
-      <form className="gate-card" onSubmit={submit}>
+        <form className="gate-card" onSubmit={submit}>
         <div className="gate-grid">
           <label className="field">
             <span>ชื่อ <b aria-hidden="true">*</b></span>
@@ -92,7 +89,8 @@ export function GateForm() {
           <button className="gate-skip" type="button" onClick={() => setStatus("skipped")}>ข้ามขั้นตอนนี้</button>
           {status !== "idle" && <p role="status">{status === "saved" ? "บันทึกข้อมูลตัวอย่างเรียบร้อยแล้ว" : "ข้ามการกรอกข้อมูลตัวอย่างแล้ว"}</p>}
         </footer>
-      </form>
+        </form>
+      </div>
     </main>
   );
 }
