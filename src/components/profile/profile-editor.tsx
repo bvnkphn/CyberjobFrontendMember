@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import { Icon, type IconName } from "../icons";
 import { DesiredJobForm } from "./desired-job-form";
@@ -9,7 +9,7 @@ import { WorkExperienceForm } from "./work-experience-form";
 import { CertificateForm } from "./certificate-form";
 import { LanguageForm } from "./language-form";
 import { OtherSkillsForm } from "./other-skills-form";
-import { formDataToObject, saveProfileSection } from "@/lib/member-api";
+import { formDataToObject, getProfile, saveProfileSection, type MemberProfile } from "@/lib/member-api";
 import "./profile-editor.css";
 
 type ProfileSection = {
@@ -46,6 +46,30 @@ const apiSections: Record<ProfileSectionId, string> = {
   "other-skills": "otherSkills",
 };
 
+const requiredSectionFields: Partial<Record<ProfileSectionId, string[]>> = {
+  education: ["education1Level", "education1Institution", "education1Faculty", "education1Year"],
+  "work-experience": [
+    "workExperience1StartMonth", "workExperience1StartYear", "workExperience1EndMonth",
+    "workExperience1EndYear", "workExperience1Company", "workExperience1Position",
+  ],
+  certificate: ["certificate1Title", "certificate1FileName"],
+  language: ["language1Name"],
+};
+
+function hasRequiredValues(data: unknown, fields: string[]) {
+  if (!data || typeof data !== "object" || Array.isArray(data)) return false;
+  const record = data as Record<string, unknown>;
+  return fields.every((field) => String(record[field] ?? "").trim().length > 0);
+}
+
+function completedFromProfile(profile: MemberProfile) {
+  const completed = new Set<ProfileSectionId>();
+  for (const [section, fields] of Object.entries(requiredSectionFields) as [ProfileSectionId, string[]][]) {
+    if (hasRequiredValues(profile[apiSections[section] as keyof MemberProfile], fields)) completed.add(section);
+  }
+  return completed;
+}
+
 type FieldProps = {
   label: string;
   required?: boolean;
@@ -70,6 +94,24 @@ export function ProfileEditor() {
   const [completedSections, setCompletedSections] = useState<Set<ProfileSectionId>>(new Set());
   const [gender, setGender] = useState("male");
   const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    getProfile()
+      .then((profile) => setCompletedSections(completedFromProfile(profile)))
+      .catch(() => undefined);
+  }, []);
+
+  const refreshActiveSectionStatus = (form: HTMLFormElement) => {
+    const fields = requiredSectionFields[activeSection];
+    if (!fields) return;
+    const data = formDataToObject(form);
+    setCompletedSections((current) => {
+      const next = new Set(current);
+      if (form.checkValidity() && hasRequiredValues(data, fields)) next.add(activeSection);
+      else next.delete(activeSection);
+      return next;
+    });
+  };
 
   // UX-only submit: replace this function with the profile API mutation later.
   const submit = async (event: FormEvent<HTMLFormElement>) => {
@@ -123,6 +165,13 @@ export function ProfileEditor() {
           </nav>
         </aside>
 
+        <div className="profile-form-area" onInput={(event) => {
+          const form = (event.target as HTMLElement).closest("form");
+          if (form) refreshActiveSectionStatus(form);
+        }} onChange={(event) => {
+          const form = (event.target as HTMLElement).closest("form");
+          if (form) refreshActiveSectionStatus(form);
+        }}>
         {activeSection === "other-skills" ? (
           <OtherSkillsForm onSubmit={submit} saved={saved} />
         ) : activeSection === "language" ? (
@@ -199,6 +248,7 @@ export function ProfileEditor() {
           </div>
         </form>
         )}
+        </div>
       </div>
     </main>
   );
