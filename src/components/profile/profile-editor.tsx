@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import Link from "next/link";
 import { Icon, type IconName } from "../icons";
 import { DesiredJobForm } from "./desired-job-form";
 import { EducationForm } from "./education-form";
@@ -88,16 +89,14 @@ export function ProfileEditor() {
       <div className="profile-layout">
         <aside className="profile-sidebar" aria-label="ส่วนของประวัติ">
           <section className="completion-card">
-            <div className="progress-ring" aria-label="ความสมบูรณ์ของประวัติ 70 เปอร์เซ็นต์">
-              <span>70%</span>
+            <div className="completion-main">
+              <div className="progress-ring" aria-label="ความสมบูรณ์ของประวัติ 70 เปอร์เซ็นต์">
+                <span>70%</span>
+              </div>
+              <Link className="profile-shortcut" href="/profile"><Icon name="user" /> หน้าโปรไฟล์</Link>
             </div>
             <p>ความสมบูรณ์ของประวัติ</p>
             <small>ผ่านการตรวจสอบแล้ว</small>
-          </section>
-
-          <section className="update-card">
-            <p>อัปเดตประวัติ เพื่อเพิ่มโอกาสให้บริษัทได้พบประวัติคุณก่อนใคร</p>
-            <button className="primary-button" type="button">อัปเดต</button>
           </section>
 
           <label className="mobile-section-picker">
