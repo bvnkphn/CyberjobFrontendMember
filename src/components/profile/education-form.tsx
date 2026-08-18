@@ -74,7 +74,7 @@ function EducationCard({ record, index, canDelete, onStatusChange, onReset, onDe
         {record.status === "graduated" && (
           <label className="field"><span>ชื่อปริญญา</span><input name={`${prefix}Degree`} placeholder="กรอกชื่อปริญญา" /></label>
         )}
-        <label className="field"><span>สาขา</span><input name={`${prefix}Major`} placeholder="กรอกชื่อสาขา" /></label>
+        <label className="field"><span>สาขา <b aria-hidden="true">*</b></span><input name={`${prefix}Major`} placeholder="กรอกชื่อสาขา" required /></label>
 
         <SelectField
           label={record.status === "studying" ? "ปีที่คาดว่าจะจบ (พ.ศ.)" : "ปีที่สำเร็จการศึกษา (พ.ศ.)"}

@@ -87,8 +87,8 @@ export function DesiredJobForm({ onSubmit, saved, initialData = {} }: DesiredJob
         </label>
 
         <label className="field">
-          <span>สถานที่ปฏิบัติงานที่ต้องการ</span>
-          <select name="workplacePreference" defaultValue="">
+          <span>สถานที่ปฏิบัติงานที่ต้องการ <b aria-hidden="true">*</b></span>
+          <select name="workplacePreference" defaultValue="" required>
             <option value="" disabled>เลือกรูปแบบการทำงาน</option>
             <option>ทำงานที่สำนักงาน</option>
             <option>ทำงานแบบไฮบริด</option>
@@ -97,8 +97,8 @@ export function DesiredJobForm({ onSubmit, saved, initialData = {} }: DesiredJob
         </label>
 
         <label className="field">
-          <span>วันที่สามารถเริ่มงานได้</span>
-          <select name="availableStartDate" defaultValue="">
+          <span>วันที่สามารถเริ่มงานได้ <b aria-hidden="true">*</b></span>
+          <select name="availableStartDate" defaultValue="" required>
             <option value="" disabled>เลือกวันที่เริ่มงาน</option>
             <option>เริ่มงานได้ทันที</option>
             <option>ภายใน 7 วัน</option>

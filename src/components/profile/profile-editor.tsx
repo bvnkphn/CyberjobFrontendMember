@@ -48,16 +48,26 @@ const apiSections: Record<ProfileSectionId, string> = {
 };
 
 const requiredSectionFields: Partial<Record<ProfileSectionId, string[]>> = {
-  personal: ["firstName", "lastName", "birthDay", "birthMonth", "birthYear", "phone", "address"],
-  "desired-job": ["desiredPosition1", "desiredJobType1"],
-  education: ["education1Level", "education1Institution", "education1Faculty", "education1Year"],
+  personal: ["firstName", "lastName", "gender", "birthDay", "birthMonth", "birthYear", "nationality", "phone", "address"],
+  "desired-job": ["desiredPosition1", "desiredJobType1", "workplacePreference", "availableStartDate"],
+  education: ["education1Level", "education1Institution", "education1Faculty", "education1Major", "education1Year"],
   "work-experience": [
     "workExperience1StartMonth", "workExperience1StartYear", "workExperience1EndMonth",
     "workExperience1EndYear", "workExperience1Company", "workExperience1Position",
   ],
   certificate: ["certificate1Title", "certificate1FileName"],
-  language: ["language1Name"],
+  language: ["language1Name", "language1Listening", "language1Speaking", "language1Reading", "language1Writing"],
   "other-skills": ["specialty1"],
+};
+
+const completionWeights: Record<ProfileSectionId, Record<string, number>> = {
+  personal: { firstName: 4, lastName: 4, gender: 3, birthDay: 3, birthMonth: 3, birthYear: 3, nationality: 3, phone: 5, address: 7 },
+  "desired-job": { desiredPosition1: 8, desiredJobType1: 6, workplacePreference: 3, availableStartDate: 3 },
+  education: { education1Level: 4, education1Institution: 4, education1Faculty: 2, education1Year: 3, education1Major: 2 },
+  "work-experience": { workExperience1StartMonth: 1, workExperience1StartYear: 1, workExperience1EndMonth: 1, workExperience1EndYear: 1, workExperience1Company: 3, workExperience1Position: 3 },
+  certificate: { certificate1Title: 2.5, certificate1FileName: 2.5 },
+  language: { language1Name: 2, language1Listening: 2, language1Speaking: 2, language1Reading: 2, language1Writing: 2 },
+  "other-skills": { specialty1: 3, projects: 2 },
 };
 
 function hasRequiredValues(data: unknown, fields: string[]) {
@@ -72,6 +82,24 @@ function completedFromProfile(profile: MemberProfile) {
     if (hasRequiredValues(profile[apiSections[section] as keyof MemberProfile], fields)) completed.add(section);
   }
   return completed;
+}
+
+function hasValue(value: unknown) {
+  return value !== null && value !== undefined && String(value).trim().length > 0;
+}
+
+function calculateCompletion(profile: MemberProfile | null, overrideSection?: ProfileSectionId, overrideData?: Record<string, unknown>) {
+  let score = 0;
+  for (const section of sections) {
+    const stored = profile?.[apiSections[section.id] as keyof MemberProfile];
+    const data = section.id === overrideSection
+      ? overrideData
+      : stored && typeof stored === "object" && !Array.isArray(stored) ? stored as Record<string, unknown> : undefined;
+    for (const [field, weight] of Object.entries(completionWeights[section.id])) {
+      if (data && hasValue(data[field])) score += weight;
+    }
+  }
+  return Math.round(score);
 }
 
 type FieldProps = {
@@ -97,15 +125,15 @@ export function ProfileEditor() {
   const [activeSection, setActiveSection] = useState<ProfileSectionId>("personal");
   const [completedSections, setCompletedSections] = useState<Set<ProfileSectionId>>(new Set());
   const [profile, setProfile] = useState<MemberProfile | null>(null);
+  const [completion, setCompletion] = useState(0);
   const [gender, setGender] = useState("male");
   const [saved, setSaved] = useState(false);
-  const completion = Math.round((completedSections.size / sections.length) * 100);
   const activeDataValue = profile?.[apiSections[activeSection] as keyof MemberProfile];
   const initialData = activeDataValue && typeof activeDataValue === "object" && !Array.isArray(activeDataValue) ? activeDataValue as Record<string, unknown> : {};
 
   useEffect(() => {
     getProfile()
-      .then((loadedProfile) => { setProfile(loadedProfile); setCompletedSections(completedFromProfile(loadedProfile)); })
+      .then((loadedProfile) => { setProfile(loadedProfile); setCompletion(loadedProfile.completion); setCompletedSections(completedFromProfile(loadedProfile)); })
       .catch(() => undefined);
   }, []);
 
@@ -135,6 +163,7 @@ export function ProfileEditor() {
     const fields = requiredSectionFields[activeSection];
     if (!fields) return;
     const data = formDataToObject(form);
+    setCompletion(calculateCompletion(profile, activeSection, data));
     setCompletedSections((current) => {
       const next = new Set(current);
       if (form.checkValidity() && hasRequiredValues(data, fields)) next.add(activeSection);
@@ -148,7 +177,7 @@ export function ProfileEditor() {
     event.preventDefault();
     try {
       const data = formDataToObject(event.currentTarget);
-      const result = await saveProfileSection(apiSections[activeSection], data) as { updatedAt?: string };
+      const result = await saveProfileSection(apiSections[activeSection], data) as { completion?: number; updatedAt?: string };
       setProfile((current) => current ? {
         ...current,
         [apiSections[activeSection]]: data,
@@ -160,6 +189,7 @@ export function ProfileEditor() {
         updatedAt: result.updatedAt ?? current.updatedAt,
       } : current);
       setCompletedSections((current) => new Set(current).add(activeSection));
+      setCompletion(result.completion ?? calculateCompletion(profile, activeSection, data));
       setSaved(true);
       window.setTimeout(() => setSaved(false), 2500);
     } catch (error) {
@@ -184,7 +214,7 @@ export function ProfileEditor() {
               <Link className="profile-shortcut" href="/profile"><Icon name="user" /> หน้าโปรไฟล์</Link>
             </div>
             <p>ความสมบูรณ์ของประวัติ</p>
-            <small>{completion === 100 ? "กรอกข้อมูลครบทุกหัวข้อแล้ว" : `กรอกครบ ${completedSections.size} จาก ${sections.length} หัวข้อ`}</small>
+            <small>{completion === 100 ? "ข้อมูลสำหรับ Resume ครบถ้วนแล้ว" : "ข้อมูลหลักมีน้ำหนักมากกว่าข้อมูลเสริม"}</small>
           </section>
 
           <label className="mobile-section-picker">
@@ -268,8 +298,8 @@ export function ProfileEditor() {
               </div>
             </Field>
 
-            <Field label="สัญชาติ">
-              <select name="nationality" defaultValue=""><option value="">เลือก</option><option>ไทย</option><option>อื่น ๆ</option></select>
+            <Field label="สัญชาติ" required>
+              <select name="nationality" defaultValue="" required><option value="">เลือก</option><option>ไทย</option><option>อื่น ๆ</option></select>
             </Field>
             <Field label="ศาสนา">
               <select name="religion" defaultValue=""><option value="">เลือก</option><option>พุทธ</option><option>คริสต์</option><option>อิสลาม</option><option>อื่น ๆ</option></select>

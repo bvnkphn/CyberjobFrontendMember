@@ -23,12 +23,12 @@ export function OtherSkillsForm({ onSubmit, saved, initialData = {} }: OtherSkil
       <h1>ความสามารถอื่น ๆ</h1>
 
       <fieldset className="other-section specialty-section">
-        <legend>ความสามารถเฉพาะทาง</legend>
+        <legend>ความสามารถเฉพาะทาง <b aria-hidden="true">*</b></legend>
         <p>เพิ่มเครื่องมือ เทคโนโลยี หรือทักษะที่คุณเชี่ยวชาญ</p>
         <div className="specialty-list">
           {skills.map((id, index) => (
             <div className="repeatable-row" key={id}>
-              <input name={`specialty${index + 1}`} aria-label={`ความสามารถเฉพาะทางลำดับที่ ${index + 1}`} placeholder={index === 0 ? "เช่น ออกแบบ UX/UI, React, วิเคราะห์ข้อมูล" : "กรอกความสามารถเพิ่มเติม"} />
+              <input name={`specialty${index + 1}`} aria-label={`ความสามารถเฉพาะทางลำดับที่ ${index + 1}`} placeholder={index === 0 ? "เช่น ออกแบบ UX/UI, React, วิเคราะห์ข้อมูล" : "กรอกความสามารถเพิ่มเติม"} required={index === 0} />
               {index > 0 && <button className="remove-row-button" type="button" onClick={() => removeSkill(id)} aria-label={`ลบความสามารถลำดับที่ ${index + 1}`}>×</button>}
             </div>
           ))}

@@ -14,8 +14,8 @@ const levels = ["พื้นฐาน", "พอใช้", "ดี", "ดีม
 function SkillLevel({ label, name }: { label: string; name: string }) {
   return (
     <label className="field language-skill">
-      <span>{label}</span>
-      <select name={name} defaultValue="">
+      <span>{label} <b aria-hidden="true">*</b></span>
+      <select name={name} defaultValue="" required>
         <option value="" disabled>เลือกระดับ</option>
         {levels.map((level) => <option key={level}>{level}</option>)}
       </select>
