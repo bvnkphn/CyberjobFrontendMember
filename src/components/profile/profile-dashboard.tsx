@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useState, type FormEvent } from "react";
 import { getProfile, type MemberProfile } from "@/lib/member-api";
 import { Icon, type IconName } from "../icons";
+import { ProfilePageHeading } from "./profile-page-heading";
+import { useLanguage } from "../language-provider";
 import "./profile-editor.css";
 import "./profile-dashboard.css";
 
@@ -17,6 +19,7 @@ const settings: { icon: IconName; label: string; modal: Exclude<ModalName, null>
 ];
 
 export function ProfileDashboard() {
+  const { locale } = useLanguage();
   const [profile, setProfile] = useState<MemberProfile | null>(null);
   const [expanded, setExpanded] = useState<ModalName>(null);
   const [saved, setSaved] = useState(false);
@@ -26,8 +29,8 @@ export function ProfileDashboard() {
   const personal = profile?.personal ?? {};
   const firstName = profile?.firstName ?? (typeof personal.firstName === "string" ? personal.firstName : "");
   const lastName = profile?.lastName ?? (typeof personal.lastName === "string" ? personal.lastName : "");
-  const name = firstName || lastName ? `${firstName} ${lastName}`.trim() : "ผู้ใช้งาน CyberJob";
-  const email = profile?.email ?? "สมาชิก CyberJob";
+  const name = firstName || lastName ? `${firstName} ${lastName}`.trim() : locale === "th" ? "ผู้ใช้งาน CyberJob" : "CyberJob user";
+  const email = profile?.email ?? (locale === "th" ? "สมาชิก CyberJob" : "CyberJob member");
   const completion = profile?.completion ?? 0;
 
   const submitModal = (event: FormEvent<HTMLFormElement>) => {
@@ -39,11 +42,11 @@ export function ProfileDashboard() {
   return (
     <main className="dashboard-page">
       <div className="dashboard-layout">
-        <header className="dashboard-heading"><span>บัญชีของฉัน</span><h1>โปรไฟล์</h1><p>จัดการ Resume และการตั้งค่าบัญชีของคุณได้จากที่นี่</p></header>
+        <ProfilePageHeading title="โปรไฟล์" description="จัดการ Resume และการตั้งค่าบัญชีของคุณได้จากที่นี่" fallbackHref="/" />
 
         <section className="dashboard-user-card">
           <div className="avatar" aria-hidden="true">{name.charAt(0)}</div>
-          <div><strong>{name}</strong><span>{email}</span></div>
+          <div data-no-translate><strong>{name}</strong><span>{email}</span></div>
         </section>
 
         <section className="resume-summary">

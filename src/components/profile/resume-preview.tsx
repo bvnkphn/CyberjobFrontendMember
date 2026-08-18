@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { getProfile, type MemberProfile } from "@/lib/member-api";
 import { Icon } from "../icons";
 import { ProfilePageHeading } from "./profile-page-heading";
+import { useLanguage } from "../language-provider";
 import "./profile-editor.css";
 import "./resume-preview.css";
 
@@ -11,6 +12,7 @@ const text = (value: unknown, fallback = "-") => typeof value === "string" && va
 const record = (value: unknown) => value && !Array.isArray(value) && typeof value === "object" ? value as Record<string, unknown> : {};
 
 export function ResumePreview() {
+  const { locale } = useLanguage();
   const [profile, setProfile] = useState<MemberProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
@@ -25,7 +27,7 @@ export function ResumePreview() {
   const certificates = record(profile?.certificates);
   const languages = record(profile?.languages);
   const other = record(profile?.otherSkills);
-  const fullName = `${text(profile?.firstName ?? personal.firstName, "ชื่อ")} ${text(profile?.lastName ?? personal.lastName, "นามสกุล")}`;
+  const fullName = `${text(profile?.firstName ?? personal.firstName, locale === "th" ? "ชื่อ" : "First name")} ${text(profile?.lastName ?? personal.lastName, locale === "th" ? "นามสกุล" : "Last name")}`;
 
   const printResume = () => {
     const previousTitle = document.title;
@@ -79,20 +81,20 @@ export function ResumePreview() {
         <article className="resume-paper" ref={resumeRef}>
           <header className="resume-header">
             <div className="resume-avatar" aria-hidden="true">{fullName.charAt(0)}</div>
-            <div><h1>{fullName}</h1><p>{text(desired.desiredPosition1, "ตำแหน่งงานที่ต้องการ")}</p></div>
+            <div><h1 data-no-translate>{fullName}</h1><p data-no-translate>{text(desired.desiredPosition1, locale === "th" ? "ตำแหน่งงานที่ต้องการ" : "Desired position")}</p></div>
           </header>
 
           <div className="resume-contact">
-            <span>{text(profile?.email, "ยังไม่ระบุอีเมล")}</span>
-            <span>{text(personal.phone, "ยังไม่ระบุเบอร์โทร")}</span>
-            <span>{text(personal.lineId, "ยังไม่ระบุ LINE ID")}</span>
-            <span>{text(profile?.address ?? personal.address, "ยังไม่ระบุที่อยู่")}</span>
+            <span data-no-translate>{text(profile?.email, locale === "th" ? "ยังไม่ระบุอีเมล" : "Email not provided")}</span>
+            <span data-no-translate>{text(personal.phone, locale === "th" ? "ยังไม่ระบุเบอร์โทร" : "Phone not provided")}</span>
+            <span data-no-translate>{text(personal.lineId, locale === "th" ? "ยังไม่ระบุ LINE ID" : "LINE ID not provided")}</span>
+            <span data-no-translate>{text(profile?.address ?? personal.address, locale === "th" ? "ยังไม่ระบุที่อยู่" : "Address not provided")}</span>
           </div>
 
           <div className="resume-columns">
             <aside>
               <ResumeSection title="เป้าหมายทางอาชีพ">
-                <p>{[desired.desiredPosition1, desired.desiredPosition2, desired.desiredPosition3].map((item) => text(item, "")).filter(Boolean).join(" / ") || "ยังไม่ได้ระบุตำแหน่งงาน"}</p>
+                <p data-no-translate>{[desired.desiredPosition1, desired.desiredPosition2, desired.desiredPosition3].map((item) => text(item, "")).filter(Boolean).join(" / ") || (locale === "th" ? "ยังไม่ได้ระบุตำแหน่งงาน" : "No desired position provided")}</p>
                 <p>เงินเดือน: {text(desired.expectedSalary)}</p>
                 <p>รูปแบบงาน: {text(desired.workplacePreference)}</p>
               </ResumeSection>
@@ -102,7 +104,7 @@ export function ResumePreview() {
               </ResumeSection>
 
               <ResumeSection title="ทักษะเฉพาะทาง">
-                <ul>{[other.specialty1, other.specialty2, other.specialty3, other.specialty4, other.specialty5].map((skill) => text(skill, "")).filter(Boolean).map((skill) => <li key={skill}>{skill}</li>)}</ul>
+                <ul data-no-translate>{[other.specialty1, other.specialty2, other.specialty3, other.specialty4, other.specialty5].map((skill) => text(skill, "")).filter(Boolean).map((skill) => <li key={skill}>{skill}</li>)}</ul>
               </ResumeSection>
 
               <ResumeSection title="ภาษา">
@@ -112,7 +114,7 @@ export function ResumePreview() {
 
             <section className="resume-main-column">
               <ResumeSection title="เกี่ยวกับฉัน">
-                <p>{text(other.projects, "เพิ่มข้อมูลโครงการ ผลงาน และประสบการณ์อื่น ๆ เพื่อแนะนำตัวกับผู้ประกอบการ")}</p>
+                <p data-no-translate>{text(other.projects, locale === "th" ? "เพิ่มข้อมูลโครงการ ผลงาน และประสบการณ์อื่น ๆ เพื่อแนะนำตัวกับผู้ประกอบการ" : "Add projects, achievements, and other experience to introduce yourself to employers")}</p>
               </ResumeSection>
 
               <ResumeSection title="ประสบการณ์การทำงาน">
