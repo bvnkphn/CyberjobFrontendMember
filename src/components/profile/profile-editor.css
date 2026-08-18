@@ -18,11 +18,11 @@
 .account-menu .danger { color: var(--red); }
 .profile-page { min-height: 1000px; padding: 72px 32px 120px; background: radial-gradient(circle at 50% 0,#fff 0,#f5f7fb 340px); }
 .profile-layout { max-width: 1100px; margin: auto; display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 26px; align-items: start; }
-.profile-page-heading { grid-column: 1 / -1; min-height: 58px; display: flex; align-items: flex-start; gap: 18px; }
+.profile-page-heading { grid-column: 1 / -1; min-height: 58px; display: flex; align-items: center; gap: 16px; }
 .profile-page-heading h1 { margin: 0; color: var(--navy); font-size: 34px; }
 .profile-page-heading p { margin: 3px 0 0; color: var(--muted); font-size: 14px; }
-.profile-back-link { min-height: 38px; display: inline-flex; align-items: center; gap: 7px; color: #536071; font-size: 14px; }
-.profile-back-link span { font-size: 19px; transition: transform .15s; }
+.profile-back-link { width: 28px; min-height: 44px; flex: 0 0 28px; display: inline-grid; place-items: center; color: #536071; }
+.profile-back-link span { font-size: 34px; font-weight: 300; line-height: 1; transition: transform .15s; }
 .profile-back-link:hover { color: var(--blue); }
 .profile-back-link:hover span { transform: translateX(-3px); }
 .profile-form-area { min-width: 0; width: 100%; }

@@ -15,7 +15,7 @@ export function ProfilePageHeading({ title, description, fallbackHref = "/profil
   return (
     <header className="profile-page-heading">
       <a className="profile-back-link" href={fallbackHref} onClick={goBack} aria-label="ย้อนกลับไปหน้าก่อนหน้า">
-        <span aria-hidden="true">←</span> ย้อนกลับ
+        <span aria-hidden="true">‹</span>
       </a>
       <div><h1>{title}</h1>{description && <p>{description}</p>}</div>
     </header>
