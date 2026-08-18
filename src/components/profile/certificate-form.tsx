@@ -77,8 +77,11 @@ export function CertificateForm({ onSubmit, saved }: CertificateFormProps) {
           <div className="certificate-item" key={item.id}>
             <label>
               <span className="visually-hidden">ชื่อประกาศนียบัตรลำดับที่ {index + 1}</span>
-              <input value={item.title} onChange={(event) => updateTitle(item.id, event.target.value)} placeholder="ชื่อประกาศนียบัตร" required />
+              <input name={`certificate${index + 1}Title`} value={item.title} onChange={(event) => updateTitle(item.id, event.target.value)} placeholder="ชื่อประกาศนียบัตร" required />
             </label>
+            <input type="hidden" name={`certificate${index + 1}FileName`} value={item.file.name} />
+            <input type="hidden" name={`certificate${index + 1}FileSize`} value={item.file.size} />
+            <input type="hidden" name={`certificate${index + 1}FileType`} value={item.file.type} />
             <span className="certificate-file-name"><i aria-hidden="true">▤</i>{item.file.name}</span>
             <button type="button" onClick={() => removeFile(item.id)} aria-label={`ลบไฟล์ ${item.file.name}`}>ลบ</button>
           </div>

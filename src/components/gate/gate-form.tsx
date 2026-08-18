@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { saveGate, skipGate } from "@/lib/member-api";
 import "../profile/profile-editor.css";
 import "./gate.css";
 
@@ -20,9 +21,31 @@ export function GateForm() {
   const [status, setStatus] = useState<"idle" | "saved" | "skipped">("idle");
 
   // UX-only interaction: replace with the onboarding API mutation later.
-  const submit = (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setStatus("saved");
+    const formData = new FormData(event.currentTarget);
+    const categories = [formData.get("jobCategory1"), formData.get("jobCategory2")].filter(Boolean);
+    try {
+      await saveGate({
+        firstName: formData.get("firstName"),
+        lastName: formData.get("lastName"),
+        address: formData.get("address"),
+        desiredJobCategories: categories,
+        privacy: formData.get("privacy"),
+      });
+      setStatus("saved");
+    } catch (error) {
+      window.alert(error instanceof Error ? error.message : "บันทึกข้อมูลไม่สำเร็จ");
+    }
+  };
+
+  const skip = async () => {
+    try {
+      await skipGate();
+      setStatus("skipped");
+    } catch (error) {
+      window.alert(error instanceof Error ? error.message : "ข้ามขั้นตอนไม่สำเร็จ");
+    }
   };
 
   return (
@@ -81,7 +104,7 @@ export function GateForm() {
 
         <footer className="gate-actions">
           <button className="primary-button gate-submit" type="submit">บันทึกและดำเนินการต่อ</button>
-          <button className="gate-skip" type="button" onClick={() => setStatus("skipped")}>ข้ามขั้นตอนนี้</button>
+          <button className="gate-skip" type="button" onClick={skip}>ข้ามขั้นตอนนี้</button>
           {status !== "idle" && <p role="status">{status === "saved" ? "บันทึกข้อมูลตัวอย่างเรียบร้อยแล้ว" : "ข้ามการกรอกข้อมูลตัวอย่างแล้ว"}</p>}
         </footer>
         </form>

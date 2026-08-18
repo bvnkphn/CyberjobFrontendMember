@@ -8,28 +8,42 @@ import { WorkExperienceForm } from "./work-experience-form";
 import { CertificateForm } from "./certificate-form";
 import { LanguageForm } from "./language-form";
 import { OtherSkillsForm } from "./other-skills-form";
+import { formDataToObject, saveProfileSection } from "@/lib/member-api";
 import "./profile-editor.css";
 
 type ProfileSection = {
+  id: ProfileSectionId;
   icon: IconName;
   label: string;
   action?: string;
 };
 
+type ProfileSectionId = "personal" | "desired-job" | "education" | "work-experience" | "certificate" | "language" | "other-skills";
+
 const sections: ProfileSection[] = [
-  { icon: "user", label: "ข้อมูลส่วนบุคคล" },
-  { icon: "briefcase", label: "ลักษณะงานที่ต้องการ" },
-  { icon: "education", label: "ประวัติการศึกษา", action: "เพิ่ม" },
-  { icon: "edit", label: "ประวัติการฝึกงาน/ทำงาน", action: "เพิ่ม" },
-  { icon: "trophy", label: "อบรมประกาศนียบัตร", action: "เพิ่ม" },
-  { icon: "globe", label: "ความสามารถทางภาษา", action: "เพิ่ม" },
-  { icon: "skills", label: "ความสามารถอื่นๆ" },
+  { id: "personal", icon: "user", label: "ข้อมูลส่วนบุคคล" },
+  { id: "desired-job", icon: "briefcase", label: "ลักษณะงานที่ต้องการ" },
+  { id: "education", icon: "education", label: "ประวัติการศึกษา", action: "เพิ่ม" },
+  { id: "work-experience", icon: "edit", label: "ประวัติการฝึกงาน/ทำงาน", action: "เพิ่ม" },
+  { id: "certificate", icon: "trophy", label: "อบรมประกาศนียบัตร", action: "เพิ่ม" },
+  { id: "language", icon: "globe", label: "ความสามารถทางภาษา", action: "เพิ่ม" },
+  { id: "other-skills", icon: "skills", label: "ความสามารถอื่นๆ" },
 ];
 
 const thaiMonths = [
   "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
   "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม",
 ];
+
+const apiSections: Record<ProfileSectionId, string> = {
+  personal: "personal",
+  "desired-job": "desiredJob",
+  education: "educations",
+  "work-experience": "workExperiences",
+  certificate: "certificates",
+  language: "languages",
+  "other-skills": "otherSkills",
+};
 
 type FieldProps = {
   label: string;
@@ -51,15 +65,22 @@ function Field({ label, required, children, className = "" }: FieldProps) {
 }
 
 export function ProfileEditor() {
-  const [activeSection, setActiveSection] = useState<"personal" | "desired-job" | "education" | "work-experience" | "certificate" | "language" | "other-skills">("personal");
+  const [activeSection, setActiveSection] = useState<ProfileSectionId>("personal");
+  const [completedSections, setCompletedSections] = useState<Set<ProfileSectionId>>(new Set());
   const [gender, setGender] = useState("male");
   const [saved, setSaved] = useState(false);
 
   // UX-only submit: replace this function with the profile API mutation later.
-  const submit = (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setSaved(true);
-    window.setTimeout(() => setSaved(false), 2500);
+    try {
+      await saveProfileSection(apiSections[activeSection], formDataToObject(event.currentTarget));
+      setCompletedSections((current) => new Set(current).add(activeSection));
+      setSaved(true);
+      window.setTimeout(() => setSaved(false), 2500);
+    } catch (error) {
+      window.alert(error instanceof Error ? error.message : "บันทึกข้อมูลไม่สำเร็จ");
+    }
   };
 
   return (
@@ -79,26 +100,25 @@ export function ProfileEditor() {
             <button className="primary-button" type="button">อัปเดต</button>
           </section>
 
+          <label className="mobile-section-picker">
+            <span>กำลังแก้ไข</span>
+            <select value={activeSection} onChange={(event) => setActiveSection(event.target.value as ProfileSectionId)}>
+              {sections.map(({ id, label }) => <option value={id} key={id}>{label}</option>)}
+            </select>
+          </label>
+
           <nav className="section-nav" aria-label="หัวข้อแก้ไขประวัติ">
-            {sections.map(({ icon, label, action }, index) => (
+            {sections.map(({ id, icon, label, action }) => (
               <button
-                className={(index === 0 && activeSection === "personal") || (index === 1 && activeSection === "desired-job") || (index === 2 && activeSection === "education") || (index === 3 && activeSection === "work-experience") || (index === 4 && activeSection === "certificate") || (index === 5 && activeSection === "language") || (index === 6 && activeSection === "other-skills") ? "active" : ""}
+                className={activeSection === id ? "active" : ""}
                 type="button"
-                onClick={() => {
-                  if (index === 0) setActiveSection("personal");
-                  if (index === 1) setActiveSection("desired-job");
-                  if (index === 2) setActiveSection("education");
-                  if (index === 3) setActiveSection("work-experience");
-                  if (index === 4) setActiveSection("certificate");
-                  if (index === 5) setActiveSection("language");
-                  if (index === 6) setActiveSection("other-skills");
-                }}
-                aria-current={(index === 0 && activeSection === "personal") || (index === 1 && activeSection === "desired-job") || (index === 2 && activeSection === "education") || (index === 3 && activeSection === "work-experience") || (index === 4 && activeSection === "certificate") || (index === 5 && activeSection === "language") || (index === 6 && activeSection === "other-skills") ? "page" : undefined}
+                onClick={() => setActiveSection(id)}
+                aria-current={activeSection === id ? "page" : undefined}
                 key={label}
               >
                 <Icon name={icon} />
                 <span>{label}</span>
-                {action && <em>{action}</em>}
+                {action && !completedSections.has(id) && <em>{action}</em>}
               </button>
             ))}
           </nav>
