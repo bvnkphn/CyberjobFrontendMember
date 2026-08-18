@@ -4,7 +4,46 @@ function getAccessToken() {
   return typeof window === "undefined" ? null : window.localStorage.getItem("accessToken");
 }
 
+export function hasAccessToken() { return Boolean(getAccessToken()); }
+
+type AuthSession = { accessToken: string; user: { id: string; email: string; isDemo: boolean } };
+
+export async function ensureDemoSession() {
+  if (typeof window === "undefined" || getAccessToken() || window.localStorage.getItem("demoSessionDisabled") === "true") return null;
+  const response = await fetch(`${API_URL}/auth/demo`, { method: "POST", headers: { "Content-Type": "application/json" } });
+  if (!response.ok) return null;
+  const session = await response.json() as AuthSession;
+  window.localStorage.setItem("accessToken", session.accessToken);
+  window.localStorage.setItem("memberEmail", session.user.email);
+  return session;
+}
+
+export function logout() {
+  window.localStorage.removeItem("accessToken");
+  window.localStorage.removeItem("memberEmail");
+  window.localStorage.setItem("demoSessionDisabled", "true");
+}
+
+export async function login(email: string, password: string) {
+  const response = await fetch(`${API_URL}/auth/login`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, password }) });
+  if (!response.ok) throw new Error("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
+  const session = await response.json() as AuthSession;
+  window.localStorage.setItem("accessToken", session.accessToken);
+  window.localStorage.removeItem("demoSessionDisabled");
+  return session;
+}
+
+export async function register(email: string, password: string) {
+  const response = await fetch(`${API_URL}/auth/register`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, password }) });
+  if (!response.ok) throw new Error("ไม่สามารถสมัครสมาชิกได้");
+  const session = await response.json() as AuthSession;
+  window.localStorage.setItem("accessToken", session.accessToken);
+  window.localStorage.removeItem("demoSessionDisabled");
+  return session;
+}
+
 async function request<T>(path: string, init: RequestInit): Promise<T> {
+  if (!getAccessToken()) await ensureDemoSession();
   const token = getAccessToken();
   const response = await fetch(`${API_URL}${path}`, {
     ...init,
