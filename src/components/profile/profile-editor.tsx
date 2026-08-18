@@ -22,8 +22,8 @@ type ProfileSection = {
 type ProfileSectionId = "personal" | "desired-job" | "education" | "work-experience" | "certificate" | "language" | "other-skills";
 
 const sections: ProfileSection[] = [
-  { id: "personal", icon: "user", label: "ข้อมูลส่วนบุคคล" },
-  { id: "desired-job", icon: "briefcase", label: "ลักษณะงานที่ต้องการ" },
+  { id: "personal", icon: "user", label: "ข้อมูลส่วนบุคคล", action: "เพิ่ม" },
+  { id: "desired-job", icon: "briefcase", label: "ลักษณะงานที่ต้องการ", action: "เพิ่ม" },
   { id: "education", icon: "education", label: "ประวัติการศึกษา", action: "เพิ่ม" },
   { id: "work-experience", icon: "edit", label: "ประวัติการฝึกงาน/ทำงาน", action: "เพิ่ม" },
   { id: "certificate", icon: "trophy", label: "อบรมประกาศนียบัตร", action: "เพิ่ม" },
@@ -47,6 +47,8 @@ const apiSections: Record<ProfileSectionId, string> = {
 };
 
 const requiredSectionFields: Partial<Record<ProfileSectionId, string[]>> = {
+  personal: ["firstName", "lastName", "birthDay", "birthMonth", "birthYear", "phone", "address"],
+  "desired-job": ["desiredPosition1", "desiredJobType1"],
   education: ["education1Level", "education1Institution", "education1Faculty", "education1Year"],
   "work-experience": [
     "workExperience1StartMonth", "workExperience1StartYear", "workExperience1EndMonth",
