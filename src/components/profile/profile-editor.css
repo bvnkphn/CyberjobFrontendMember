@@ -87,6 +87,12 @@
 .outline-add-button:hover { background: var(--blue-soft); }
 .education-limit { margin-top: -14px; text-align: center; color: #9198a3; font-size: 12px; }
 .education-form > .save-row { min-height: 78px; margin-top: 2px; padding-top: 24px; border-top: 1px solid var(--line); }
+.experience-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 28px; }
+.period-field { margin: 0; padding: 0; border: 0; }
+.period-field legend { margin-bottom: 8px; font-size: 14px; font-weight: 600; }
+.period-field legend b { color: var(--red); }
+.period-field > div { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.period-field select { width: 100%; height: 44px; padding: 0 38px 0 14px; border: 1px solid var(--line); border-radius: 7px; background: #fff; color: var(--ink); }
 .site-footer { background: linear-gradient(135deg,#1738be,#08175e); color: #fff; }
 .footer-main { max-width: 1440px; margin: auto; padding: 72px 65px 60px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 80px; }
 .brand-inverted { color: #fff; }
@@ -114,6 +120,7 @@
   .education-form { padding: 25px 18px 24px; } .education-card { padding-bottom: 24px; } .education-card + .education-card { padding-top: 24px; }
   .education-card-header { align-items: flex-start; } .education-card-header div { flex-direction: column; }
   .education-grid { grid-template-columns: 1fr; gap: 20px; } .education-grid .full { grid-column: auto; } .education-segmented { width: 100%; }
+  .experience-grid { grid-template-columns: 1fr; gap: 20px; } .experience-grid .full { grid-column: auto; } .period-field > div { gap: 10px; }
   .date-grid { grid-template-columns: 1fr; gap: 10px; } .segmented { width: 100%; } .save-row { min-height: 105px; } .save-button { width: 100%; }
   .education-form > .save-row { min-height: 82px; }
   .footer-links { grid-template-columns: 1fr 1fr; gap: 32px 20px; } .footer-bottom div { flex-wrap: wrap; gap: 12px 20px; }
