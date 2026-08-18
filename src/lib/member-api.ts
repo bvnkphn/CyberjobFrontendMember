@@ -51,6 +51,14 @@ export type MemberProfile = {
   completion: number;
   privacy: "public" | "private";
   updatedAt: string;
+  address: string | null;
+  personal: Record<string, unknown>;
+  desiredJob: Record<string, unknown>;
+  educations: Record<string, unknown> | unknown[];
+  workExperiences: Record<string, unknown> | unknown[];
+  certificates: Record<string, unknown> | unknown[];
+  languages: Record<string, unknown> | unknown[];
+  otherSkills: Record<string, unknown>;
 };
 
 export function getProfile() {

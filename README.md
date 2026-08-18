@@ -35,6 +35,8 @@ src/components/icons.tsx                   local SVG icon set
 
 หน้า Profile dashboard และการตั้งค่าบัญชีอยู่ที่ `http://localhost:3000/profile`
 
+หน้าตัวอย่าง Resume และการพิมพ์/บันทึก PDF อยู่ที่ `http://localhost:3000/profile/preview`
+
 Next.js frontend สำหรับสมาชิก ใช้ `NEXT_PUBLIC_API_URL` เชื่อมต่อ REST API
 
 ```bash
