@@ -26,14 +26,14 @@
 .settings-item > button svg { width: 19px; }
 .settings-item > button b { font-size: 17px; font-weight: 500; }
 .settings-item > button.danger { color: var(--red); }
-.settings-dropdown { padding: 22px; border-top: 1px solid var(--line); background: #fbfcff; animation: dropdown-open .18s ease-out; }
+.settings-dropdown { padding: 22px; border-top: 1px solid var(--line); background: #fbfcff; font-size: 13px; animation: dropdown-open .18s ease-out; }
 .settings-dropdown form { max-width: 680px; margin: auto; }
 @keyframes dropdown-open { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 .modal-options, .toggle-settings { margin: 0 0 18px; padding: 18px; border: 1px solid var(--line); border-radius: 8px; display: grid; gap: 10px; }
-.modal-options legend, .toggle-settings legend { padding: 0 6px; font-weight: 700; }
+.modal-options legend, .toggle-settings legend { padding: 0 6px; font-size: 13px; font-weight: 700; }
 .modal-options label { padding: 12px; border: 1px solid var(--line); border-radius: 7px; display: flex; gap: 10px; }
-.modal-options label span { display: grid; gap: 2px; }.modal-options small { color: #77818e; }
+.modal-options label span { display: grid; gap: 2px; }.modal-options strong { font-size: 13px; }.modal-options small { color: #77818e; font-size: 11px; }
 .toggle-settings label { display: flex; justify-content: space-between; gap: 16px; }.toggle-settings input { accent-color: var(--blue); }
 .modal-fields { display: grid; gap: 16px; }.modal-fields label { display: grid; gap: 7px; font-size: 13px; font-weight: 600; }.modal-fields input:not([type="checkbox"]) { height: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: 7px; }.modal-fields ul { margin: -4px 0 0; color: #697383; font-size: 12px; }.modal-fields a { color: var(--blue); font-size: 13px; }.modal-note { margin: 0; padding: 12px; border-radius: 7px; background: var(--blue-soft); color: #45617f; font-size: 12px; }.delete-warning > p { margin: 0; padding: 14px; border: 1px solid #ffd0d3; border-radius: 7px; background: #fff4f4; color: #9d2830; }.delete-confirm { display: flex !important; grid-template-columns: auto 1fr; align-items: flex-start; }.delete-confirm input { margin-top: 3px; }
-.settings-dropdown footer { margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--line); display: flex; justify-content: flex-end; gap: 10px; }.modal-cancel { min-height: 44px; padding: 0 20px; border: 1px solid var(--line); border-radius: 6px; background: #fff; cursor: pointer; }.delete-button { background: var(--red); }.modal-status { color: #087d4c; text-align: right; font-size: 13px; }
+.settings-dropdown footer { margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--line); display: flex; justify-content: flex-end; gap: 10px; }.settings-dropdown footer button { font-size: 13px; }.modal-cancel { min-height: 44px; padding: 0 20px; border: 1px solid var(--line); border-radius: 6px; background: #fff; cursor: pointer; }.delete-button { background: var(--red); }.modal-status { color: #087d4c; text-align: right; font-size: 13px; }
 @media (max-width: 620px) { .dashboard-page { padding: 34px 18px 70px; }.dashboard-heading h1 { font-size: 28px; }.dashboard-heading p { font-size: 13px; }.resume-summary-content { align-items: flex-start; gap: 18px; }.dashboard-ring { width: 82px; height: 82px; }.resume-actions { flex-direction: column; }.resume-actions a { justify-content: center; }.settings-dropdown { padding: 18px 14px; }.settings-dropdown footer { display: grid; }.settings-dropdown footer button { width: 100%; } }
