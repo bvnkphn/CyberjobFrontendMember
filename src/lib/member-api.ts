@@ -44,3 +44,15 @@ export function skipGate() {
 export function saveProfileSection(section: string, data: Record<string, unknown>) {
   return request(`/profile/${section}`, { method: "PATCH", body: JSON.stringify({ data }) });
 }
+
+export type MemberProfile = {
+  firstName: string | null;
+  lastName: string | null;
+  completion: number;
+  privacy: "public" | "private";
+  updatedAt: string;
+};
+
+export function getProfile() {
+  return request<MemberProfile>("/profile", { method: "GET" });
+}
