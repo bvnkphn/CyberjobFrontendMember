@@ -27,7 +27,8 @@ export function logout() {
 }
 
 export async function login(email: string, password: string) {
-  const response = await fetch(`${API_URL}/auth/login`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, password }) });
+  const isDevelopmentDemo = process.env.NODE_ENV === "development" && email.trim().toLowerCase() === "user@test.com" && password === "usertest555";
+  const response = await fetch(`${API_URL}${isDevelopmentDemo ? "/auth/demo" : "/auth/login"}`, { method: "POST", headers: { "Content-Type": "application/json" }, ...(isDevelopmentDemo ? {} : { body: JSON.stringify({ email, password }) }) });
   if (!response.ok) throw new Error("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
   const session = await response.json() as AuthSession;
   window.localStorage.setItem("accessToken", session.accessToken);
