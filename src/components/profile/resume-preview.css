@@ -1,4 +1,6 @@
 .resume-preview-page { min-height: 1100px; padding: 48px 24px 120px; background: #f4f6fa; }
+.resume-preview-layout { width: min(1100px, 100%); margin: auto; }
+.resume-preview-layout > .profile-page-heading { margin-bottom: 20px; }
 .resume-toolbar { width: min(900px,100%); margin: 0 auto 20px; display: flex; justify-content: flex-end; gap: 12px; }
 .resume-toolbar button { min-height: 40px; padding: 0 14px; border: 0; border-radius: 6px; background: transparent; color: #606a77; cursor: pointer; }
 .resume-toolbar button:hover { background: #e8edf5; color: var(--blue); }
@@ -12,4 +14,4 @@
 .resume-section { margin-bottom: 28px; }.resume-section h2 { margin: 0 0 12px; padding-bottom: 7px; border-bottom: 2px solid var(--navy); color: var(--navy); font-size: 17px; }.resume-section p { margin: 5px 0; color: #596473; font-size: 12px; line-height: 1.65; }.resume-section ul { margin: 0; padding-left: 18px; color: #596473; font-size: 12px; line-height: 1.8; }
 .resume-repeated { display: grid; gap: 15px; }.resume-repeated > div { display: grid; gap: 2px; }.resume-repeated strong { font-size: 13px; }.resume-repeated span { color: #697483; font-size: 11px; }.resume-repeated p { margin-top: 4px; }.resume-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; color: #596473; font-size: 12px; }
 @media (max-width: 700px) { .resume-preview-page { padding: 24px 12px 60px; }.resume-paper { min-height: auto; padding: 30px 22px; }.resume-header h1 { font-size: 25px; }.resume-avatar { width: 60px; height: 60px; }.resume-columns { grid-template-columns: 1fr; gap: 0; }.resume-columns > aside { padding: 0; border: 0; }.resume-facts { grid-template-columns: 1fr; } }
-@media print { @page { size: A4; margin: 0; } body { background: #fff !important; }.resume-site-shell > .site-header,.resume-site-shell > .site-footer,.resume-toolbar { display: none !important; }.resume-preview-page { min-height: auto; padding: 0; background: #fff; }.resume-paper { width: 210mm; min-height: 297mm; padding: 14mm 16mm; box-shadow: none; print-color-adjust: exact; -webkit-print-color-adjust: exact; } }
+@media print { @page { size: A4; margin: 0; } body { background: #fff !important; }.resume-site-shell > .site-header,.resume-site-shell > .site-footer,.resume-toolbar,.resume-preview-layout > .profile-page-heading { display: none !important; }.resume-preview-page { min-height: auto; padding: 0; background: #fff; }.resume-paper { width: 210mm; min-height: 297mm; padding: 14mm 16mm; box-shadow: none; print-color-adjust: exact; -webkit-print-color-adjust: exact; } }

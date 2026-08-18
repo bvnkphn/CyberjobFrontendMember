@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getProfile, type MemberProfile } from "@/lib/member-api";
 import { Icon } from "../icons";
+import { ProfilePageHeading } from "./profile-page-heading";
 import "./profile-editor.css";
 import "./resume-preview.css";
 
@@ -33,12 +34,14 @@ export function ResumePreview() {
 
   return (
     <main className="resume-preview-page">
-      <div className="resume-toolbar">
-        <button type="button" onClick={printResume}><span aria-hidden="true">⎙</span> พิมพ์</button>
-        <button type="button" onClick={printResume}><span aria-hidden="true">⇩</span> ดาวน์โหลดเป็น PDF</button>
-      </div>
+      <div className="resume-preview-layout">
+        <ProfilePageHeading title="ดู Resume" />
+        <div className="resume-toolbar">
+          <button type="button" onClick={printResume}><span aria-hidden="true">⎙</span> พิมพ์</button>
+          <button type="button" onClick={printResume}><span aria-hidden="true">⇩</span> ดาวน์โหลดเป็น PDF</button>
+        </div>
 
-      {loading ? <p className="resume-loading">กำลังโหลด Resume...</p> : (
+        {loading ? <p className="resume-loading">กำลังโหลด Resume...</p> : (
         <article className="resume-paper">
           <header className="resume-header">
             <div className="resume-avatar" aria-hidden="true">{fullName.charAt(0)}</div>
@@ -91,7 +94,8 @@ export function ResumePreview() {
             </section>
           </div>
         </article>
-      )}
+        )}
+      </div>
     </main>
   );
 }

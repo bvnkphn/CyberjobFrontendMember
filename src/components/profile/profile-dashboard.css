@@ -1,5 +1,5 @@
 .dashboard-page { min-height: 920px; padding: 90px 24px 130px; background: var(--background); }
-.dashboard-layout { max-width: 820px; margin: auto; display: grid; gap: 18px; }
+.dashboard-layout { max-width: 1100px; margin: auto; display: grid; gap: 18px; }
 .dashboard-layout > h1 { margin: 0 0 6px; color: var(--navy); font-size: 34px; }
 .dashboard-user-card, .resume-summary, .settings-card { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
 .dashboard-user-card { padding: 22px; display: flex; align-items: center; gap: 18px; }

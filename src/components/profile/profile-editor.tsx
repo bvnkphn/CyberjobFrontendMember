@@ -9,6 +9,7 @@ import { WorkExperienceForm } from "./work-experience-form";
 import { CertificateForm } from "./certificate-form";
 import { LanguageForm } from "./language-form";
 import { OtherSkillsForm } from "./other-skills-form";
+import { ProfilePageHeading } from "./profile-page-heading";
 import { formDataToObject, getProfile, saveProfileSection, type MemberProfile } from "@/lib/member-api";
 import "./profile-editor.css";
 
@@ -133,6 +134,7 @@ export function ProfileEditor() {
   return (
     <main className="profile-page">
       <div className="profile-layout">
+        <ProfilePageHeading title="แก้ไข Resume" />
         <aside className="profile-sidebar" aria-label="ส่วนของประวัติ">
           <section className="completion-card">
             <div className="completion-main">

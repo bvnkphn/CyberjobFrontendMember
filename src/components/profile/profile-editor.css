@@ -17,7 +17,13 @@
 .account-menu svg { width: 21px; }
 .account-menu .danger { color: var(--red); }
 .profile-page { min-height: 1000px; padding: 110px 32px 150px; }
-.profile-layout { max-width: 1240px; margin: auto; display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 26px; align-items: start; }
+.profile-layout { max-width: 1100px; margin: auto; display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 26px; align-items: start; }
+.profile-page-heading { grid-column: 1 / -1; min-height: 48px; display: flex; align-items: center; gap: 18px; }
+.profile-page-heading h1 { margin: 0; color: var(--navy); font-size: 34px; }
+.profile-page-heading button { min-height: 38px; padding: 0 13px; border: 1px solid var(--line); border-radius: 6px; display: inline-flex; align-items: center; gap: 7px; background: #fff; color: #536071; cursor: pointer; }
+.profile-page-heading button:hover { border-color: var(--blue); color: var(--blue); }
+.profile-form-area { min-width: 0; width: 100%; }
+.profile-form-area > form { width: 100%; }
 .profile-sidebar { display: grid; gap: 14px; }
 .completion-card { padding: 28px 20px 24px; text-align: center; color: #fff; background: var(--navy-dark); border-radius: var(--radius); }
 .completion-main { display: flex; align-items: center; justify-content: center; gap: 16px; }
