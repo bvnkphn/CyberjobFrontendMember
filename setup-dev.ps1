@@ -6,16 +6,16 @@ $backendPath = Join-Path (Split-Path $PSScriptRoot -Parent) "CyberJobBackendMemb
 $composeFile = Join-Path $backendPath "compose.yaml"
 
 function Require-Command([string]$name, [string]$help) {
-  if (-not (Get-Command $name -ErrorAction SilentlyContinue)) { throw "ไม่พบ $name - $help" }
+  if (-not (Get-Command $name -ErrorAction SilentlyContinue)) { throw "Missing $name - $help" }
 }
 
-Require-Command "node" "ติดตั้ง Node.js LTS ก่อนรันสคริปต์"
-Require-Command "npm" "ติดตั้ง npm ก่อนรันสคริปต์"
-Require-Command "docker" "ติดตั้งและเปิด Docker Desktop ก่อนรันสคริปต์"
-if (-not (Test-Path -LiteralPath $backendPath)) { throw "กรุณาวาง Frontend และ Backend ไว้ในโฟลเดอร์แม่เดียวกัน" }
+Require-Command "node" "install Node.js LTS first"
+Require-Command "npm" "install npm first"
+Require-Command "docker" "install and start Docker Desktop first"
+if (-not (Test-Path -LiteralPath $backendPath)) { throw "Frontend and Backend must be in the same parent directory" }
 
 docker info *> $null
-if ($LASTEXITCODE -ne 0) { throw "Docker Desktop ยังไม่พร้อม กรุณาเปิด Docker Desktop แล้วลองใหม่" }
+if ($LASTEXITCODE -ne 0) { throw "Docker Desktop is not ready. Start Docker Desktop and try again" }
 
 $backendEnv = Join-Path $backendPath ".env"
 if (-not (Test-Path -LiteralPath $backendEnv)) {
@@ -31,12 +31,12 @@ DEMO_ACCOUNT_ENABLED=true
 OAUTH_CLIENT_ID=
 OAUTH_CLIENT_SECRET=
 OAUTH_CALLBACK_URL=http://localhost:3003/api/v1/auth/oauth/callback
-"@ | Set-Content -LiteralPath $backendEnv -Encoding utf8
+"@ | Set-Content -LiteralPath $backendEnv -Encoding ascii
 }
 
 $frontendEnv = Join-Path $frontendPath ".env.local"
 if (-not (Test-Path -LiteralPath $frontendEnv)) {
-  "NEXT_PUBLIC_API_URL=http://localhost:3003/api/v1" | Set-Content -LiteralPath $frontendEnv -Encoding utf8
+  "NEXT_PUBLIC_API_URL=http://localhost:3003/api/v1" | Set-Content -LiteralPath $frontendEnv -Encoding ascii
 }
 
 if (-not $SkipInstall) {
@@ -55,7 +55,7 @@ for ($attempt = 1; $attempt -le 30; $attempt++) {
 }
 if (-not $backendReady) {
   docker compose -f $composeFile --project-directory $backendPath logs api --tail 80
-  throw "Backend ไม่พร้อมภายใน 60 วินาที กรุณาตรวจ log ด้านบน"
+  throw "Backend was not ready within 60 seconds. Review the logs above"
 }
 
 docker compose -f $composeFile --project-directory $backendPath exec -T api npm run migration:run
