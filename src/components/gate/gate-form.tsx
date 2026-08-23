@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { getProfile, saveGate, skipGate } from "@/lib/member-api";
 import "../profile/profile-editor.css";
-import "./gate.css";
+import "../gate/gate-form.css";
 
 const jobCategories = [
   "งานคอมพิวเตอร์/ไอที",

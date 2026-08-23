@@ -1,1 +1,34 @@
-{"name":"cyberjob-frontend-member","version":"0.1.0","private":true,"scripts":{"dev":"powershell -ExecutionPolicy Bypass -File ./setup-dev.ps1 -SkipInstall","dev:setup":"powershell -ExecutionPolicy Bypass -File ./setup-dev.ps1","dev:frontend":"next dev","dev:stop":"docker compose -f ../CyberJobBackendMember/compose.yaml --project-directory ../CyberJobBackendMember down","dev:logs":"docker compose -f ../CyberJobBackendMember/compose.yaml --project-directory ../CyberJobBackendMember logs -f api postgres","build":"next build","start":"next start","lint":"next lint"},"dependencies":{"html2canvas":"^1.4.1","jspdf":"^4.2.1","next":"^15.4.0","react":"^19.1.0","react-dom":"^19.1.0"},"devDependencies":{"@types/node":"^22.0.0","@types/react":"^19.0.0","@types/react-dom":"^19.0.0","eslint":"^9.0.0","eslint-config-next":"^15.4.0","typescript":"^5.8.0"}}
+{
+  "name": "cyberjob-frontend-member",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "powershell -ExecutionPolicy Bypass -File ./setup-dev.ps1 -SkipInstall",
+    "dev:setup": "powershell -ExecutionPolicy Bypass -File ./setup-dev.ps1",
+    "dev:frontend": "next dev",
+    "dev:stop": "docker compose -f ../CyberJobBackendMember/compose.yaml --project-directory ../CyberJobBackendMember down",
+    "dev:logs": "docker compose -f ../CyberJobBackendMember/compose.yaml --project-directory ../CyberJobBackendMember logs -f api postgres",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@react-oauth/google": "^0.13.5",
+    "axios": "^1.19.0",
+    "html2canvas": "^1.4.1",
+    "js-cookie": "^3.0.8",
+    "jspdf": "^4.2.1",
+    "next": "^15.4.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "^15.4.0",
+    "typescript": "^5.8.0"
+  }
+}

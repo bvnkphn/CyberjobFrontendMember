@@ -11,7 +11,7 @@ export function MemberRouteGuard({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     ensureDemoSession().finally(() => {
       if (hasAccessToken()) setReady(true);
-      else router.replace("/");
+      else router.replace("/gate/login");
     });
   }, [router]);
 

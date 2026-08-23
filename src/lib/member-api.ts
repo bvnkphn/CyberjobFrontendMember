@@ -36,13 +36,57 @@ export async function login(email: string, password: string) {
   return session;
 }
 
-export async function register(email: string, password: string) {
-  const response = await fetch(`${API_URL}/auth/register`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, password }) });
-  if (!response.ok) throw new Error("ไม่สามารถสมัครสมาชิกได้");
+// 1. อัปเดตฟังก์ชัน Register ใหม่
+export async function register(data: { email: string; password?: string; confirmPassword?: string; role: string; termsAccepted: boolean }) {
+  const response = await fetch(`${API_URL}/auth/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "ไม่สามารถสมัครสมาชิกได้");
+  }
+  return response.json(); // รีเทิร์นแค่ข้อความแจ้งเตือนให้ไปยืนยัน OTP
+}
+
+// 2. เพิ่มฟังก์ชัน Verify OTP (อันใหม่)
+export async function verifyOtp(email: string, otp: string) {
+  const response = await fetch(`${API_URL}/auth/verify-otp`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, otp }),
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "รหัส OTP ไม่ถูกต้อง");
+  }
   const session = await response.json() as AuthSession;
   window.localStorage.setItem("accessToken", session.accessToken);
+  window.localStorage.setItem("memberEmail", session.user.email);
   window.sessionStorage.removeItem("demoSessionDisabled");
   return session;
+}
+
+// 3. เพิ่มฟังก์ชัน ลืมรหัสผ่าน / ตั้งรหัสผ่านใหม่
+export async function forgotPassword(email: string) {
+  const response = await fetch(`${API_URL}/auth/forgot-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+  if (!response.ok) throw new Error("เกิดข้อผิดพลาดในการส่งอีเมล");
+  return response.json();
+}
+
+export async function resetPassword(token: string, newPassword: string) {
+  const response = await fetch(`${API_URL}/auth/reset-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token, newPassword }),
+  });
+  if (!response.ok) throw new Error("ไม่สามารถตั้งรหัสผ่านใหม่ได้ Token อาจหมดอายุ");
+  return response.json();
 }
 
 async function request<T>(path: string, init: RequestInit, retried = false): Promise<T> {
@@ -92,6 +136,17 @@ export function skipGate() {
 export function saveProfileSection(section: string, data: Record<string, unknown>) {
   return request(`/profile/${section}`, { method: "PATCH", body: JSON.stringify({ data }) });
 }
+
+export async function resendOtp(email: string) {
+  const response = await fetch(`${API_URL}/auth/resend-otp`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+  if (!response.ok) throw new Error("ไม่สามารถส่งรหัส OTP ใหม่ได้");
+  return response.json();
+}
+
 
 export type MemberProfile = {
   email: string | null;

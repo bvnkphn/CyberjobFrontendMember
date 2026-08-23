@@ -17,3 +17,318 @@ a { color: inherit; text-decoration: none; }
 .primary-button:active { transform: translateY(1px); box-shadow: 0 3px 8px rgb(52 121 237 / 20%); }
 .primary-button:focus-visible, button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid rgb(52 121 237 / 28%); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* Auth Layout & Card */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 160px); /* ลบความสูง Header/Footer ออกคร่าวๆ */
+  padding: 40px 20px;
+}
+
+.auth-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 48px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--line);
+}
+
+/* Typography Colors */
+.auth-title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 32px;
+}
+.text-blue { color: var(--blue); }
+.text-navy { color: var(--navy); }
+.text-blue-link { color: var(--blue); text-decoration: none; }
+.auth-link-bold { color: var(--blue-dark); font-weight: 700; text-decoration: none; }
+
+/* Inputs */
+.input-group {
+  margin-bottom: 20px;
+  position: relative;
+}
+.auth-input {
+  width: 100%;
+  height: 50px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 15px;
+  color: var(--ink);
+  transition: border-color 0.2s;
+}
+.auth-input:focus {
+  border-color: var(--blue);
+  outline: none;
+}
+.icon-btn {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+}
+
+/* Checkbox */
+.checkbox-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 28px;
+  font-size: 14px;
+  color: var(--muted);
+}
+.checkbox-group input[type="checkbox"] {
+  margin-top: 4px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* Button & Error */
+.auth-btn {
+  width: 100%;
+  background-color: #172b85; /* สีน้ำเงินเข้มตาม Figma */
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  padding: 14px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s;
+}
+.auth-btn:hover { background-color: var(--navy); }
+.auth-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+.auth-footer {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 15px;
+  color: var(--muted);
+}
+.error-message {
+  background: #ffe5e5;
+  color: var(--red);
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: center;
+}
+/* ปุ่ม Log in สไตล์ Figma */
+.login-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 24px;
+  border: 1px solid var(--blue);
+  color: var(--blue);
+  border-radius: 20px; /* ขอบมนตามรูป */
+  font-weight: 600;
+  font-size: 15px;
+  background: transparent;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.login-btn-outline:hover {
+  background: var(--blue-soft);
+}
+
+/* OTP & Success UI Styles */
+.flex-col-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.success-icon-wrap {
+  width: 80px;
+  height: 80px;
+  background-color: #e6f9f0; /* สีเขียวอ่อน */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.success-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 12px 0;
+}
+
+.success-subtitle {
+  font-size: 16px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Utilities */
+.text-center { text-align: center; }
+.text-muted { color: var(--muted); }
+.mb-6 { margin-bottom: 24px; }
+.mt-6 { margin-top: 24px; }
+.text-lg { font-size: 18px; }
+.tracking-widest { letter-spacing: 0.25em; font-weight: 600; }
+
+.otp-container {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.otp-box {
+  width: 50px;
+  height: 56px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background-color: #fff;
+  transition: all 0.2s ease;
+}
+
+.otp-box:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(52, 121, 237, 0.15);
+  outline: none;
+}
+
+/* Utilities เพิ่มเติม */
+.font-bold { font-weight: 700; }
+.hover\:underline:hover { text-decoration: underline; }
+.bg-transparent { background: transparent; }
+.border-none { border: none; }
+.cursor-pointer { cursor: pointer; }
+.p-0 { padding: 0; }
+
+/* --- Login Specific Styles --- */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 480px; /* ขนาดกว้างพอดีกับ Card */
+}
+
+/* Tabs */
+.auth-tabs {
+  display: flex;
+  width: 100%;
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+}
+
+.auth-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.auth-tab.active {
+  background-color: #cde4ff; /* สีฟ้าอ่อน ตามภาพ */
+  color: var(--navy);
+}
+
+.auth-tab:not(.active) {
+  background-color: #e2e8f0; /* สีเทาอ่อน ตามภาพ */
+  color: #64748b;
+}
+
+.auth-tab .mr-2 {
+  margin-right: 8px;
+}
+
+/* Card when using Tabs */
+.auth-card.has-tabs {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  margin-top: 0; /* ลบ margin เพื่อให้ชิดกับ Tab */
+}
+
+/* Divider (หรือ) */
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 24px 0;
+  color: var(--muted);
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid var(--line);
+}
+
+.divider span {
+  padding: 0 12px;
+  font-size: 14px;
+}
+
+/* Google Button */
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 14px;
+  background-color: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background-color 0.2s;
+  gap: 12px;
+}
+
+.google-btn:hover {
+  background-color: #f1f5f9;
+}
+
+.gap-4 {
+  gap: 16px;
+}
+
+/* Helper Text Styles */
+.input-group-with-helper {
+  margin-bottom: 20px;
+}
+.input-group-with-helper .mb-1 {
+  margin-bottom: 4px;
+}
+.input-helper {
+  font-size: 12px;
+  color: #64748b; /* สีเทาอ่อน */
+  margin: 0;
+  padding-left: 4px;
+}
