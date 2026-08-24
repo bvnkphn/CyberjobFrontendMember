@@ -1,0 +1,171 @@
+/* ═══════════════════════════════════════════════════════════════════
+   สมัครงาน – ตรวจสอบ & ส่ง (Step 3)
+   Standalone page — matches CyberJob component style
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Navbar ────────────────────────────────────────────────────── */
+.s3-navbar { height: 72px; background: #fff; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 30; }
+.s3-navbar-inner { max-width: 1440px; height: 100%; margin: auto; padding: 0 48px; display: flex; align-items: center; gap: 40px; }
+.s3-nav-brand { color: var(--navy); font-size: 22px; font-weight: 800; letter-spacing: -.04em; white-space: nowrap; }
+.s3-nav-brand span { color: #ffc400; }
+.s3-nav-links { margin-left: auto; display: flex; align-items: center; gap: 28px; font-size: 14px; }
+.s3-nav-links a { color: var(--ink); transition: color .15s; }
+.s3-nav-links a:hover { color: var(--blue); }
+.s3-nav-lang { display: flex; align-items: center; gap: 3px; border: 0; background: transparent; color: inherit; font-size: 14px; cursor: pointer; }
+.s3-nav-lang svg { width: 14px; }
+.s3-nav-profile { position: relative; }
+.s3-nav-avatar { width: 38px; height: 38px; border: 1px solid #b9c0ca; border-radius: 50%; background: #fff; display: grid; place-items: center; cursor: pointer; transition: border-color .15s; }
+.s3-nav-avatar:hover { border-color: var(--blue); }
+.s3-nav-avatar svg { width: 20px; color: #536071; }
+.s3-nav-dropdown { position: absolute; top: 46px; right: 0; min-width: 230px; padding: 8px 0; background: #fff; border-radius: 8px; box-shadow: 0 12px 36px rgb(12 28 66 / 18%); z-index: 40; }
+.s3-nav-dropdown-header { padding: 12px 20px 14px; border-bottom: 1px solid #ececec; }
+.s3-nav-dropdown-header strong { display: block; color: var(--navy); font-size: 14px; }
+.s3-nav-dropdown-header small { color: var(--muted); font-size: 12px; }
+.s3-nav-dropdown a { display: flex; align-items: center; gap: 14px; padding: 0 20px; height: 46px; color: var(--ink); font-size: 14px; transition: background .1s; }
+.s3-nav-dropdown a:hover { background: #f5f7fb; }
+.s3-nav-dropdown a svg { width: 20px; flex-shrink: 0; }
+.s3-nav-dropdown hr { margin: 4px 0; border: 0; border-top: 1px solid #ececec; }
+.s3-nav-dropdown a.danger { color: var(--red); }
+.s3-mobile-toggle { display: none; width: 38px; height: 38px; border: 1px solid #b9c0ca; border-radius: 6px; background: #fff; cursor: pointer; margin-left: auto; }
+
+/* ── Header / Job card ─────────────────────────────────────────── */
+.s3-header { max-width: 820px; margin: 0 auto; padding: 28px 32px 0; }
+.s3-back { display: inline-flex; align-items: center; gap: 6px; color: #536071; font-size: 15px; font-weight: 500; border: 0; background: transparent; cursor: pointer; padding: 6px 0; margin-bottom: 16px; }
+.s3-back:hover { color: var(--blue); }
+.s3-back svg { width: 20px; transition: transform .15s; }
+.s3-back:hover svg { transform: translateX(-3px); }
+.s3-job-card { padding: 22px 26px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; display: flex; align-items: center; gap: 18px; box-shadow: 0 6px 20px rgb(17 28 67 / 5%); }
+.s3-job-eyebrow { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+.s3-job-logo { width: 56px; height: 56px; border-radius: 14px; background: var(--blue-soft); color: var(--blue); display: grid; place-items: center; font-size: 24px; font-weight: 800; flex-shrink: 0; }
+.s3-job-text h1 { margin: 0; color: var(--navy); font-size: 20px; font-weight: 700; }
+.s3-job-text .s3-job-company { margin: 3px 0 0; color: var(--muted); font-size: 13px; }
+.s3-job-text .s3-job-location { margin: 2px 0 0; color: var(--muted); font-size: 12px; display: flex; align-items: center; gap: 4px; }
+.s3-job-text .s3-job-location svg { width: 13px; }
+
+/* ── Step indicator ────────────────────────────────────────────── */
+.s3-steps { max-width: 820px; margin: 28px auto 0; padding: 0 32px; display: flex; justify-content: center; }
+.s3-steps-track { display: flex; align-items: flex-start; gap: 0; position: relative; width: 100%; }
+.s3-step { display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; flex: 1; min-width: 100px; }
+.s3-step-circle { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-size: 14px; font-weight: 800; position: relative; z-index: 1; transition: all .2s; }
+.s3-step-circle.pending { background: #dfe5ee; color: #718096; }
+.s3-step-circle.done { background: var(--green); color: #fff; }
+.s3-step-circle.active {
+  background: var(--navy);
+  color: #fff;
+  box-shadow:
+    0 0 0 4px rgb(52 121 237 / 30%),
+    0 4px 14px rgb(6 21 79 / 30%);
+}
+.s3-step-text { font-size: 13px; font-weight: 500; color: #758090; text-align: center; }
+.s3-step.active .s3-step-text { color: var(--navy); font-weight: 700; }
+.s3-step.done .s3-step-text { color: var(--green); }
+.s3-step-line { position: absolute; top: 18px; left: calc(50% + 22px); right: calc(-50% + 22px); height: 3px; border-radius: 2px; background: #dfe5ee; z-index: 0; }
+.s3-step-line.done { background: var(--green); }
+.s3-step:last-child .s3-step-line { display: none; }
+
+/* ── Main card ─────────────────────────────────────────────────── */
+.s3-main { max-width: 820px; margin: 24px auto 0; padding: 0 32px 80px; }
+.s3-card { padding: 36px 40px 32px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; box-shadow: 0 8px 30px rgb(17 28 67 / 5%); }
+.s3-card h2 { margin: 0 0 4px; color: var(--navy); font-size: 22px; }
+.s3-card .s3-card-desc { margin: 0 0 28px; color: var(--muted); font-size: 14px; }
+
+/* ── Section cards ─────────────────────────────────────────────── */
+.s3-section { margin-bottom: 20px; padding: 22px 24px; border: 1px solid var(--line); border-radius: 10px; background: #fafbfc; }
+.s3-section:last-of-type { margin-bottom: 0; }
+.s3-section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.s3-section-title-row { display: flex; align-items: center; gap: 10px; }
+.s3-section-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--blue-soft); color: var(--blue); display: grid; place-items: center; flex-shrink: 0; }
+.s3-section-icon svg { width: 18px; }
+.s3-section-header h3 { margin: 0; color: var(--navy); font-size: 16px; font-weight: 700; }
+.s3-section-edit { border: 0; background: transparent; color: var(--blue); font-size: 13px; font-weight: 600; cursor: pointer; padding: 4px 0; }
+.s3-section-edit:hover { text-decoration: underline; }
+
+/* ── Resume card body ──────────────────────────────────────────── */
+.s3-resume-body { display: flex; align-items: center; gap: 14px; padding: 16px; background: #fff; border: 1px solid var(--line); border-radius: 8px; }
+.s3-pdf-icon { width: 44px; height: 52px; border-radius: 8px; background: #e8f0fe; color: var(--blue); display: grid; place-items: center; flex-shrink: 0; }
+.s3-pdf-icon svg { width: 24px; }
+.s3-resume-info { display: flex; flex-direction: column; gap: 2px; }
+.s3-resume-info strong { color: var(--ink); font-size: 14px; }
+.s3-resume-info small { color: var(--muted); font-size: 12px; }
+
+/* ── Answer list ───────────────────────────────────────────────── */
+.s3-answer-list { display: flex; flex-direction: column; }
+.s3-answer-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f0f2f6; gap: 16px; }
+.s3-answer-row:last-child { border-bottom: 0; padding-bottom: 0; }
+.s3-answer-label { font-size: 14px; color: var(--muted); font-weight: 500; flex-shrink: 0; }
+.s3-answer-value { font-size: 14px; color: var(--ink); font-weight: 600; text-align: right; word-break: break-word; }
+.s3-answer-value.empty { color: #aab2c0; font-weight: 400; font-style: italic; }
+
+/* ── Consent checkbox ──────────────────────────────────────────── */
+.s3-consent-wrap { margin-top: 28px; }
+.s3-consent-label { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; user-select: none; }
+.s3-checkbox {
+  width: 22px; height: 22px; border-radius: 5px; border: 2px solid #b0bac9;
+  display: grid; place-items: center; flex-shrink: 0; margin-top: 1px;
+  transition: all .15s; color: #fff; font-size: 13px; background: #fff;
+}
+.s3-consent-label.checked .s3-checkbox {
+  border-color: var(--green); background: var(--green);
+}
+.s3-checkbox svg { width: 14px; }
+.s3-checkbox-input { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.s3-consent-text { font-size: 14px; color: var(--ink); line-height: 1.6; }
+
+/* ── Bottom actions ────────────────────────────────────────────── */
+.s3-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 28px; padding-top: 22px; border-top: 1px solid var(--line); }
+.s3-outline-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 20px; border: 1px solid #cfd5de; border-radius: 8px; background: #fff; color: #576170; font-size: 14px; font-weight: 500; cursor: pointer; transition: border-color .15s, color .15s; text-decoration: none; }
+.s3-outline-btn:hover { border-color: var(--blue); color: var(--blue); }
+.s3-outline-btn svg { width: 18px; }
+.s3-submit-btn { min-width: 140px; }
+.s3-submit-btn:disabled { background: #aeb8c7; cursor: not-allowed; box-shadow: none; }
+
+/* ── Success state ─────────────────────────────────────────────── */
+.s3-success-wrap { display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 72px - 200px); }
+.s3-success { text-align: center; padding: 60px 40px; }
+.s3-success-icon { width: 80px; height: 80px; border-radius: 50%; background: #f0fdf4; color: var(--green); display: grid; place-items: center; margin: 0 auto 24px; }
+.s3-success-icon svg { width: 40px; }
+.s3-success h2 { margin: 0 0 8px; color: var(--navy); font-size: 24px; }
+.s3-success-job { margin: 0 0 8px; color: var(--muted); font-size: 14px; }
+.s3-success-job strong { color: var(--ink); }
+.s3-success p { margin: 0 0 8px; color: var(--muted); font-size: 15px; line-height: 1.6; }
+.s3-success-actions { margin-top: 32px; display: flex; justify-content: center; gap: 12px; }
+
+/* ── Footer ────────────────────────────────────────────────────── */
+.s3-footer { background: linear-gradient(135deg, #1738be, #08175e); color: #fff; }
+.s3-footer-main { max-width: 1440px; margin: auto; padding: 60px 65px 48px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 80px; }
+.s3-footer-brand { color: #fff; font-size: 22px; font-weight: 800; letter-spacing: -.04em; display: inline-block; margin-bottom: 14px; }
+.s3-footer-brand span { color: #ffc400; }
+.s3-footer-about p { line-height: 1.7; color: #eef2ff; font-size: 14px; }
+.s3-footer-links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; }
+.s3-footer-col { display: flex; flex-direction: column; gap: 8px; }
+.s3-footer-col strong { margin-bottom: 2px; font-size: 14px; }
+.s3-footer-col a { color: #eef2ff; font-size: 13px; }
+.s3-footer-col a:hover { text-decoration: underline; }
+.s3-footer-bottom { padding: 14px 65px; border-top: 1px solid rgb(255 255 255 / 20%); display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #c5cdf8; }
+.s3-footer-bottom-links { display: flex; gap: 24px; }
+.s3-footer-bottom-links a { color: #c5cdf8; }
+.s3-footer-bottom-links a:hover { color: #fff; }
+
+/* ── Responsive ────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .s3-navbar-inner { padding: 0 20px; gap: 12px; }
+  .s3-mobile-toggle { display: grid; }
+  .s3-nav-links { display: none; position: absolute; top: 72px; left: 0; right: 0; padding: 16px 20px 22px; background: #fff; box-shadow: 0 10px 20px rgb(10 30 60 / 10%); flex-direction: column; align-items: stretch; gap: 0; z-index: 30; }
+  .s3-nav-links.is-open { display: flex; }
+  .s3-nav-links a, .s3-nav-lang { min-height: 44px; border-bottom: 1px solid #edf0f4; }
+  .s3-footer-main { padding: 48px 28px; grid-template-columns: 1fr; gap: 36px; }
+  .s3-footer-bottom { padding: 16px 28px; flex-direction: column; gap: 12px; }
+}
+@media (max-width: 620px) {
+  .s3-header { padding: 20px 18px 0; }
+  .s3-job-card { padding: 16px; gap: 14px; flex-wrap: wrap; }
+  .s3-steps { padding: 0 18px; }
+  .s3-main { padding: 0 18px 60px; }
+  .s3-card { padding: 24px 18px 22px; }
+  .s3-answer-row { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .s3-actions { flex-direction: column-reverse; gap: 12px; }
+  .s3-success { padding: 40px 20px; }
+  .s3-success-actions { flex-direction: column; align-items: center; }
+  .s3-footer-links { grid-template-columns: 1fr 1fr; gap: 28px 16px; }
+  .s3-footer-bottom-links { flex-wrap: wrap; gap: 10px 16px; }
+}
