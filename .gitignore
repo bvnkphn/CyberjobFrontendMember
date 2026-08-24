@@ -4,3 +4,4 @@ node_modules/
 !.env.example
 npm-debug.log*
 .npm-cache/
+.npm/
