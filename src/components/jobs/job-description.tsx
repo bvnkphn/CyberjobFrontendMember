@@ -31,7 +31,7 @@ export function JobDescription() {
           <small className="posted">ลงประกาศเมื่อ 13 วันที่แล้ว</small>
           <div className="job-actions">
             <button className="apply-button" type="button" onClick={() => setApplied(true)}>{applied ? "สมัครแล้ว" : "สมัคร"}</button>
-            <button className={`save-button ${saved ? "is-saved" : ""}`} type="button" onClick={() => setSaved(!saved)}>{saved ? "บันทึกแล้ว" : "บันทึก"}</button>
+            <button className={`job-save-button ${saved ? "is-saved" : ""}`} type="button" onClick={() => setSaved(!saved)}>{saved ? "บันทึกแล้ว" : "บันทึก"}</button>
           </div>
         </header>
 
