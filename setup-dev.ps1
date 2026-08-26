@@ -3,27 +3,18 @@ param([switch]$SkipInstall)
 $ErrorActionPreference = "Stop"
 $frontendPath = $PSScriptRoot
 $backendPath = Join-Path (Split-Path $PSScriptRoot -Parent) "CyberJobBackendMember"
-$composeFile = Join-Path $backendPath "compose.yaml"
+$composeFile = Join-Path $backendPath "docker-compose.yml"
 
 function Require-Command([string]$name, [string]$help) {
   if (-not (Get-Command $name -ErrorAction SilentlyContinue)) { throw "Missing $name - $help" }
 }
 
 function Test-DockerEngine {
-  $stdout = [System.IO.Path]::GetTempFileName()
-  $stderr = [System.IO.Path]::GetTempFileName()
   try {
-    $process = Start-Process -FilePath "docker" -ArgumentList @("info", "--format", "{{.ServerVersion}}") -NoNewWindow -PassThru -RedirectStandardOutput $stdout -RedirectStandardError $stderr
-    if (-not $process.WaitForExit(4000)) {
-      $process.Kill()
-      $process.WaitForExit()
-      return $false
-    }
-    return $process.ExitCode -eq 0
+    docker info --format "{{.ServerVersion}}" *> $null
+    return $LASTEXITCODE -eq 0
   } catch {
     return $false
-  } finally {
-    Remove-Item -LiteralPath $stdout, $stderr -Force -ErrorAction SilentlyContinue
   }
 }
 
@@ -82,22 +73,22 @@ $backendEnv = Join-Path $backendPath ".env"
 if (-not (Test-Path -LiteralPath $backendEnv)) {
   @"
 NODE_ENV=development
-PORT=3003
-DATABASE_URL=postgresql://cyberjob:change-me@postgres:5432/cyberjob_member
-DB_SSL=false
-CORS_ORIGIN=http://localhost:3000
-JWT_SECRET=cyberjob-development-secret-change-before-production
-JWT_EXPIRES_IN_SECONDS=86400
-DEMO_ACCOUNT_ENABLED=true
-OAUTH_CLIENT_ID=
-OAUTH_CLIENT_SECRET=
-OAUTH_CALLBACK_URL=http://localhost:3003/api/v1/auth/oauth/callback
+PORT=4000
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/cyberjob?schema=public
+WEB_ORIGIN=http://localhost:3000
+JWT_ACCESS_SECRET=change-me-access-secret
+JWT_ACCESS_TTL=15m
+JWT_REFRESH_TTL_DAYS=30
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_CALLBACK_URL=http://localhost:4000/api/auth/google/callback
+OAUTH_SUCCESS_REDIRECT=http://localhost:3000/auth/callback
 "@ | Set-Content -LiteralPath $backendEnv -Encoding ascii
 }
 
 $frontendEnv = Join-Path $frontendPath ".env.local"
 if (-not (Test-Path -LiteralPath $frontendEnv)) {
-  "NEXT_PUBLIC_API_URL=http://localhost:3003/api/v1" | Set-Content -LiteralPath $frontendEnv -Encoding ascii
+  "NEXT_PUBLIC_API_URL=http://localhost:4000/api" | Set-Content -LiteralPath $frontendEnv -Encoding ascii
 }
 
 if (-not $SkipInstall) {
@@ -108,7 +99,7 @@ if (-not $SkipInstall) {
 Write-Host "Starting PostgreSQL and Backend..." -ForegroundColor Cyan
 docker compose -f $composeFile --project-directory $backendPath up --build -d
 
-$healthUrl = "http://localhost:3003/api/v1/health"
+$healthUrl = "http://localhost:4000/api/jobs"
 $backendReady = $false
 for ($attempt = 1; $attempt -le 30; $attempt++) {
   try { Invoke-RestMethod -Uri $healthUrl -TimeoutSec 2 | Out-Null; $backendReady = $true; break }
@@ -119,7 +110,6 @@ if (-not $backendReady) {
   throw "Backend was not ready within 60 seconds. Review the logs above"
 }
 
-docker compose -f $composeFile --project-directory $backendPath exec -T api ./node_modules/.bin/typeorm migration:run -d dist/typeorm.config.js
 Write-Host "Ready: http://localhost:3000 (Demo account is automatic until Logout)" -ForegroundColor Green
 Write-Host "Press Ctrl+C to stop Frontend; Docker services remain running"
 Set-Location -LiteralPath $frontendPath
