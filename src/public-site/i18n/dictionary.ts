@@ -144,7 +144,7 @@ export const DICT = {
       'เราคือแพลตฟอร์มที่มุ่งเชื่อมโยงคนหางานเข้ากับองค์กรชั้นนำ ด้วยเทคโนโลยีที่ทันสมัยและการคัดกรองที่แม่นยำ เพื่อให้ทั้งผู้สมัครและผู้ประกอบการ "สมที่ใจ" ในเวลาที่รวดเร็วที่สุด',
     'about.body2':
       'ไม่ว่าคุณจะกำลังมองหางานใหม่หรือเพิ่งเริ่มต้นเส้นทางอาชีพ CyberJob พร้อมเป็นส่วนหนึ่งของความสำเร็จของคุณ',
-    'about.trusted': 'บริษัทที่ไว้วางใจเรา',
+    'about.trusted': 'พันธมิตรของเรา',
     'employer.title': 'กำลังมองหาบุคลากรคุณภาพอยู่ใช่ไหม?',
     'employer.body':
       'เข้าถึงฐานข้อมูลผู้สมัครหลากหลายสาขาอาชีพ ลงประกาศงานและจัดการผู้สมัครได้ในที่เดียว',
@@ -325,7 +325,7 @@ export const DICT = {
       'We connect job seekers with leading organisations through modern technology and precise matching, so both candidates and employers find the right fit faster.',
     'about.body2':
       'Whether you are looking for a new role or just starting your career, CyberJob is here to be part of your success.',
-    'about.trusted': 'Companies that trust us',
+    'about.trusted': 'Our partner',
     'employer.title': 'Looking for quality talent?',
     'employer.body':
       'Reach candidates across every field. Post jobs and manage applicants in one place.',
@@ -370,4 +370,3 @@ export const DICT = {
 } as const;
 
 export type DictKey = keyof (typeof DICT)['th'];
-

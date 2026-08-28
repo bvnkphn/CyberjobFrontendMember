@@ -80,17 +80,8 @@ export function ResumeAccountSection() {
 /* 3. About Us + บริษัทที่ไว้วางใจเรา                                  */
 /* ---------------------------------------------------------------- */
 
-const TRUSTED = [
-  'COMPANY 1',
-  'COMPANY 2',
-  'COMPANY 3',
-  'COMPANY 4',
-  'COMPANY 5',
-  'COMPANY 6',
-];
-
 export function AboutSection() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
 
   return (
     <section className="bg-white">
@@ -111,16 +102,20 @@ export function AboutSection() {
         <h3 className="text-center text-lg font-bold sm:text-xl">
           {t('about.trusted')}
         </h3>
-        <ul className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-          {TRUSTED.map((name) => (
-            <li
-              key={name}
-              className="flex h-14 items-center justify-center rounded-lg bg-brand-50 text-xs font-semibold tracking-wide text-brand-300"
-            >
-              {name}
-            </li>
-          ))}
-        </ul>
+        <a
+          href="https://cyberpay.asia/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mx-auto mt-6 flex max-w-md items-center justify-between gap-5 rounded-2xl border border-brand-100 bg-brand-50 px-6 py-5 transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-pop"
+          aria-label="CyberPay official website"
+        >
+          <span className="text-xl font-extrabold tracking-tight text-brand-900">
+            CYBER<span className="text-accent-500">PAY</span>
+          </span>
+          <span className="text-right text-xs font-semibold text-slate-500 sm:text-sm">
+            {lang === 'en' ? 'Official technology partner' : 'พันธมิตรด้านเทคโนโลยีอย่างเป็นทางการ'}
+          </span>
+        </a>
       </div>
     </section>
   );
