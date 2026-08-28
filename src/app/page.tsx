@@ -1,4 +1,3 @@
-import { AuthProvider } from "@/public-site/auth/AuthProvider";
 import { ContactSupportBand } from "@/public-site/components/ContactSupport";
 import { Footer } from "@/public-site/components/Footer";
 import {
@@ -20,21 +19,19 @@ export default async function HomePage() {
 
   return (
     <LanguageProvider>
-      <AuthProvider>
-        <div className="flex min-h-screen flex-col">
-          <Navbar />
-          <main className="flex-1">
-            <HeroSection />
-            <ResumeAccountSection />
-            <AboutSection />
-            <EmployerCta />
-            <RecommendedJobs jobs={recommended} />
-            <ArticlesSection />
-          </main>
-          <ContactSupportBand />
-          <Footer />
-        </div>
-      </AuthProvider>
+      <div className="flex min-h-screen flex-col">
+        <Navbar />
+        <main className="flex-1">
+          <HeroSection />
+          <ResumeAccountSection />
+          <AboutSection />
+          <EmployerCta />
+          <RecommendedJobs jobs={recommended} />
+          <ArticlesSection />
+        </main>
+        <ContactSupportBand />
+        <Footer />
+      </div>
     </LanguageProvider>
   );
 }

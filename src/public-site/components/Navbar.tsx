@@ -7,7 +7,6 @@ import { useI18n } from '@/public-site/i18n/LanguageProvider';
 import type { DictKey } from '@/public-site/i18n/dictionary';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { Logo } from './Logo';
-import { UserMenu } from './UserMenu';
 import { CloseIcon } from './Icons';
 
 /** เมนูหลักตาม Feature 3.4 – มีอยู่ทุกหน้า */
@@ -59,8 +58,6 @@ export function Navbar() {
           <div className="hidden sm:block">
             <LanguageSwitcher />
           </div>
-          <UserMenu />
-
           <button
             type="button"
             aria-label={t('nav.menu')}
