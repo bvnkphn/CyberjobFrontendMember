@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from "@/public-site/lib/api";
+import { apiGet, apiPatch, apiPost } from "@/public-site/lib/api";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 
@@ -139,7 +139,7 @@ export function skipGate() {
 }
 
 export function saveProfileSection(section: string, data: Record<string, unknown>) {
-  return request(`/profile/${section}`, { method: "PATCH", body: JSON.stringify({ data }) });
+  return apiPatch<{ section: string; data: Record<string, unknown>; completion: number; updatedAt: string }>(`/profile/${section}`, { data });
 }
 
 export type MemberProfile = {

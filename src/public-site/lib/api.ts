@@ -9,6 +9,7 @@ export const API_BASE =
   process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') ?? 'http://localhost:4000/api';
 
 const TOKEN_KEY = 'cyberjob.accessToken';
+const LEGACY_TOKEN_KEY = 'accessToken';
 
 let accessToken: string | null = null;
 
@@ -18,6 +19,7 @@ export function setAccessToken(token: string | null): void {
   try {
     if (token) window.localStorage.setItem(TOKEN_KEY, token);
     else window.localStorage.removeItem(TOKEN_KEY);
+    window.localStorage.removeItem(LEGACY_TOKEN_KEY);
   } catch {
     /* โหมดส่วนตัวของเบราว์เซอร์อาจปิด storage ไว้ */
   }
@@ -28,6 +30,15 @@ export function getAccessToken(): string | null {
   if (typeof window === 'undefined') return null;
   try {
     accessToken = window.localStorage.getItem(TOKEN_KEY);
+    // Older gate/profile screens used a different key. Migrate an existing
+    // session so every API call uses the same authentication source.
+    if (!accessToken) {
+      accessToken = window.localStorage.getItem(LEGACY_TOKEN_KEY);
+      if (accessToken) {
+        window.localStorage.setItem(TOKEN_KEY, accessToken);
+        window.localStorage.removeItem(LEGACY_TOKEN_KEY);
+      }
+    }
   } catch {
     accessToken = null;
   }
@@ -172,6 +183,19 @@ export function apiPost<T>(
   return request<T>(path, {
     ...init,
     method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...(init?.headers ?? {}) },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+}
+
+export function apiPatch<T>(
+  path: string,
+  body?: unknown,
+  init?: RequestOptions,
+): Promise<T> {
+  return request<T>(path, {
+    ...init,
+    method: 'PATCH',
     headers: { 'Content-Type': 'application/json', ...(init?.headers ?? {}) },
     body: body === undefined ? undefined : JSON.stringify(body),
   });
