@@ -4,7 +4,7 @@
 
 :root {
   --font-body: 'Noto Sans Thai', 'IBM Plex Sans Thai', sans-serif;
-  --font-display: 'Prompt', 'Noto Sans Thai', sans-serif;
+  --font-display: 'Noto Sans Thai', 'IBM Plex Sans Thai', sans-serif;
 }
 
 @layer base {
@@ -84,4 +84,3 @@
 .scroll-slim::-webkit-scrollbar-track {
   background: transparent;
 }
-
