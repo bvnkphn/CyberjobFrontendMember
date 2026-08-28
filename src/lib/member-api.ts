@@ -1,3 +1,5 @@
+import { apiGet, apiPost } from "@/public-site/lib/api";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 
 export class ApiError extends Error {
@@ -129,11 +131,11 @@ export function formDataToObject(form: HTMLFormElement) {
 }
 
 export function saveGate(data: Record<string, unknown>) {
-  return request("/gate", { method: "POST", body: JSON.stringify(data) });
+  return apiPost<{ ok: true; gateCompleted: true }>("/gate", data);
 }
 
 export function skipGate() {
-  return request("/gate/skip", { method: "POST", body: JSON.stringify({ privacy: "private" }) });
+  return apiPost<{ ok: true; gateCompleted: true }>("/gate/skip", { privacy: "private" });
 }
 
 export function saveProfileSection(section: string, data: Record<string, unknown>) {
@@ -159,7 +161,7 @@ export type MemberProfile = {
 };
 
 export function getProfile() {
-  return request<MemberProfile>("/profile", { method: "GET" });
+  return apiGet<MemberProfile>("/profile");
 }
 
 /* ── Application types ───────────────────────────────────────────── */

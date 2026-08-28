@@ -23,6 +23,9 @@ export function GateForm() {
   const { refreshUser } = useAuth();
   const [privacy, setPrivacy] = useState<"public" | "private">("public");
   const [status, setStatus] = useState<"idle" | "saved" | "skipped">("idle");
+  const [loadingProfile, setLoadingProfile] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     getProfile().then((profile) => {
@@ -40,12 +43,17 @@ export function GateForm() {
         if ((field instanceof HTMLInputElement || field instanceof HTMLSelectElement || field instanceof HTMLTextAreaElement) && value != null) field.value = String(value);
       }
       setPrivacy(profile.privacy);
-    }).catch(() => undefined);
+    }).catch((reason) => {
+      setError(reason instanceof Error ? reason.message : "โหลดข้อมูลโปรไฟล์ไม่สำเร็จ");
+    }).finally(() => setLoadingProfile(false));
   }, []);
 
-  // UX-only interaction: replace with the onboarding API mutation later.
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
+    setError("");
+    setStatus("idle");
     const formData = new FormData(event.currentTarget);
     const categories = [formData.get("jobCategory1"), formData.get("jobCategory2")].filter(Boolean);
     try {
@@ -60,18 +68,26 @@ export function GateForm() {
       await refreshUser();
       router.replace("/");
     } catch (error) {
-      window.alert(error instanceof Error ? error.message : "บันทึกข้อมูลไม่สำเร็จ");
+      setError(error instanceof Error ? error.message : "บันทึกข้อมูลไม่สำเร็จ");
+    } finally {
+      setSubmitting(false);
     }
   };
 
   const skip = async () => {
+    if (submitting) return;
+    setSubmitting(true);
+    setError("");
+    setStatus("idle");
     try {
       await skipGate();
       setStatus("skipped");
       await refreshUser();
       router.replace("/");
     } catch (error) {
-      window.alert(error instanceof Error ? error.message : "ข้ามขั้นตอนไม่สำเร็จ");
+      setError(error instanceof Error ? error.message : "ข้ามขั้นตอนไม่สำเร็จ");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -135,8 +151,10 @@ export function GateForm() {
         </div>
 
         <footer className="gate-actions">
-          <button className="primary-button gate-submit" type="submit">บันทึกและดำเนินการต่อ</button>
-          <button className="gate-skip" type="button" onClick={skip}>ข้ามขั้นตอนนี้</button>
+          <button className="primary-button gate-submit" type="submit" disabled={submitting || loadingProfile}>{submitting ? "กำลังบันทึก..." : "บันทึกและดำเนินการต่อ"}</button>
+          <button className="gate-skip" type="button" onClick={skip} disabled={submitting || loadingProfile}>ข้ามขั้นตอนนี้</button>
+          {loadingProfile && <p role="status">กำลังโหลดข้อมูลโปรไฟล์...</p>}
+          {error && <p className="gate-error" role="alert">{error}</p>}
           {status !== "idle" && <p role="status">{status === "saved" ? "บันทึกข้อมูลเรียบร้อยแล้ว" : "ข้ามขั้นตอนเรียบร้อยแล้ว"}</p>}
         </footer>
         </form>
