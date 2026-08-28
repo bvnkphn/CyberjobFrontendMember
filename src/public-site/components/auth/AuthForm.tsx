@@ -20,7 +20,9 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const redirectTo = params.get('redirect') || '/';
+  // AccessControl และปุ่มสมัครงานส่งปลายทางมาใน `next`;
+  // รองรับ `redirect` เดิมไว้เพื่อไม่ทำให้ลิงก์เก่าเสีย
+  const redirectTo = params.get('next') || params.get('redirect') || '/';
 
   // ล็อกอินอยู่แล้วก็ไม่ต้องเห็นหน้านี้
   useEffect(() => {
