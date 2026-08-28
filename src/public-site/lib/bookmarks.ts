@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@/public-site/auth/AuthProvider';
 import { meService } from '@/public-site/services/auth.service';
+import { usePathname, useRouter } from 'next/navigation';
 
 const STORAGE_KEY = 'cyberjob.bookmarks';
 
@@ -29,6 +30,8 @@ function writeLocal(ids: string[]): void {
  * ยังไม่ล็อกอิน → เก็บไว้ในเครื่องก่อน แล้วย้ายเข้าบัญชีอัตโนมัติตอนล็อกอิน
  */
 export function useBookmarks() {
+  const router = useRouter();
+  const pathname = usePathname();
   const { user, loading: authLoading } = useAuth();
   const [ids, setIds] = useState<string[]>([]);
   const [ready, setReady] = useState(false);
@@ -58,6 +61,10 @@ export function useBookmarks() {
 
   const toggle = useCallback(
     (id: string) => {
+      if (!user) {
+        router.push(`/gate/login?next=${encodeURIComponent(pathname)}`);
+        return;
+      }
       const isOn = ids.includes(id);
       const next = isOn ? ids.filter((x) => x !== id) : [...ids, id];
 
@@ -69,15 +76,12 @@ export function useBookmarks() {
           ? meService.removeBookmark(id)
           : meService.addBookmark(id);
         call.catch(() => setIds(ids)); // ล้มเหลว → ย้อนกลับ
-      } else {
-        writeLocal(next);
       }
     },
-    [ids, user],
+    [ids, pathname, router, user],
   );
 
   const has = useCallback((id: string) => ids.includes(id), [ids]);
 
   return { ids, has, toggle, ready };
 }
-

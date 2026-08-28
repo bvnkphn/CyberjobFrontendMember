@@ -1,6 +1,8 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/public-site/auth/AuthProvider";
 import { getProfile, saveGate, skipGate } from "@/lib/member-api";
 import "../profile/profile-editor.css";
 import "./gate.css";
@@ -17,6 +19,8 @@ const jobCategories = [
 ];
 
 export function GateForm() {
+  const router = useRouter();
+  const { refreshUser } = useAuth();
   const [privacy, setPrivacy] = useState<"public" | "private">("public");
   const [status, setStatus] = useState<"idle" | "saved" | "skipped">("idle");
 
@@ -53,6 +57,8 @@ export function GateForm() {
         privacy: formData.get("privacy"),
       });
       setStatus("saved");
+      await refreshUser();
+      router.replace("/");
     } catch (error) {
       window.alert(error instanceof Error ? error.message : "บันทึกข้อมูลไม่สำเร็จ");
     }
@@ -62,6 +68,8 @@ export function GateForm() {
     try {
       await skipGate();
       setStatus("skipped");
+      await refreshUser();
+      router.replace("/");
     } catch (error) {
       window.alert(error instanceof Error ? error.message : "ข้ามขั้นตอนไม่สำเร็จ");
     }
@@ -129,7 +137,7 @@ export function GateForm() {
         <footer className="gate-actions">
           <button className="primary-button gate-submit" type="submit">บันทึกและดำเนินการต่อ</button>
           <button className="gate-skip" type="button" onClick={skip}>ข้ามขั้นตอนนี้</button>
-          {status !== "idle" && <p role="status">{status === "saved" ? "บันทึกข้อมูลตัวอย่างเรียบร้อยแล้ว" : "ข้ามการกรอกข้อมูลตัวอย่างแล้ว"}</p>}
+          {status !== "idle" && <p role="status">{status === "saved" ? "บันทึกข้อมูลเรียบร้อยแล้ว" : "ข้ามขั้นตอนเรียบร้อยแล้ว"}</p>}
         </footer>
         </form>
       </div>

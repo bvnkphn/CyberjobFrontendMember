@@ -1,0 +1,36 @@
+"use client";
+
+import { useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useAuth } from "@/public-site/auth/AuthProvider";
+
+const PUBLIC_PREFIXES = ["/jobs", "/gate/login", "/gate/register"];
+
+export function AccessControl({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useAuth();
+  const pathname = usePathname();
+  const router = useRouter();
+  const isPublic = pathname === "/" || PUBLIC_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+  const isAuthPage = pathname === "/gate/login" || pathname === "/gate/register";
+
+  useEffect(() => {
+    if (loading) return;
+    if (!user && !isPublic) {
+      const search = typeof window === "undefined" ? "" : window.location.search;
+      router.replace(`/gate/login?next=${encodeURIComponent(`${pathname}${search}`)}`);
+      return;
+    }
+    if (user && !user.gateCompleted && pathname !== "/gate") {
+      router.replace("/gate");
+      return;
+    }
+    if (user?.gateCompleted && (pathname === "/gate" || isAuthPage)) {
+      const next = typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("next");
+      router.replace(next || "/");
+    }
+  }, [isAuthPage, isPublic, loading, pathname, router, user]);
+
+  if (loading) return <main className="member-route-loading">กำลังตรวจสอบบัญชี...</main>;
+  if ((!user && !isPublic) || (user && !user.gateCompleted && pathname !== "/gate")) return <main className="member-route-loading">กำลังนำคุณไปยังหน้าที่ถูกต้อง...</main>;
+  return children;
+}

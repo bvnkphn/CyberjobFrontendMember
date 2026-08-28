@@ -55,7 +55,7 @@ export function JobDetailView({
   /** ยังไม่ล็อกอิน → พาไปหน้าเข้าสู่ระบบก่อน แล้วค่อยกลับมา */
   async function handleApply() {
     if (!user) {
-      router.push(`/gate/login?redirect=${encodeURIComponent(pathname)}`);
+      router.push(`/gate/login?next=${encodeURIComponent(pathname)}`);
       return;
     }
     setApplyError(null);

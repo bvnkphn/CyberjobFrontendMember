@@ -22,6 +22,7 @@ interface AuthContextValue {
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, name: string) => Promise<void>;
   logout: () => Promise<void>;
+  refreshUser: () => Promise<void>;
   /** ใช้หลังกลับมาจาก OAuth callback */
   adoptSession: (accessToken: string) => Promise<void>;
 }
@@ -99,6 +100,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }, []);
 
+  const refreshUser = useCallback(async () => {
+    const current = await authService.me();
+    setUser(current);
+  }, []);
+
   const adoptSession = useCallback(
     async (accessToken: string) => {
       setAccessToken(accessToken);
@@ -110,8 +116,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const value = useMemo(
-    () => ({ user, loading, login, register, logout, adoptSession }),
-    [user, loading, login, register, logout, adoptSession],
+    () => ({ user, loading, login, register, logout, refreshUser, adoptSession }),
+    [user, loading, login, register, logout, refreshUser, adoptSession],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -122,4 +128,3 @@ export function useAuth(): AuthContextValue {
   if (!ctx) throw new Error('useAuth ต้องอยู่ภายใต้ <AuthProvider>');
   return ctx;
 }
-
