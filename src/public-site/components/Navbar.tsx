@@ -59,7 +59,6 @@ export function Navbar() {
           <div className="hidden sm:block">
             <LanguageSwitcher />
           </div>
-          <UserMenu />
           <button
             type="button"
             aria-label={t('nav.menu')}
@@ -75,6 +74,7 @@ export function Navbar() {
               </svg>
             )}
           </button>
+          <UserMenu />
         </div>
       </nav>
 
