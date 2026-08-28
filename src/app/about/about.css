@@ -7,9 +7,6 @@
 }
 .about-title {
   margin: 0 0 48px;
-  color: var(--navy);
-  font-size: 34px;
-  font-weight: 800;
 }
 /* ===== Cards (shared) ===== */
 .about-card {
@@ -132,7 +129,7 @@
 }
 @media (max-width: 620px) {
   .about-page { padding: 80px 18px 60px; }
-  .about-title { font-size: 28px; }
+  .about-title { margin-bottom: 34px; }
   .about-section-title { font-size: 20px; }
   .about-section-title-lg { font-size: 24px; }
   .about-services-grid { grid-template-columns: 1fr; }

@@ -2,8 +2,6 @@
 .contact-page { width: min(100% - 32px, 1120px); margin: 0 auto; padding: 64px 0 96px; }
 .contact-heading { max-width: 720px; margin-bottom: 32px; }
 .contact-eyebrow, .faq-heading > span { color: #3479ed; font-size: 12px; font-weight: 800; letter-spacing: .12em; }
-.contact-heading h1 { margin: 8px 0 10px; color: var(--navy); font-size: clamp(32px, 5vw, 46px); line-height: 1.2; }
-.contact-heading p { margin: 0; color: #64748b; font-size: 16px; line-height: 1.75; }
 
 .line-banner { position: relative; display: grid; grid-template-columns: 72px minmax(0, 1fr) 112px auto; align-items: center; gap: 24px; overflow: hidden; padding: 30px; border-radius: 22px; background: linear-gradient(120deg, #08a957 0%, #20c976 100%); color: #fff; box-shadow: 0 18px 45px rgb(8 169 87 / 20%); }
 .line-banner::after { position: absolute; right: -70px; bottom: -110px; width: 270px; height: 270px; border: 45px solid rgb(255 255 255 / 8%); border-radius: 50%; content: ""; pointer-events: none; }

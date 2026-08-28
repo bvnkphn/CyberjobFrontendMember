@@ -317,41 +317,6 @@ export default function ApplyStep2Page() {
         </div>
       </main>
 
-      {/* ═══ Footer ═══ */}
-      {false && <footer className="s2-footer">
-        <div className="s2-footer-main">
-          <div>
-            <div className="s2-footer-brand">CYBER<span>JOB</span></div>
-            <p className="s2-footer-about">เว็บหางานสำหรับคนทำงานเพื่อโอกาสเติบโตในบริษัทด้วยตำแหน่งที่เหมาะกับไลฟ์สไตล์ของคุณ</p>
-          </div>
-          <div className="s2-footer-links">
-            <div className="s2-footer-col">
-              <strong>ผู้หางาน</strong>
-              <a href="/jobs">ค้นหางาน</a>
-              <a href="/profile">โปรไฟล์</a>
-              <a href="/saved-jobs">งานที่บันทึก</a>
-              <a href="/applications">ประวัติการสมัครงาน</a>
-            </div>
-            <div className="s2-footer-col">
-              <strong>ผู้ประกอบการ</strong>
-              <a href="/register/business">ลงทะเบียนฟรี</a>
-              <a href="/post-job">ลงประกาศงาน</a>
-            </div>
-            <div className="s2-footer-col">
-              <strong>เกี่ยวกับเรา</strong>
-              <a href="/contact">ติดต่อเรา</a>
-            </div>
-          </div>
-        </div>
-        <div className="s2-footer-bottom">
-          <span>Copyright @ 2026 CYBERJOB Co, Ltd | All Rights Reserved.</span>
-          <div className="s2-footer-bottom-links">
-            <a href="/terms">ข้อกำหนดและเงื่อนไข</a>
-            <a href="/security">ความปลอดภัย</a>
-            <a href="/privacy">ความเป็นส่วนตัว</a>
-          </div>
-        </div>
-      </footer>}
     </>
   );
 }

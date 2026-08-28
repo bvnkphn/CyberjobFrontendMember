@@ -11,12 +11,6 @@ import {
 } from "@/lib/member-api";
 import "./apply-step3.css";
 
-function IconChevron() {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m8 10 4 4 4-4" /></svg>;
-}
-function IconUser() {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="4" /><path d="M4 21a8 8 0 0 1 16 0" /></svg>;
-}
 function IconArrowLeft() {
   return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>;
 }
@@ -46,49 +40,8 @@ function formatAnswer(q: ApplicationQuestion, answer: string | string[] | null |
   return String(answer);
 }
 
-function Footer() {
-  return (
-    <footer className="s3-footer">
-      <div className="s3-footer-main">
-        <div>
-          <div className="s3-footer-brand">CYBER<span>JOB</span></div>
-          <p className="s3-footer-about">เว็บหางานสำหรับคนทำงานเพื่อโอกาสเติบโตในบริษัทด้วยตำแหน่งที่เหมาะกับไลฟ์สไตล์ของคุณ</p>
-        </div>
-        <div className="s3-footer-links">
-          <div className="s3-footer-col">
-            <strong>ผู้หางาน</strong>
-            <a href="/jobs">ค้นหางาน</a>
-            <a href="/profile">โปรไฟล์</a>
-            <a href="/saved-jobs">งานที่บันทึก</a>
-            <a href="/applications">ประวัติการสมัครงาน</a>
-          </div>
-          <div className="s3-footer-col">
-            <strong>ผู้ประกอบการ</strong>
-            <a href="/register/business">ลงทะเบียนฟรี</a>
-            <a href="/post-job">ลงประกาศงาน</a>
-          </div>
-          <div className="s3-footer-col">
-            <strong>เกี่ยวกับเรา</strong>
-            <a href="/contact">ติดต่อเรา</a>
-          </div>
-        </div>
-      </div>
-      <div className="s3-footer-bottom">
-        <span>Copyright @ 2026 CYBERJOB Co, Ltd | All Rights Reserved.</span>
-        <div className="s3-footer-bottom-links">
-          <a href="/terms">ข้อกำหนดและเงื่อนไข</a>
-          <a href="/security">ความปลอดภัย</a>
-          <a href="/privacy">ความเป็นส่วนตัว</a>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
 export default function ApplyStep3Page() {
   const router = useRouter();
-  const [navOpen, setNavOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [consent, setConsent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -174,12 +127,6 @@ export default function ApplyStep3Page() {
   if (submitted) {
     return (
       <>
-        {false && <header className="s3-navbar">
-          <div className="s3-navbar-inner">
-            <a href="/" className="s3-nav-brand">CYBER<span>JOB</span></a>
-            <nav className="s3-nav-links"><a href="/jobs">ค้นหางาน</a></nav>
-          </div>
-        </header>}
         <main className="s3-main s3-success-wrap">
           <div className="s3-card">
             <div className="s3-success">
@@ -203,42 +150,6 @@ export default function ApplyStep3Page() {
 
   return (
     <>
-      {/* ═══ Navbar ═══ */}
-      {false && <header className="s3-navbar">
-        <div className="s3-navbar-inner">
-          <a href="/" className="s3-nav-brand">CYBER<span>JOB</span></a>
-          <button className="s3-mobile-toggle" type="button" onClick={() => setNavOpen(!navOpen)} aria-label="เปิดเมนู">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
-          </button>
-          <nav className={`s3-nav-links ${navOpen ? "is-open" : ""}`}>
-            <a href="/">หน้าแรก</a>
-            <a href="/jobs">ค้นหางาน</a>
-            <a href="/profile/edit">ฝากประวัติ</a>
-            <a href="/articles">บทความ</a>
-            <a href="/about">เกี่ยวกับเรา</a>
-            <a href="/contact">ติดต่อเรา</a>
-            <button className="s3-nav-lang" type="button">ภาษาไทย <IconChevron /></button>
-            <div className="s3-nav-profile">
-              <button className="s3-nav-avatar" type="button" onClick={() => setDropdownOpen(!dropdownOpen)} aria-label="เมนูบัญชี">
-                <IconUser />
-              </button>
-              {dropdownOpen && (
-                <nav className="s3-nav-dropdown">
-                  <div className="s3-nav-dropdown-header">
-                    <strong>ผู้ใช้</strong>
-                    <small></small>
-                  </div>
-                  <a href="/profile"><IconUser /> โปรไฟล์</a>
-                  <a href="/profile/edit"><IconDoc /> แก้ไขประวัติ</a>
-                  <hr />
-                  <a href="/" className="danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M10 4H4v16h6M14 8l4 4-4 4M8 12h10" /></svg> ออกจากระบบ</a>
-                </nav>
-              )}
-            </div>
-          </nav>
-        </div>
-      </header>}
-
       {/* ═══ Header / Job Card ═══ */}
       <div className="s3-header">
         <button className="s3-back" type="button" onClick={() => history.back()}>

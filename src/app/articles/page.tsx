@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { PageHeading } from "@/components/page-heading";
 import { articles } from "./article-data";
 import "./articles.css";
 
@@ -12,7 +13,7 @@ export default function ArticlesPage() {
   const filteredArticles = activeCategory === "ทั้งหมด" ? articles : articles.filter((article) => article.category === activeCategory);
 
   return <div className="articles-shell"><main className="articles-page">
-    <header className="articles-list-heading"><h1>บทความ</h1><p>เคล็ดลับและความรู้เพื่อการทำงานและพัฒนาตัวเอง</p></header>
+    <PageHeading title="บทความ" description="เคล็ดลับและความรู้เพื่อการทำงานและพัฒนาตัวเอง" fallbackHref="/" className="articles-list-heading" />
     <nav className="article-filters" aria-label="หมวดหมู่บทความ">{categories.map((category) => <button className={activeCategory === category ? "active" : ""} type="button" key={category} onClick={() => setActiveCategory(category)} aria-pressed={activeCategory === category}>{category}</button>)}</nav>
     <section className="article-grid" aria-label="รายการบทความ">{filteredArticles.map((article) => <article className="article-card" key={article.slug}>
       <Link href={`/articles/${article.slug}`}><img src={article.image} alt="" /><div className="article-card-body"><span className="article-category">{article.category}</span><h2>{article.title}</h2><p>{article.excerpt}</p><span className="read-more">อ่านต่อ <span aria-hidden="true">→</span></span></div></Link>

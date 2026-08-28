@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { articles } from "../article-data";
+import { PageHeading } from "@/components/page-heading";
 import "../articles.css";
 
 const extraImages = [
@@ -14,6 +15,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
   if (!article) notFound();
   const related = articles.filter((item) => item.slug !== article.slug).slice(0, 4);
   return <div className="articles-shell"><main className="article-detail-page">
+    <PageHeading title="บทความ" description={article.title} fallbackHref="/articles" className="article-detail-heading" />
     <div className="article-detail-layout">
       <article className="article-detail">
         <span className="article-badge">High quality professional</span>

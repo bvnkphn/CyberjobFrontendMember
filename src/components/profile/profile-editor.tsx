@@ -172,7 +172,6 @@ export function ProfileEditor() {
     });
   };
 
-  // UX-only submit: replace this function with the profile API mutation later.
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
@@ -320,7 +319,7 @@ export function ProfileEditor() {
 
           <div className="save-row">
             <button className="primary-button save-button" type="submit">บันทึก</button>
-            {saved && <p className="save-message" role="status">บันทึกตัวอย่างเรียบร้อยแล้ว</p>}
+            {saved && <p className="save-message" role="status">บันทึกข้อมูลเรียบร้อยแล้ว</p>}
           </div>
         </form>
         )}

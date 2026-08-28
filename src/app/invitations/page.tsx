@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { PageHeading } from "@/components/page-heading";
 import "./invitations.css";
 
 type Invitation = { id: number; initials: string; color: string; company: string; title: string; salary: string; detail: string; status: "pending" | "accepted" | "declined" };
@@ -19,7 +20,7 @@ export default function InvitationsPage() {
   const updateStatus = (id: number, status: "accepted" | "declined") => setInvitations((items) => items.map((item) => item.id === id ? { ...item, status } : item));
 
   return <div className="invitations-shell"><main className="invitations-page">
-    <header className="invitations-heading"><h1>คำเชิญจากบริษัท <span>({invitations.length})</span></h1><div className="invitation-tabs"><button className={filter === "all" ? "active" : ""} type="button" onClick={() => setFilter("all")}>ทั้งหมด</button><button className={filter === "pending" ? "active" : ""} type="button" onClick={() => setFilter("pending")}>รอตอบกลับ</button></div></header>
+    <div className="invitations-heading"><PageHeading title={`คำเชิญจากบริษัท (${invitations.length})`} description="ตรวจสอบและตอบรับคำเชิญจากบริษัทที่สนใจโปรไฟล์ของคุณ" fallbackHref="/profile" /><div className="invitation-tabs"><button className={filter === "all" ? "active" : ""} type="button" onClick={() => setFilter("all")}>ทั้งหมด</button><button className={filter === "pending" ? "active" : ""} type="button" onClick={() => setFilter("pending")}>รอตอบกลับ</button></div></div>
     <section className="invitation-grid" aria-label="รายการคำเชิญ">{visibleInvitations.map((invitation) => <article className="invitation-card" key={invitation.id}><div className="invitation-company"><span className={`company-initial ${invitation.color}`}>{invitation.initials}</span><div><small>{invitation.company}</small><h2>{invitation.title}</h2><p>{invitation.company} เงินเดือน {invitation.salary}</p></div></div><p className="invitation-detail">{invitation.detail}</p><strong className="invitation-salary">{invitation.salary}</strong><div className="invitation-actions">{invitation.status === "pending" ? <><button className="accept-button" type="button" onClick={() => updateStatus(invitation.id, "accepted")}>✓ ตอบรับ</button><button className="decline-button" type="button" onClick={() => updateStatus(invitation.id, "declined")}>× ปฏิเสธ</button></> : <span className={`status-pill ${invitation.status}`}>{invitation.status === "accepted" ? "✓ ตอบรับแล้ว" : "× ปฏิเสธแล้ว"}</span>}</div></article>)}</section>
     {visibleInvitations.length === 0 && <p className="empty-invitations">ไม่มีคำเชิญที่รอตอบกลับ</p>}
   </main></div>;

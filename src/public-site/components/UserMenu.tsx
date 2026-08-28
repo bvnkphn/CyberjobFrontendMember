@@ -25,8 +25,9 @@ export function UserMenu() {
 
   return (
     <div ref={ref} className="relative">
-      <button type="button" onClick={toggle} aria-haspopup="menu" aria-expanded={open} aria-label={t('user.account')} className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-brand-700 transition-colors hover:border-brand-300 hover:bg-brand-50">
+      <button type="button" onClick={toggle} aria-haspopup="menu" aria-expanded={open} aria-label={t('user.account')} className="flex h-10 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-2.5 text-brand-700 transition-colors hover:border-brand-300 hover:bg-brand-50 md:px-3.5">
         <UserIcon width={20} height={20} />
+        <span className="hidden text-sm font-semibold md:inline">{t('user.profile')}</span>
       </button>
       {open && (
         <div role="menu" className="absolute right-0 z-50 mt-2 w-64 overflow-hidden rounded-xl border border-slate-200 bg-white py-1.5 shadow-pop">

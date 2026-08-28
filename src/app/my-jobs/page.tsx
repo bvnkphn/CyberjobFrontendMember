@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import Link from "next/link";
 import { MemberRouteGuard } from "@/components/member-route-guard";
+import { PageHeading } from "@/components/page-heading";
 import { getApplications, SAMPLE_JOBS, type JobApplication } from "@/lib/member-api";
 import "./my-jobs.css";
 
@@ -504,7 +505,7 @@ function MyJobsContent() {
   return (
     <main className="mj-page">
       <div className="mj-layout">
-        <h1 className="mj-title">งานของฉัน</h1>
+        <PageHeading className="mj-title" title="งานของฉัน" description="จัดการงานที่บันทึกและติดตามสถานะใบสมัครของคุณ" fallbackHref="/profile" />
 
         {/* ── Tab bar ── */}
         <div className="mj-tabs">

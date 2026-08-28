@@ -1,3 +1,5 @@
+import { PageHeading } from "@/components/page-heading";
+
 export function LegalPage({
   title,
   children,
@@ -8,7 +10,7 @@ export function LegalPage({
   return (
     <main className="container-page w-full py-12 sm:py-16">
       <article className="mx-auto max-w-3xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-10">
-        <h1 className="text-3xl font-bold text-brand-900">{title}</h1>
+        <PageHeading title={title} fallbackHref="/" />
         <div className="mt-6 space-y-5 text-sm leading-7 text-slate-600">{children}</div>
       </article>
     </main>

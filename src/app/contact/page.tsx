@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { PageHeading } from "@/components/page-heading";
 import "./contact.css";
 
 const faqs = [
@@ -24,11 +25,7 @@ export default function ContactPage() {
   return (
     <div className="contact-shell">
       <main className="contact-page">
-        <header className="contact-heading">
-          <span className="contact-eyebrow">CONTACT CYBERJOB</span>
-          <h1>ติดต่อเรา</h1>
-          <p>มีคำถามหรือต้องการความช่วยเหลือ? ทีมงาน CyberJob พร้อมดูแลคุณ</p>
-        </header>
+        <PageHeading title="ติดต่อเรา" description="มีคำถามหรือต้องการความช่วยเหลือ? ทีมงาน CyberJob พร้อมดูแลคุณ" eyebrow="CONTACT CYBERJOB" fallbackHref="/" className="contact-heading" />
 
         <section className="line-banner" aria-label="ติดต่อผ่าน LINE">
           <div className="line-mark">

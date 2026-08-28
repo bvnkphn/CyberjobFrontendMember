@@ -1,10 +1,11 @@
 import "./about.css";
+import { PageHeading } from "@/components/page-heading";
 
 export default function AboutPage() {
   return (
     <div className="site-shell">
       <main className="about-page">
-        <h1 className="about-title">เกี่ยวกับเรา</h1>
+        <PageHeading title="เกี่ยวกับเรา" description="รู้จักเรื่องราว พันธกิจ และบริการที่ CyberJob ตั้งใจสร้างเพื่อคนหางาน" fallbackHref="/" className="about-title" />
 
         {/* Section 1: เรื่องราวของเรา + พันธกิจ/วิสัยทัศน์ */}
         <section className="about-grid">
