@@ -2,6 +2,7 @@
 
 import { useRef, useState, useCallback, useEffect, Suspense, type ChangeEvent, type DragEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Header } from "@/components/header";
 import {
   createApplication,
   updateResume,
@@ -138,6 +139,7 @@ function ApplyStep1Inner() {
 
   return (
     <>
+      <Header />
       {/* ═══ Navbar ═══ */}
       <header className="s1-navbar">
         <div className="s1-navbar-inner">

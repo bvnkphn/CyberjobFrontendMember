@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Header } from "@/components/header";
 import { saveAnswers, SAMPLE_JOBS, type ApplicationQuestion } from "@/lib/member-api";
 import "./apply-step2.css";
 
@@ -153,6 +154,7 @@ export default function ApplyStep2Page() {
 
   return (
     <>
+      <Header />
       {/* ═══ Navbar ═══ */}
       <header className="s2-navbar">
         <div className="s2-navbar-inner">

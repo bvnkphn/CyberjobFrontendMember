@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { Header } from "@/components/header";
 import {
   getApplicationReview,
   submitApplication,
@@ -174,6 +175,7 @@ export default function ApplyStep3Page() {
   if (submitted) {
     return (
       <>
+        <Header />
         <header className="s3-navbar">
           <div className="s3-navbar-inner">
             <a href="/" className="s3-nav-brand">CYBER<span>JOB</span></a>
@@ -204,6 +206,7 @@ export default function ApplyStep3Page() {
 
   return (
     <>
+      <Header />
       {/* ═══ Navbar ═══ */}
       <header className="s3-navbar">
         <div className="s3-navbar-inner">
