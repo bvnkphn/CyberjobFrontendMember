@@ -1,6 +1,72 @@
-.contact-page { max-width: 1040px; min-height: 650px; margin: 0 auto; padding: 70px 32px 130px; }
-.contact-heading h1 { margin: 0 0 14px; color: var(--navy); font-size: 30px; line-height: 1.2; }.contact-heading p { display: flex; align-items: center; gap: 5px; margin: 0 0 12px; color: #13ad67; font-size: 11px; font-weight: 600; }.contact-heading p b { font-weight: 700; }.line-dot { width: 10px; height: 7px; border: 2px solid #18bf72; border-radius: 4px; }
-.line-banner { display: grid; grid-template-columns: 60px minmax(0, 1fr) auto 96px auto; align-items: center; gap: 22px; min-height: 160px; margin: 0 24px 22px; padding: 25px 28px; border-radius: 14px; background: linear-gradient(100deg, #10b964, #27c967); color: #fff; }.line-mark { display: grid; width: 60px; height: 60px; place-items: center; border-radius: 14px; background: #fff; color: #13b963; font-size: 11px; font-weight: 900; }.line-mark img { width: 42px; height: 42px; object-fit: contain; }.line-icon-text { display: none !important; }.line-mark.line-icon-fallback .line-icon-text { display: block !important; }.line-banner strong, .line-banner span, .line-banner small { display: block; }.line-banner strong { font-size: 25px; }.line-banner div:nth-child(2) span { margin-top: 5px; color: #d8ffe9; font-size: 13px; }.line-banner small { width: max-content; margin-top: 10px; padding: 6px 10px; border-radius: 4px; background: rgb(0 120 62 / 35%); font-size: 11px; }.line-badge { align-self: start; margin-top: 5px; padding: 6px 11px; border-radius: 12px; background: #ffe887; color: #775b00 !important; font-size: 10px !important; }.qr-code { width: 96px; height: 96px; padding: 5px; border: 0; border-radius: 9px; background: #fff; box-shadow: 0 2px 5px rgb(0 0 0 / 8%); }.qr-code img { display: block; width: 100%; height: 100%; object-fit: cover; }.line-banner button { min-width: 158px; padding: 16px 22px; border: 0; border-radius: 26px; background: #fff; color: #12ab5b; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 3px 8px rgb(0 90 40 / 12%); }.line-banner button span { display: inline; margin-left: 8px; }
-.contact-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 0 24px 28px; }.contact-methods a { display: grid; grid-template-columns: 30px 1fr; grid-template-rows: 16px 20px; column-gap: 10px; align-items: center; padding: 11px 15px; border: 1px solid #f0f2f5; border-radius: 8px; background: #fff; box-shadow: 0 3px 12px rgb(30 60 90 / 3%); }.contact-icon { grid-row: 1 / 3; display: grid; width: 26px; height: 26px; place-items: center; border-radius: 6px; font-size: 13px; }.mail-icon { background: #fff1d9; color: #f2a71c; }.phone-icon { background: #ffe4e8; color: #ef6e7e; }.contact-methods small { color: #9da5af; font-size: 9px; }.contact-methods strong { color: #536073; font-size: 10px; }
-.faq-section { margin: 0 24px; padding: 22px; border: 1px solid #f0f2f5; border-radius: 8px; background: #fff; box-shadow: 0 3px 12px rgb(30 60 90 / 3%); }.faq-section h2 { margin: 0 0 10px; color: #526174; font-size: 14px; }.faq-item { border-top: 1px solid #f1f3f6; }.faq-item button { display: flex; justify-content: space-between; width: 100%; padding: 13px 0; border: 0; background: none; color: #717c8d; font-size: 10px; text-align: left; cursor: pointer; }.faq-chevron { color: #a4adb9; transition: transform .2s; }.faq-item.open .faq-chevron { transform: rotate(180deg); }.faq-item p { margin: -3px 24px 13px 0; color: #9aa3af; font-size: 10px; line-height: 1.7; }
-@media (max-width: 700px) { .contact-page { padding: 44px 16px 72px; }.contact-heading h1 { font-size: 27px; }.line-banner { grid-template-columns: 48px 1fr; gap: 14px; margin: 0 0 16px; padding: 18px; }.line-mark { width: 48px; height: 48px; border-radius: 11px; }.line-mark img { width: 32px; height: 32px; }.line-banner strong { font-size: 20px; }.line-banner div:nth-child(2) span { font-size: 11px; }.line-badge { display: none; }.qr-code { display: none; }.line-banner button { grid-column: 2; justify-self: start; min-width: 0; padding: 11px 16px; font-size: 11px; }.contact-methods, .faq-section { margin-left: 0; margin-right: 0; }.contact-methods { gap: 8px; }.contact-methods a { padding: 10px; }.faq-section { padding: 17px; } }
+.contact-shell { min-height: 100vh; background: #f8fafc; }
+.contact-page { width: min(100% - 32px, 1120px); margin: 0 auto; padding: 64px 0 96px; }
+.contact-heading { max-width: 720px; margin-bottom: 32px; }
+.contact-eyebrow, .faq-heading > span { color: #3479ed; font-size: 12px; font-weight: 800; letter-spacing: .12em; }
+.contact-heading h1 { margin: 8px 0 10px; color: var(--navy); font-size: clamp(32px, 5vw, 46px); line-height: 1.2; }
+.contact-heading p { margin: 0; color: #64748b; font-size: 16px; line-height: 1.75; }
+
+.line-banner { position: relative; display: grid; grid-template-columns: 72px minmax(0, 1fr) 112px auto; align-items: center; gap: 24px; overflow: hidden; padding: 30px; border-radius: 22px; background: linear-gradient(120deg, #08a957 0%, #20c976 100%); color: #fff; box-shadow: 0 18px 45px rgb(8 169 87 / 20%); }
+.line-banner::after { position: absolute; right: -70px; bottom: -110px; width: 270px; height: 270px; border: 45px solid rgb(255 255 255 / 8%); border-radius: 50%; content: ""; pointer-events: none; }
+.line-mark { position: relative; z-index: 1; display: grid; width: 72px; height: 72px; place-items: center; border-radius: 18px; background: #fff; color: #08a957; font-size: 12px; font-weight: 900; box-shadow: 0 10px 25px rgb(0 90 40 / 16%); }
+.line-mark img { width: 50px; height: 50px; object-fit: contain; }
+.line-icon-text { display: none; }.line-mark.line-icon-fallback .line-icon-text { display: block; }
+.line-copy { position: relative; z-index: 1; min-width: 0; }
+.line-copy strong { display: block; margin: 8px 0 4px; font-size: 26px; line-height: 1.3; }
+.line-copy p { max-width: 580px; margin: 0; color: rgb(255 255 255 / 84%); font-size: 14px; line-height: 1.65; }
+.line-copy small { display: inline-block; margin-top: 10px; padding: 5px 10px; border-radius: 999px; background: rgb(0 90 45 / 24%); font-size: 13px; font-weight: 700; }
+.line-badge { display: inline-flex; padding: 5px 10px; border-radius: 999px; background: #fff2a8; color: #6b5500; font-size: 11px; font-weight: 800; }
+.qr-code { position: relative; z-index: 1; width: 112px; height: 112px; padding: 7px; border-radius: 14px; background: #fff; box-shadow: 0 8px 20px rgb(0 80 40 / 16%); }
+.qr-code img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.line-action { position: relative; z-index: 1; min-height: 48px; padding: 0 22px; border: 0; border-radius: 999px; background: #fff; color: #079b50; font-weight: 800; cursor: pointer; box-shadow: 0 8px 20px rgb(0 80 40 / 14%); }
+.line-action:hover { background: #effff6; transform: translateY(-1px); }
+.line-action span { margin-left: 8px; }
+
+.contact-methods { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 22px; }
+.contact-methods a { display: flex; align-items: center; gap: 16px; min-width: 0; padding: 22px; border: 1px solid #e2e8f0; border-radius: 16px; background: #fff; box-shadow: 0 8px 24px rgb(15 42 107 / 5%); transition: border-color .2s, box-shadow .2s, transform .2s; }
+.contact-methods a:hover { border-color: #bcd0f6; box-shadow: 0 14px 30px rgb(15 42 107 / 10%); transform: translateY(-2px); }
+.contact-icon { display: grid; width: 52px; height: 52px; flex: 0 0 52px; place-items: center; border-radius: 14px; }
+.contact-icon svg { width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.mail-icon { background: #fff3d9; color: #d99000; }.phone-icon { background: #ffe7ec; color: #df5268; }
+.contact-methods a > span:last-child { min-width: 0; }
+.contact-methods small, .contact-methods strong, .contact-methods em { display: block; }
+.contact-methods small { color: #94a3b8; font-size: 12px; }
+.contact-methods strong { overflow-wrap: anywhere; color: #1e293b; font-size: 17px; }
+.contact-methods em { margin-top: 3px; color: #94a3b8; font-size: 12px; font-style: normal; }
+
+.faq-section { display: grid; grid-template-columns: minmax(220px, .72fr) minmax(0, 1.5fr); gap: 48px; margin-top: 56px; padding: 38px; border: 1px solid #e2e8f0; border-radius: 22px; background: #fff; box-shadow: 0 14px 40px rgb(15 42 107 / 6%); }
+.faq-heading h2 { margin: 7px 0 8px; color: var(--navy); font-size: 26px; }
+.faq-heading p { margin: 0; color: #64748b; font-size: 14px; line-height: 1.7; }
+.faq-list { min-width: 0; }
+.faq-item { border-bottom: 1px solid #e8edf3; }.faq-item:first-child { border-top: 1px solid #e8edf3; }
+.faq-item button { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 0; border: 0; background: transparent; color: #334155; font-size: 15px; font-weight: 600; text-align: left; cursor: pointer; }
+.faq-chevron { display: grid; width: 28px; height: 28px; flex: 0 0 28px; place-items: center; border-radius: 50%; background: #f1f5f9; color: #64748b; transition: transform .2s, background .2s; }
+.faq-item.open .faq-chevron { transform: rotate(180deg); background: #e8f0ff; color: #3479ed; }
+.faq-item p { margin: -6px 42px 18px 0; color: #64748b; font-size: 14px; line-height: 1.75; }
+
+@media (max-width: 900px) {
+  .contact-page { padding: 48px 0 72px; }
+  .line-banner { grid-template-columns: 64px minmax(0, 1fr) auto; }
+  .line-mark { width: 64px; height: 64px; }
+  .line-mark img { width: 44px; height: 44px; }
+  .qr-code { display: none; }
+  .faq-section { grid-template-columns: 1fr; gap: 24px; padding: 28px; }
+}
+
+@media (max-width: 640px) {
+  .contact-page { width: min(100% - 24px, 1120px); padding: 34px 0 56px; }
+  .contact-heading { margin-bottom: 22px; }
+  .contact-heading p { font-size: 15px; }
+  .line-banner { grid-template-columns: 52px minmax(0, 1fr); gap: 14px; padding: 20px; border-radius: 18px; }
+  .line-mark { width: 52px; height: 52px; border-radius: 14px; }
+  .line-mark img { width: 36px; height: 36px; }
+  .line-copy strong { font-size: 20px; }
+  .line-copy p { font-size: 13px; }
+  .line-badge { font-size: 10px; }
+  .line-action { grid-column: 1 / -1; width: 100%; margin-top: 4px; }
+  .contact-methods { grid-template-columns: 1fr; gap: 12px; }
+  .contact-methods a { padding: 18px; }
+  .faq-section { margin-top: 36px; padding: 22px 18px; border-radius: 18px; }
+  .faq-heading h2 { font-size: 23px; }
+  .faq-item button { padding: 16px 0; font-size: 14px; }
+  .faq-item p { margin-right: 0; }
+}
