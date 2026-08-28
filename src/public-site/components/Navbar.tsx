@@ -9,21 +9,24 @@ import { LanguageSwitcher } from './LanguageSwitcher';
 import { Logo } from './Logo';
 import { CloseIcon } from './Icons';
 import { UserMenu } from './UserMenu';
+import { useAuth } from '@/public-site/auth/AuthProvider';
 
 /** เมนูหลักตาม Feature 3.4 – มีอยู่ทุกหน้า */
-const NAV_ITEMS: { key: DictKey; href: string }[] = [
+const NAV_ITEMS: { key: DictKey; href: string; requiresAuth?: boolean }[] = [
   { key: 'nav.home', href: '/' },
   { key: 'nav.jobs', href: '/jobs' },
-  { key: 'nav.resume', href: '/profile' },
-  { key: 'nav.articles', href: '/articles' },
-  { key: 'nav.about', href: '/about' },
-  { key: 'nav.contact', href: '/contact' },
+  { key: 'nav.resume', href: '/profile', requiresAuth: true },
+  { key: 'nav.articles', href: '/articles', requiresAuth: true },
+  { key: 'nav.about', href: '/about', requiresAuth: true },
+  { key: 'nav.contact', href: '/contact', requiresAuth: true },
 ];
 
 export function Navbar() {
   const { t } = useI18n();
   const pathname = usePathname();
+  const { user } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const visibleItems = NAV_ITEMS.filter((item) => !item.requiresAuth || user);
 
   const isActive = (href: string) =>
     href === '/' ? pathname === '/' : pathname.startsWith(href);
@@ -35,7 +38,7 @@ export function Navbar() {
 
         {/* ดันเมนูไปชิดขวาให้อยู่ติดกับปุ่มเปลี่ยนภาษา */}
         <ul className="ml-auto hidden items-center gap-1 lg:flex">
-          {NAV_ITEMS.map((item) => (
+          {visibleItems.map((item) => (
             <li key={item.href}>
               <Link
                 href={item.href}
@@ -81,7 +84,7 @@ export function Navbar() {
       {mobileOpen && (
         <div className="border-t border-slate-200 bg-white lg:hidden">
           <ul className="container-page flex flex-col py-2">
-            {NAV_ITEMS.map((item) => (
+            {visibleItems.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
