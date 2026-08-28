@@ -7,7 +7,8 @@ import { useI18n } from '@/public-site/i18n/LanguageProvider';
 import type { DictKey } from '@/public-site/i18n/dictionary';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { Logo } from './Logo';
-import { CloseIcon, UserIcon } from './Icons';
+import { CloseIcon } from './Icons';
+import { UserMenu } from './UserMenu';
 
 /** เมนูหลักตาม Feature 3.4 – มีอยู่ทุกหน้า */
 const NAV_ITEMS: { key: DictKey; href: string }[] = [
@@ -58,14 +59,7 @@ export function Navbar() {
           <div className="hidden sm:block">
             <LanguageSwitcher />
           </div>
-          <Link
-            href="/profile"
-            aria-label={t('user.profile')}
-            title={t('user.profile')}
-            className="auth-simulated-profile auth-placeholder-desktop"
-          >
-            <UserIcon width={20} height={20} />
-          </Link>
+          <UserMenu />
           <button
             type="button"
             aria-label={t('nav.menu')}
@@ -104,16 +98,6 @@ export function Navbar() {
             ))}
             <li className="px-1 pt-2 sm:hidden">
               <LanguageSwitcher />
-            </li>
-            <li className="px-1 pb-2 pt-2 sm:hidden">
-              <Link
-                href="/profile"
-                onClick={() => setMobileOpen(false)}
-                className="auth-simulated-profile auth-placeholder-mobile"
-              >
-                <UserIcon width={20} height={20} />
-                <span>{t('user.profile')}</span>
-              </Link>
             </li>
           </ul>
         </div>
