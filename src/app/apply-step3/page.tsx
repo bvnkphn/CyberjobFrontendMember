@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Header } from "@/components/header";
 import {
   getApplicationReview,
   submitApplication,
@@ -175,13 +174,12 @@ export default function ApplyStep3Page() {
   if (submitted) {
     return (
       <>
-        <Header />
-        <header className="s3-navbar">
+        {false && <header className="s3-navbar">
           <div className="s3-navbar-inner">
             <a href="/" className="s3-nav-brand">CYBER<span>JOB</span></a>
             <nav className="s3-nav-links"><a href="/jobs">ค้นหางาน</a></nav>
           </div>
-        </header>
+        </header>}
         <main className="s3-main s3-success-wrap">
           <div className="s3-card">
             <div className="s3-success">
@@ -197,7 +195,6 @@ export default function ApplyStep3Page() {
             </div>
           </div>
         </main>
-        <Footer />
       </>
     );
   }
@@ -206,9 +203,8 @@ export default function ApplyStep3Page() {
 
   return (
     <>
-      <Header />
       {/* ═══ Navbar ═══ */}
-      <header className="s3-navbar">
+      {false && <header className="s3-navbar">
         <div className="s3-navbar-inner">
           <a href="/" className="s3-nav-brand">CYBER<span>JOB</span></a>
           <button className="s3-mobile-toggle" type="button" onClick={() => setNavOpen(!navOpen)} aria-label="เปิดเมนู">
@@ -241,7 +237,7 @@ export default function ApplyStep3Page() {
             </div>
           </nav>
         </div>
-      </header>
+      </header>}
 
       {/* ═══ Header / Job Card ═══ */}
       <div className="s3-header">
@@ -362,7 +358,6 @@ export default function ApplyStep3Page() {
         </div>
       </main>
 
-      <Footer />
     </>
   );
 }

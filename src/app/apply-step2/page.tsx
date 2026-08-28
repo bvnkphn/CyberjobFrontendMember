@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Header } from "@/components/header";
 import { saveAnswers, SAMPLE_JOBS, type ApplicationQuestion } from "@/lib/member-api";
 import "./apply-step2.css";
 
@@ -154,44 +153,6 @@ export default function ApplyStep2Page() {
 
   return (
     <>
-      <Header />
-      {/* ═══ Navbar ═══ */}
-      <header className="s2-navbar">
-        <div className="s2-navbar-inner">
-          <a href="/" className="s2-nav-brand">CYBER<span>JOB</span></a>
-          <button className="s2-mobile-toggle" type="button" onClick={() => setNavOpen(!navOpen)} aria-label="เปิดเมนู">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
-          </button>
-          <nav className={`s2-nav-links ${navOpen ? "is-open" : ""}`}>
-            <a href="/">หน้าแรก</a>
-            <a href="/jobs">ค้นหางาน</a>
-            <a href="/profile/edit">ฝากประวัติ</a>
-            <a href="/articles">บทความ</a>
-            <a href="/about">เกี่ยวกับเรา</a>
-            <a href="/contact">ติดต่อเรา</a>
-            <button className="s2-nav-lang" type="button">ภาษาไทย <IconChevron /></button>
-            <div className="s2-nav-profile">
-              <button className="s2-nav-avatar" type="button" onClick={() => setDropdownOpen(!dropdownOpen)} aria-label="เมนูบัญชี">
-                <IconUser />
-              </button>
-              {dropdownOpen && (
-                <nav className="s2-nav-dropdown">
-                  <div className="s2-nav-dropdown-header">
-                    <strong>ผู้ใช้</strong>
-                    <small></small>
-                  </div>
-                  <a href="/profile"><IconUser /> โปรไฟล์</a>
-                  <a href="/profile/edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 3h10a2 2 0 0 1 2 2v5M8 7h5M8 11h3M5 3v18h7" /><path d="m14 18 5-5 2 2-5 5-3 1z" /></svg> แก้ไขประวัติ</a>
-                  <a href="/my-jobs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18M10 12v2h4v-2" /></svg> งานของฉัน</a>
-                  <hr />
-                  <a href="/" className="danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M10 4H4v16h6M14 8l4 4-4 4M8 12h10" /></svg> ออกจากระบบ</a>
-                </nav>
-              )}
-            </div>
-          </nav>
-        </div>
-      </header>
-
       {/* ═══ Header / Job Card ═══ */}
       <div className="s2-header">
         <button className="s2-back" type="button" onClick={() => history.back()}>
@@ -357,7 +318,7 @@ export default function ApplyStep2Page() {
       </main>
 
       {/* ═══ Footer ═══ */}
-      <footer className="s2-footer">
+      {false && <footer className="s2-footer">
         <div className="s2-footer-main">
           <div>
             <div className="s2-footer-brand">CYBER<span>JOB</span></div>
@@ -390,7 +351,7 @@ export default function ApplyStep2Page() {
             <a href="/privacy">ความเป็นส่วนตัว</a>
           </div>
         </div>
-      </footer>
+      </footer>}
     </>
   );
 }

@@ -2,8 +2,6 @@
 
 import { useState, useMemo, useEffect, useRef } from "react";
 import Link from "next/link";
-import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
 import { MemberRouteGuard } from "@/components/member-route-guard";
 import { getApplications, SAMPLE_JOBS, type JobApplication } from "@/lib/member-api";
 import "./my-jobs.css";
@@ -392,11 +390,7 @@ function getLogoColor(initials: string): string {
 export default function MyJobsPage() {
   return (
     <MemberRouteGuard>
-      <div className="site-shell">
-        <Header />
-        <MyJobsContent />
-        <Footer />
-      </div>
+      <MyJobsContent />
     </MemberRouteGuard>
   );
 }

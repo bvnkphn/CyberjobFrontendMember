@@ -2,7 +2,6 @@
 
 import { useRef, useState, useCallback, useEffect, Suspense, type ChangeEvent, type DragEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Header } from "@/components/header";
 import {
   createApplication,
   updateResume,
@@ -139,46 +138,6 @@ function ApplyStep1Inner() {
 
   return (
     <>
-      <Header />
-      {/* ═══ Navbar ═══ */}
-      <header className="s1-navbar">
-        <div className="s1-navbar-inner">
-          <a href="/" className="s1-nav-brand">CYBER<span>JOB</span></a>
-          <button className="s1-mobile-toggle" type="button" onClick={() => setNavOpen(!navOpen)} aria-label="เปิดเมนู">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
-          </button>
-           <nav className={`s1-nav-links ${navOpen ? "is-open" : ""}`}>
-            <a href="/">หน้าแรก</a>
-            <a href="/jobs">ค้นหางาน</a>
-            <a href="/profile/edit">ฝากประวัติ</a>
-            <a href="/articles">บทความ</a>
-            <a href="/about">เกี่ยวกับเรา</a>
-            <a href="/contact">ติดต่อเรา</a>
-            <button className="s1-nav-lang" type="button">ภาษาไทย <IconChevron /></button>
-            <div className="s1-nav-profile">
-              <button className="s1-nav-avatar" type="button" onClick={() => setDropdownOpen(!dropdownOpen)} aria-label="เมนูบัญชี">
-                <IconUser />
-              </button>
-              {dropdownOpen && (
-                <nav className="s1-nav-dropdown">
-                  <div className="s1-nav-dropdown-header">
-                    <strong>{firstName || "ผู้ใช้"} {lastName}</strong>
-                    <small>{profile?.email ?? ""}</small>
-                  </div>
-                  <a href="/profile"><IconUser /> โปรไฟล์</a>
-                  <a href="/profile/edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 3h10a2 2 0 0 1 2 2v5M8 7h5M8 11h3M5 3v18h7" /><path d="m14 18 5-5 2 2-5 5-3 1z" /></svg> แก้ไขประวัติ</a>
-                  <a href="/profile/preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M5 3h11a2 2 0 0 1 2 2v5M8 7h6M8 11h3M5 3v18h8" /><path d="M13 17s2-3 5-3 5 3 5 3-2 3-5 3-5-3-5-3Z" /><circle cx="18" cy="17" r="1" /></svg> ดูตัวอย่างประวัติ</a>
-                  <a href="/my-jobs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18M10 12v2h4v-2" /></svg> งานของฉัน</a>
-                  <a href="/invitations"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m4 7 8 6 8-6" /></svg> คำเชิญจากบริษัท</a>
-                  <hr />
-                  <a href="/" className="danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M10 4H4v16h6M14 8l4 4-4 4M8 12h10" /></svg> ออกจากระบบ</a>
-                </nav>
-              )}
-            </div>
-          </nav>
-        </div>
-      </header>
-
       {/* ═══ Header / Job Card ═══ */}
       <div className="s1-header">
         <button className="s1-back" type="button" onClick={() => history.back()}>
@@ -332,41 +291,6 @@ function ApplyStep1Inner() {
         </div>
       </main>
 
-      {/* ═══ Footer ═══ */}
-      <footer className="s1-footer">
-        <div className="s1-footer-main">
-          <div>
-            <div className="s1-footer-brand">CYBER<span>JOB</span></div>
-            <p className="s1-footer-about">เว็บหางานสำหรับคนทำงานเพื่อโอกาสเติบโตในบริษัทด้วยตำแหน่งที่เหมาะกับไลฟ์สไตล์ของคุณ</p>
-          </div>
-          <div className="s1-footer-links">
-            <div className="s1-footer-col">
-              <strong>ผู้หางาน</strong>
-              <a href="/jobs">ค้นหางาน</a>
-              <a href="/profile">โปรไฟล์</a>
-              <a href="/saved-jobs">งานที่บันทึก</a>
-              <a href="/applications">ประวัติการสมัครงาน</a>
-            </div>
-            <div className="s1-footer-col">
-              <strong>ผู้ประกอบการ</strong>
-              <a href="/register/business">ลงทะเบียนฟรี</a>
-              <a href="/post-job">ลงประกาศงาน</a>
-            </div>
-            <div className="s1-footer-col">
-              <strong>เกี่ยวกับเรา</strong>
-              <a href="/contact">ติดต่อเรา</a>
-            </div>
-          </div>
-        </div>
-        <div className="s1-footer-bottom">
-          <span>Copyright @ 2026 CYBERJOB Co, Ltd | All Rights Reserved.</span>
-          <div className="s1-footer-bottom-links">
-            <a href="/terms">ข้อกำหนดและเงื่อนไข</a>
-            <a href="/security">ความปลอดภัย</a>
-            <a href="/privacy">ความเป็นส่วนตัว</a>
-          </div>
-        </div>
-      </footer>
     </>
   );
 }

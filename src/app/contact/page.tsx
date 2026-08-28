@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
 import "./contact.css";
 
 const faqs = [
@@ -25,7 +23,6 @@ export default function ContactPage() {
 
   return (
     <div className="contact-shell">
-      <Header />
       <main className="contact-page">
         <header className="contact-heading">
           <span className="contact-eyebrow">CONTACT CYBERJOB</span>
@@ -75,7 +72,6 @@ export default function ContactPage() {
           </div>
         </section>
       </main>
-      <Footer />
     </div>
   );
 }

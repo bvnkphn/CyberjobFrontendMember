@@ -19,8 +19,8 @@ const COLUMNS: { title: DictKey; links: { key: DictKey; href: string }[] }[] = [
   {
     title: 'footer.employer',
     links: [
-      { key: 'footer.registerFree', href: process.env.NEXT_PUBLIC_OWNER_URL ?? 'http://localhost:3102/gate' },
-      { key: 'footer.postJob', href: '/employer/post-job' },
+      { key: 'footer.registerFree', href: process.env.NEXT_PUBLIC_OWNER_URL ?? '/contact' },
+      { key: 'footer.postJob', href: process.env.NEXT_PUBLIC_OWNER_URL ?? '/contact' },
     ],
   },
   {

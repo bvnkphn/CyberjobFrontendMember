@@ -1,11 +1,8 @@
-import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
 import "./about.css";
 
 export default function AboutPage() {
   return (
     <div className="site-shell">
-      <Header />
       <main className="about-page">
         <h1 className="about-title">เกี่ยวกับเรา</h1>
 
@@ -124,7 +121,6 @@ export default function AboutPage() {
           </div>
         </section>
       </main>
-      <Footer />
     </div>
   );
 }

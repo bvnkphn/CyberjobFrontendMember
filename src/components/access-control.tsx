@@ -4,7 +4,14 @@ import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/public-site/auth/AuthProvider";
 
-const PUBLIC_PREFIXES = ["/jobs", "/gate/login", "/gate/register"];
+const PUBLIC_PREFIXES = [
+  "/jobs",
+  "/gate/login",
+  "/gate/register",
+  "/terms",
+  "/privacy",
+  "/security",
+];
 
 export function AccessControl({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();

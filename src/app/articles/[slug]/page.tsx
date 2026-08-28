@@ -1,7 +1,5 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
 import { articles } from "../article-data";
 import "../articles.css";
 
@@ -15,7 +13,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
   const article = articles.find((item) => item.slug === slug);
   if (!article) notFound();
   const related = articles.filter((item) => item.slug !== article.slug).slice(0, 4);
-  return <div className="articles-shell"><Header /><main className="article-detail-page">
+  return <div className="articles-shell"><main className="article-detail-page">
     <div className="article-detail-layout">
       <article className="article-detail">
         <span className="article-badge">High quality professional</span>
@@ -35,5 +33,5 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
     <div className="article-author-card"><span className="large-author-avatar">JC</span><small>ผู้เขียน</small><strong>Jennifer Chen</strong><span className="author-contact">●</span><button type="button">ดูโปรไฟล์</button></div>
     <section className="comments-section"><h2>ความคิดเห็น (3)</h2>{["เป็นบทความที่มีประโยชน์มากครับ ขอบคุณสำหรับการแบ่งปัน", "ขอบคุณมากค่ะ ทักษะการเขียนเรซูเม่ดีขึ้นมาก", "เนื้อหาดีและอ่านเข้าใจง่ายมาก"].map((comment, index) => <div className="comment" key={comment}><span className="comment-avatar">{index + 1}</span><span><strong>{["Jane Westerness", "May Mavick", "Gracia Viktum"][index]}</strong><small>{20 - index * 5} มิ.ย. 2024</small><p>{comment}</p></span></div>)}<textarea placeholder="เขียนความคิดเห็นของคุณ..."></textarea><button className="comment-button" type="button">ส่งความคิดเห็น</button></section>
     <section className="related-section"><h2>โพสต์ใกล้เคียง</h2><div className="related-grid">{related.map((item) => <Link className="related-card" href={`/articles/${item.slug}`} key={item.slug}><img src={item.image} alt="" /><span className="article-category">{item.category}</span><strong>{item.title}</strong><small>ทีมงาน CyberJob · {item.date}</small></Link>)}</div><Link className="all-articles-button" href="/articles">ดูบทความทั้งหมด</Link></section>
-  </main><Footer /></div>;
+  </main></div>;
 }
