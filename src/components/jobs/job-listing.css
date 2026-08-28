@@ -1,5 +1,5 @@
 .jobs-page { min-height: 1000px; padding: 68px 32px 120px; background: radial-gradient(circle at 50% 0, #fff 0, #f5f7fb 360px); }
-.jobs-layout { max-width: 960px; margin: auto; }
+.jobs-layout { max-width: 1200px; margin: auto; }
 
 .jobs-toolbar { display: flex; gap: 12px; margin-top: 24px; }
 .jobs-search { flex: 1; }

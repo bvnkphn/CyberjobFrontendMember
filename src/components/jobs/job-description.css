@@ -1,5 +1,5 @@
 .job-page { padding: 38px 24px 88px; background: #fff; }
-.job-layout { max-width: 1000px; margin: auto; }
+.job-layout { max-width: 1200px; margin: auto; }
 .job-hero { height: 280px; border-radius: 16px 16px 0 0; background: linear-gradient(90deg, rgb(3 42 67 / 18%), rgb(0 24 42 / 26%)), url("https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1400&q=85") center / cover; }
 .job-content { max-width: 700px; margin: auto; padding: 42px 0 0; }
 .company-mark { margin-bottom: 38px; color: #46a8c9; font-size: 14px; }.company-mark span { color: #0d8aa7; margin-right: 4px; }

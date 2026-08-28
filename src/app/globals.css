@@ -8,7 +8,7 @@
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; background: var(--background); }
+body { margin: 0; background: var(--background); font-size: 16px; line-height: 1.5; }
 .member-route-loading { min-height: 100vh; display: grid; place-items: center; color: var(--muted); font-size: 14px; }
 button, input, select, textarea { font: inherit; }
 a { color: inherit; text-decoration: none; }
@@ -145,6 +145,29 @@ a { color: inherit; text-decoration: none; }
 
 .login-btn-outline:hover {
   background: var(--blue-soft);
+}
+
+.auth-placeholder-actions { display: flex; align-items: center; gap: 8px; margin-left: 8px; }
+.auth-placeholder-button {
+  min-width: 84px;
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: not-allowed;
+}
+.auth-placeholder-login { border: 1px solid var(--blue); background: #fff; color: var(--blue); }
+.auth-placeholder-register { border: 1px solid var(--blue-dark); background: var(--blue-dark); color: #fff; }
+.auth-placeholder-button:disabled { opacity: .72; }
+.auth-placeholder-mobile { display: none; margin-left: 0; }
+
+@media (max-width: 620px) {
+  .auth-placeholder-desktop { display: none; }
+  .auth-placeholder-mobile { display: flex; }
+  .auth-placeholder-mobile .auth-placeholder-button { flex: 1; height: 40px; font-size: 14px; }
 }
 
 /* OTP & Success UI Styles */

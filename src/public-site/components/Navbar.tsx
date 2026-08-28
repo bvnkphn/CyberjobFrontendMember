@@ -58,6 +58,14 @@ export function Navbar() {
           <div className="hidden sm:block">
             <LanguageSwitcher />
           </div>
+          <div className="auth-placeholder-actions auth-placeholder-desktop" aria-label={t('auth.login')}>
+            <button type="button" className="auth-placeholder-button auth-placeholder-login" disabled>
+              {t('auth.login')}
+            </button>
+            <button type="button" className="auth-placeholder-button auth-placeholder-register" disabled>
+              {t('auth.register')}
+            </button>
+          </div>
           <button
             type="button"
             aria-label={t('nav.menu')}
@@ -96,6 +104,16 @@ export function Navbar() {
             ))}
             <li className="px-1 pt-2 sm:hidden">
               <LanguageSwitcher />
+            </li>
+            <li className="px-1 pb-2 pt-2 sm:hidden">
+              <div className="auth-placeholder-actions auth-placeholder-mobile">
+                <button type="button" className="auth-placeholder-button auth-placeholder-login" disabled>
+                  {t('auth.login')}
+                </button>
+                <button type="button" className="auth-placeholder-button auth-placeholder-register" disabled>
+                  {t('auth.register')}
+                </button>
+              </div>
             </li>
           </ul>
         </div>

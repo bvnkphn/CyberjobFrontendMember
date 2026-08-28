@@ -1,53 +1,22 @@
 "use client";
-import { useEffect, useState, type MouseEvent } from "react";
+import { useState, type MouseEvent } from "react";
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation"; // 🌟 เพิ่ม usePathname
+import { useRouter } from "next/navigation";
 import { Brand } from "./brand";
-import { Icon, type IconName } from "./icons";
-import { ensureDemoSession, getProfile, hasAccessToken, logout, type MemberProfile } from "@/lib/member-api";
+import { Icon } from "./icons";
 import { useLanguage } from "./language-provider";
 import "./profile/profile-editor.css";
-
-const accountLinks: [IconName, string, string][] = [
-  ["user", "โปรไฟล์", "/profile"], ["edit", "แก้ไขประวัติ", "/profile/edit"],
-  ["preview", "ดูตัวอย่างประวัติ", "/profile/preview"], ["briefcase", "งานของฉัน", "/my-jobs"],
-  ["mail", "คำเชิญจากบริษัท", "/invitations"], ["logout", "ออกจากระบบ", "#logout"],
-];
 
 export function Header() {
   const { locale, toggleLocale } = useLanguage();
   const router = useRouter();
-  const pathname = usePathname(); // 🌟 ดึง path ปัจจุบัน
 
   const [navOpen, setNavOpen] = useState(false);
-  const [accountOpen, setAccountOpen] = useState(false);
-  const [profile, setProfile] = useState<MemberProfile | null>(null);
 
-  useEffect(() => { ensureDemoSession().then(() => getProfile().then(setProfile).catch(() => undefined)); }, []);
-  const personal = profile?.personal ?? {};
-  const accountName = [profile?.firstName ?? personal.firstName, profile?.lastName ?? personal.lastName].filter((value) => typeof value === "string" && value.trim()).join(" ");
-
-  // 🌟 ตัวแปรเช็คว่าตอนนี้อยู่หน้า Gate (Login/Register) หรือไม่
-  const isGatePage = pathname?.startsWith("/gate");
-
-  const openResume = async (event: MouseEvent<HTMLAnchorElement>) => {
+  const openResume = (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     setNavOpen(false);
-    await ensureDemoSession();
-    if (!hasAccessToken()) { router.push("/"); return; }
-    try {
-      const profile = await getProfile();
-      router.push(profile.completion > 0 ? "/profile/preview" : "/profile/edit");
-    } catch {
-      router.push("/profile/edit");
-    }
-  };
-
-  const signOut = (event: MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-    logout();
-    setAccountOpen(false);
-    router.push("/");
+    router.push("/profile/edit");
   };
 
   return (
@@ -64,31 +33,10 @@ export function Header() {
           </button>
         </nav>
 
-        {/* 🌟 เงื่อนไขสลับหน้าตาขวาสุดของ Header */}
-        {isGatePage ? (
-          <div className="gate-actions" style={{ marginLeft: '16px' }}>
-            <Link href="/gate/login" className="login-btn-outline">Log in</Link>
-          </div>
-        ) : (
-          <div className="account-wrap">
-            <button className="account-button" type="button" aria-label="เปิดเมนูบัญชี" aria-expanded={accountOpen} onClick={() => setAccountOpen(!accountOpen)}>
-              <Icon name="user" />
-            </button>
-            {accountOpen && (
-              <nav className="account-menu" aria-label="เมนูบัญชี">
-                <header>
-                  <strong data-no-translate>{accountName || (locale === "th" ? "ผู้ใช้งาน CyberJob" : "CyberJob user")}</strong>
-                  <span data-no-translate>{profile?.email ?? window.localStorage.getItem("memberEmail") ?? (locale === "th" ? "สมาชิก CyberJob" : "CyberJob member")}</span>
-                </header>
-                {accountLinks.map(([icon,label,href]) => (
-                  <Link className={icon === "logout" ? "danger" : ""} href={href} onClick={icon === "logout" ? signOut : undefined} key={label}>
-                    <Icon name={icon} />{label}
-                  </Link>
-                ))}
-              </nav>
-            )}
-          </div>
-        )}
+        <div className="auth-placeholder-actions" aria-label={locale === "th" ? "บัญชีผู้ใช้" : "User account"}>
+          <button type="button" className="auth-placeholder-button auth-placeholder-login" disabled>Login</button>
+          <button type="button" className="auth-placeholder-button auth-placeholder-register" disabled>Register</button>
+        </div>
       </div>
     </header>
   );
