@@ -76,13 +76,34 @@ async function toApiError(res: Response, path: string): Promise<ApiError> {
 
 let refreshing: Promise<boolean> | null = null;
 
+const REQUEST_TIMEOUT_MS = 8_000;
+
+/** ป้องกันหน้าเว็บค้างเมื่อ API ปลายทางหยุดทำงานหรือยังไม่พร้อม */
+async function fetchWithTimeout(
+  input: RequestInfo | URL,
+  init: RequestInit = {},
+): Promise<Response> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  const abortFromCaller = () => controller.abort();
+  if (init.signal?.aborted) controller.abort();
+  else init.signal?.addEventListener('abort', abortFromCaller, { once: true });
+
+  try {
+    return await fetch(input, { ...init, signal: controller.signal });
+  } finally {
+    clearTimeout(timeout);
+    init.signal?.removeEventListener('abort', abortFromCaller);
+  }
+}
+
 /** ขอ access token ใหม่ด้วย refresh cookie – ยิงพร้อมกันหลายครั้งก็ทำงานรอบเดียว */
 async function refreshAccessToken(): Promise<boolean> {
   if (typeof window === 'undefined') return false;
   if (!refreshing) {
     refreshing = (async () => {
       try {
-        const res = await fetch(`${API_BASE}/auth/refresh`, {
+        const res = await fetchWithTimeout(`${API_BASE}/auth/refresh`, {
           method: 'POST',
           credentials: 'include',
         });
@@ -113,7 +134,7 @@ async function request<T>(
 
   const send = () => {
     const token = getAccessToken();
-    return fetch(`${API_BASE}${path}`, {
+    return fetchWithTimeout(`${API_BASE}${path}`, {
       ...rest,
       credentials: 'include',
       headers: {
@@ -159,4 +180,3 @@ export function apiPost<T>(
 export function apiDelete<T>(path: string, init?: RequestOptions): Promise<T> {
   return request<T>(path, { ...init, method: 'DELETE' });
 }
-

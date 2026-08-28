@@ -30,7 +30,8 @@ export function AccessControl({ children }: { children: React.ReactNode }) {
     }
   }, [isAuthPage, isPublic, loading, pathname, router, user]);
 
-  if (loading) return <main className="member-route-loading">กำลังตรวจสอบบัญชี...</main>;
+  // หน้า Public ต้องเปิดดูได้ทันที แม้ Backend กำลังเริ่มระบบหรือใช้งานไม่ได้ชั่วคราว
+  if (loading && !isPublic) return <main className="member-route-loading">กำลังตรวจสอบบัญชี...</main>;
   if ((!user && !isPublic) || (user && !user.gateCompleted && pathname !== "/gate")) return <main className="member-route-loading">กำลังนำคุณไปยังหน้าที่ถูกต้อง...</main>;
   return children;
 }
