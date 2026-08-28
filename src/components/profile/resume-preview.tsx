@@ -70,7 +70,7 @@ export function ResumePreview() {
 
   return (
     <main className="resume-preview-page">
-      <div className="resume-preview-layout">
+      <div className="resume-preview-layout member-page-container">
         <ProfilePageHeading title="ดู Resume" description="ตรวจสอบข้อมูลก่อนพิมพ์หรือบันทึกเป็น PDF" />
         <div className="resume-toolbar">
           <button type="button" onClick={printResume}><span aria-hidden="true">⎙</span> พิมพ์</button>

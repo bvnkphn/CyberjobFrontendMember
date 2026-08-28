@@ -4,11 +4,13 @@
   --navy: #06154f; --navy-dark: #192d3e; --blue: #3479ed; --blue-dark: #1737bd;
   --blue-soft: #e8f0ff; --green: #00d477; --red: #f01823; --ink: #111c43;
   --muted: #77808e; --line: #dfe3ea; --background: #f5f7fb; --radius: 12px;
+  --page-max-width: 1200px; --page-gutter: 32px;
   font-family: "Noto Sans Thai", system-ui, sans-serif; color: var(--ink); background: var(--background);
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { margin: 0; background: var(--background); font-size: 16px; line-height: 1.5; }
+.member-page-container { width: 100%; max-width: var(--page-max-width); margin-inline: auto; padding-inline: var(--page-gutter); }
 .member-route-loading { min-height: 100vh; display: grid; place-items: center; color: var(--muted); font-size: 14px; }
 button, input, select, textarea { font: inherit; }
 a { color: inherit; text-decoration: none; }
@@ -17,6 +19,8 @@ a { color: inherit; text-decoration: none; }
 .primary-button:active { transform: translateY(1px); box-shadow: 0 3px 8px rgb(52 121 237 / 20%); }
 .primary-button:focus-visible, button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid rgb(52 121 237 / 28%); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+@media (max-width: 1024px) { :root { --page-gutter: 24px; } }
+@media (max-width: 640px) { :root { --page-gutter: 16px; } }
 
 /* Auth Layout & Card */
 .auth-container {

@@ -14,7 +14,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
   const article = articles.find((item) => item.slug === slug);
   if (!article) notFound();
   const related = articles.filter((item) => item.slug !== article.slug).slice(0, 4);
-  return <div className="articles-shell"><main className="article-detail-page">
+  return <div className="articles-shell"><main className="article-detail-page member-page-container">
     <PageHeading title="บทความ" description={article.title} fallbackHref="/articles" className="article-detail-heading" />
     <div className="article-detail-layout">
       <article className="article-detail">

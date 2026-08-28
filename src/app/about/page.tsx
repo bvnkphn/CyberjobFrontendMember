@@ -4,7 +4,7 @@ import { PageHeading } from "@/components/page-heading";
 export default function AboutPage() {
   return (
     <div className="site-shell">
-      <main className="about-page">
+      <main className="about-page member-page-container">
         <PageHeading title="เกี่ยวกับเรา" description="รู้จักเรื่องราว พันธกิจ และบริการที่ CyberJob ตั้งใจสร้างเพื่อคนหางาน" fallbackHref="/" className="about-title" />
 
         {/* Section 1: เรื่องราวของเรา + พันธกิจ/วิสัยทัศน์ */}

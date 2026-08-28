@@ -12,7 +12,7 @@ export default function ArticlesPage() {
   const [activeCategory, setActiveCategory] = useState("ทั้งหมด");
   const filteredArticles = activeCategory === "ทั้งหมด" ? articles : articles.filter((article) => article.category === activeCategory);
 
-  return <div className="articles-shell"><main className="articles-page">
+  return <div className="articles-shell"><main className="articles-page member-page-container">
     <PageHeading title="บทความ" description="เคล็ดลับและความรู้เพื่อการทำงานและพัฒนาตัวเอง" fallbackHref="/" className="articles-list-heading" />
     <nav className="article-filters" aria-label="หมวดหมู่บทความ">{categories.map((category) => <button className={activeCategory === category ? "active" : ""} type="button" key={category} onClick={() => setActiveCategory(category)} aria-pressed={activeCategory === category}>{category}</button>)}</nav>
     <section className="article-grid" aria-label="รายการบทความ">{filteredArticles.map((article) => <article className="article-card" key={article.slug}>

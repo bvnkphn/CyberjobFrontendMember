@@ -41,7 +41,7 @@ export function ProfileDashboard() {
 
   return (
     <main className="dashboard-page">
-      <div className="dashboard-layout">
+      <div className="dashboard-layout member-page-container">
         <ProfilePageHeading title="โปรไฟล์" description="จัดการ Resume และการตั้งค่าบัญชีของคุณได้จากที่นี่" fallbackHref="/" />
 
         <section className="dashboard-user-card">

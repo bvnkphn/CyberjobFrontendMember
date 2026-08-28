@@ -1,5 +1,5 @@
 .contact-shell { min-height: 100vh; background: #f8fafc; }
-.contact-page { width: min(100% - 32px, 1120px); margin: 0 auto; padding: 64px 0 96px; }
+.contact-page { padding-top: 64px; padding-bottom: 96px; }
 .contact-heading { max-width: 720px; margin-bottom: 32px; }
 .contact-eyebrow, .faq-heading > span { color: #3479ed; font-size: 12px; font-weight: 800; letter-spacing: .12em; }
 
@@ -42,7 +42,7 @@
 .faq-item p { margin: -6px 42px 18px 0; color: #64748b; font-size: 14px; line-height: 1.75; }
 
 @media (max-width: 900px) {
-  .contact-page { padding: 48px 0 72px; }
+  .contact-page { padding-top: 48px; padding-bottom: 72px; }
   .line-banner { grid-template-columns: 64px minmax(0, 1fr) auto; }
   .line-mark { width: 64px; height: 64px; }
   .line-mark img { width: 44px; height: 44px; }
@@ -51,7 +51,7 @@
 }
 
 @media (max-width: 640px) {
-  .contact-page { width: min(100% - 24px, 1120px); padding: 34px 0 56px; }
+  .contact-page { padding-top: 34px; padding-bottom: 56px; }
   .contact-heading { margin-bottom: 22px; }
   .contact-heading p { font-size: 15px; }
   .line-banner { grid-template-columns: 52px minmax(0, 1fr); gap: 14px; padding: 20px; border-radius: 18px; }

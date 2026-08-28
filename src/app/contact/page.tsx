@@ -24,7 +24,7 @@ export default function ContactPage() {
 
   return (
     <div className="contact-shell">
-      <main className="contact-page">
+      <main className="contact-page member-page-container">
         <PageHeading title="ติดต่อเรา" description="มีคำถามหรือต้องการความช่วยเหลือ? ทีมงาน CyberJob พร้อมดูแลคุณ" eyebrow="CONTACT CYBERJOB" fallbackHref="/" className="contact-heading" />
 
         <section className="line-banner" aria-label="ติดต่อผ่าน LINE">

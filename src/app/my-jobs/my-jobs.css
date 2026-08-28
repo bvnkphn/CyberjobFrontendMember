@@ -4,13 +4,12 @@
 
 .mj-page {
   min-height: 1000px;
-  padding: 68px 32px 120px;
+  padding: 68px 0 120px;
   background: radial-gradient(circle at 50% 0, #fff 0, var(--background) 360px);
 }
 
 .mj-layout {
-  max-width: 1100px;
-  margin: auto;
+  max-width: var(--page-max-width);
 }
 
 /* ── Title ──────────────────────────────────────────────────────── */
@@ -973,7 +972,7 @@
 
 @media (max-width: 620px) {
   .mj-page {
-    padding: 40px 18px 80px;
+    padding: 40px 0 80px;
   }
 
   .mj-title {

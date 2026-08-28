@@ -504,7 +504,7 @@ function MyJobsContent() {
 
   return (
     <main className="mj-page">
-      <div className="mj-layout">
+      <div className="mj-layout member-page-container">
         <PageHeading className="mj-title" title="งานของฉัน" description="จัดการงานที่บันทึกและติดตามสถานะใบสมัครของคุณ" fallbackHref="/profile" />
 
         {/* ── Tab bar ── */}

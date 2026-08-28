@@ -1,5 +1,5 @@
-.profile-page { min-height: 1000px; padding: 72px 32px 120px; background: radial-gradient(circle at 50% 0,#fff 0,#f5f7fb 340px); }
-.profile-layout { max-width: 1200px; margin: auto; display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 26px; align-items: start; }
+.profile-page { min-height: 1000px; padding: 72px 0 120px; background: radial-gradient(circle at 50% 0,#fff 0,#f5f7fb 340px); }
+.profile-layout { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 26px; align-items: start; }
 .profile-page-heading { grid-column: 1 / -1; min-height: 58px; display: flex; align-items: center; gap: 16px; }
 .profile-page-heading h1 { margin: 0; color: var(--navy); font-size: 34px; }
 .profile-page-heading p { margin: 3px 0 0; color: var(--muted); font-size: 14px; }
@@ -136,7 +136,7 @@
 .project-field textarea { min-height: 130px; }
 .other-skills-save-row { min-height: 90px; margin-top: 24px; padding-top: 22px; border-top: 1px solid var(--line); }
 @media (max-width: 900px) {
-  .profile-page { padding: 30px 18px 70px; } .profile-layout { grid-template-columns: 1fr; } .profile-sidebar { position: static; grid-template-columns: 1fr 1fr; }
+  .profile-page { padding: 30px 0 70px; } .profile-layout { grid-template-columns: 1fr; } .profile-sidebar { position: static; grid-template-columns: 1fr 1fr; }
   .mobile-section-picker { grid-column: 1 / -1; display: block; } .section-nav { display: none; }
 }
 @media (max-width: 620px) {
