@@ -88,7 +88,7 @@ function JobCard({ job }: { job: JobListingType }) {
         <span className="job-card-salary">{job.salary}</span>
       </div>
       <div className="job-card-actions">
-        <Link href={`/jobs/${job.id}/apply`} className="primary-button job-apply-button">
+        <Link href={`/apply-step1?jobId=${job.id}`} className="primary-button job-apply-button">
           สมัครงาน
         </Link>
       </div>
