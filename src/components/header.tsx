@@ -33,10 +33,14 @@ export function Header() {
           </button>
         </nav>
 
-        <div className="auth-placeholder-actions" aria-label={locale === "th" ? "บัญชีผู้ใช้" : "User account"}>
-          <button type="button" className="auth-placeholder-button auth-placeholder-login" disabled>Login</button>
-          <button type="button" className="auth-placeholder-button auth-placeholder-register" disabled>Register</button>
-        </div>
+        <Link
+          href="/profile"
+          className="auth-simulated-profile"
+          aria-label={locale === "th" ? "โปรไฟล์" : "Profile"}
+          title={locale === "th" ? "โปรไฟล์" : "Profile"}
+        >
+          <Icon name="user" />
+        </Link>
       </div>
     </header>
   );

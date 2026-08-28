@@ -163,10 +163,26 @@ a { color: inherit; text-decoration: none; }
 .auth-placeholder-register { border: 1px solid var(--blue-dark); background: var(--blue-dark); color: #fff; }
 .auth-placeholder-button:disabled { opacity: .72; }
 .auth-placeholder-mobile { display: none; margin-left: 0; }
+.auth-simulated-profile {
+  display: inline-flex;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d7e2f4;
+  border-radius: 999px;
+  color: var(--blue-dark);
+  background: #fff;
+  transition: border-color .2s ease, background .2s ease, color .2s ease;
+}
+.auth-simulated-profile:hover { border-color: var(--blue); background: var(--blue-soft); color: var(--blue); }
+.auth-simulated-profile svg { width: 20px; height: 20px; }
 
 @media (max-width: 620px) {
   .auth-placeholder-desktop { display: none; }
   .auth-placeholder-mobile { display: flex; }
+  .auth-simulated-profile.auth-placeholder-mobile { width: 100%; border-radius: 8px; gap: 8px; }
   .auth-placeholder-mobile .auth-placeholder-button { flex: 1; height: 40px; font-size: 14px; }
 }
 

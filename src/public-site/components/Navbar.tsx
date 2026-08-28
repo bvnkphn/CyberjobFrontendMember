@@ -7,7 +7,7 @@ import { useI18n } from '@/public-site/i18n/LanguageProvider';
 import type { DictKey } from '@/public-site/i18n/dictionary';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { Logo } from './Logo';
-import { CloseIcon } from './Icons';
+import { CloseIcon, UserIcon } from './Icons';
 
 /** เมนูหลักตาม Feature 3.4 – มีอยู่ทุกหน้า */
 const NAV_ITEMS: { key: DictKey; href: string }[] = [
@@ -58,14 +58,14 @@ export function Navbar() {
           <div className="hidden sm:block">
             <LanguageSwitcher />
           </div>
-          <div className="auth-placeholder-actions auth-placeholder-desktop" aria-label={t('auth.login')}>
-            <button type="button" className="auth-placeholder-button auth-placeholder-login" disabled>
-              {t('auth.login')}
-            </button>
-            <button type="button" className="auth-placeholder-button auth-placeholder-register" disabled>
-              {t('auth.register')}
-            </button>
-          </div>
+          <Link
+            href="/profile"
+            aria-label={t('user.profile')}
+            title={t('user.profile')}
+            className="auth-simulated-profile auth-placeholder-desktop"
+          >
+            <UserIcon width={20} height={20} />
+          </Link>
           <button
             type="button"
             aria-label={t('nav.menu')}
@@ -106,14 +106,14 @@ export function Navbar() {
               <LanguageSwitcher />
             </li>
             <li className="px-1 pb-2 pt-2 sm:hidden">
-              <div className="auth-placeholder-actions auth-placeholder-mobile">
-                <button type="button" className="auth-placeholder-button auth-placeholder-login" disabled>
-                  {t('auth.login')}
-                </button>
-                <button type="button" className="auth-placeholder-button auth-placeholder-register" disabled>
-                  {t('auth.register')}
-                </button>
-              </div>
+              <Link
+                href="/profile"
+                onClick={() => setMobileOpen(false)}
+                className="auth-simulated-profile auth-placeholder-mobile"
+              >
+                <UserIcon width={20} height={20} />
+                <span>{t('user.profile')}</span>
+              </Link>
             </li>
           </ul>
         </div>
