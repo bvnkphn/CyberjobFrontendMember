@@ -19,8 +19,8 @@ interface AuthContextValue {
   user: AuthUser | null;
   /** true ระหว่างกำลังตรวจ session ตอนเปิดเว็บครั้งแรก */
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<AuthUser>;
+  register: (email: string, password: string, name: string, role?: 'JOBSEEKER' | 'EMPLOYER') => Promise<AuthUser>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
   /** ใช้หลังกลับมาจาก OAuth callback */
@@ -52,6 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setAccessToken(result.accessToken);
       setUser(result.user);
       await mergeLocalBookmarks();
+      return result.user;
     },
     [mergeLocalBookmarks],
   );
@@ -80,17 +81,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = useCallback(
-    async (email: string, password: string) => {
+    async (email: string, password: string): Promise<AuthUser> => {
       const result = await authService.login({ email, password });
-      await applyResult(result);
+      return applyResult(result);
     },
     [applyResult],
   );
 
   const register = useCallback(
-    async (email: string, password: string, name: string) => {
-      const result = await authService.register({ email, password, name });
-      await applyResult(result);
+    async (email: string, password: string, name: string, role: 'JOBSEEKER' | 'EMPLOYER' = 'JOBSEEKER'): Promise<AuthUser> => {
+      const result = await authService.register({ email, password, name, role });
+      return applyResult(result);
     },
     [applyResult],
   );

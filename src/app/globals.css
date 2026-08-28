@@ -162,6 +162,15 @@ a { color: inherit; text-decoration: none; }
 }
 .auth-placeholder-login { border: 1px solid var(--blue); background: #fff; color: var(--blue); }
 .auth-placeholder-register { border: 1px solid var(--blue-dark); background: var(--blue-dark); color: #fff; }
+
+.account-type { margin: 0 0 18px; padding: 0; border: 0; }
+.account-type legend { margin-bottom: 9px; color: var(--navy); font-size: 13px; font-weight: 800; }
+.account-type > div { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.account-type label { min-width: 0; padding: 12px; display: grid; gap: 3px; border: 1px solid var(--line); border-radius: 9px; color: #667085; cursor: pointer; transition: .18s; }
+.account-type label.selected { border-color: var(--blue); background: #f2f6ff; box-shadow: 0 0 0 2px rgb(36 83 214 / 10%); }
+.account-type input { position: absolute; opacity: 0; pointer-events: none; }
+.account-type strong { color: var(--navy); font-size: 14px; }
+.account-type span { font-size: 11px; line-height: 1.35; }
 .auth-placeholder-button:disabled { opacity: .72; }
 .auth-placeholder-mobile { display: none; margin-left: 0; }
 .auth-simulated-profile {

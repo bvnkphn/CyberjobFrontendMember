@@ -8,7 +8,7 @@ import { useAuth } from "@/public-site/auth/AuthProvider";
 export default function RegisterForm() {
   const { register } = useAuth();
   const router = useRouter();
-  const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "", terms: false });
+  const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "", terms: false, role: "JOBSEEKER" as "JOBSEEKER" | "EMPLOYER" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -19,7 +19,11 @@ export default function RegisterForm() {
     if (!form.terms) return setError("กรุณายอมรับข้อกำหนดและนโยบายความเป็นส่วนตัว");
     setLoading(true);
     try {
-      await register(form.email, form.password, form.name);
+      const user = await register(form.email, form.password, form.name, form.role);
+      if (user.role === "EMPLOYER") {
+        window.location.assign(`${process.env.NEXT_PUBLIC_OWNER_URL ?? "http://localhost:3102"}/gate`);
+        return;
+      }
       router.replace("/gate");
       router.refresh();
     } catch (reason) {
@@ -34,6 +38,7 @@ export default function RegisterForm() {
     <p className="auth-lead">สร้างบัญชีเพื่อสมัครงานและสร้างโปรไฟล์ CyberJob</p>
     {error && <div className="error-message" role="alert">{error}</div>}
     <form onSubmit={submit}>
+      <fieldset className="account-type"><legend>สมัครในฐานะ</legend><div><label className={form.role === "JOBSEEKER" ? "selected" : ""}><input type="radio" name="role" value="JOBSEEKER" checked={form.role === "JOBSEEKER"} onChange={() => setForm({ ...form, role: "JOBSEEKER" })} /><strong>คนทั่วไป</strong><span>ค้นหาและสมัครงาน</span></label><label className={form.role === "EMPLOYER" ? "selected" : ""}><input type="radio" name="role" value="EMPLOYER" checked={form.role === "EMPLOYER"} onChange={() => setForm({ ...form, role: "EMPLOYER" })} /><strong>ผู้ประกอบการ</strong><span>ประกาศงานและค้นหาผู้สมัคร</span></label></div></fieldset>
       <div className="input-group"><input className="auth-input" placeholder="ชื่อที่แสดง" autoComplete="name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required minLength={2} /></div>
       <div className="input-group"><input className="auth-input" type="email" placeholder="อีเมล" autoComplete="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required /></div>
       <div className="input-group"><input className="auth-input" type="password" placeholder="รหัสผ่านอย่างน้อย 8 ตัว มีตัวอักษรและตัวเลข" autoComplete="new-password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required minLength={8} /></div>
