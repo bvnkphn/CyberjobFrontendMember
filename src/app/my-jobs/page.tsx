@@ -669,7 +669,7 @@ function MyJobsContent() {
                     <p className="mj-posted">โพสต์เมื่อ {selectedJob.postedDate}</p>
 
                     <div className="mj-detail-actions">
-                      <Link href={`/jobs/${selectedJob.id}/apply`} className="primary-button mj-apply-btn">สมัคร</Link>
+                      <Link href={`/apply-step1?jobId=${selectedJob.id}`} className="primary-button mj-apply-btn">สมัคร</Link>
                       <button className="mj-save-btn">
                         <IconBookmark filled={bookmarks.has(selectedJob.id)} /> บันทึก
                       </button>

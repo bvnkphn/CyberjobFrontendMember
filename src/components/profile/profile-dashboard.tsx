@@ -104,7 +104,7 @@ function EmailSettings({ email }: { email: string }) {
 }
 
 function PasswordSettings() {
-  return <div className="modal-fields"><label>รหัสผ่านปัจจุบัน<input type="password" required placeholder="กรอกรหัสผ่านปัจจุบัน" /></label><label>รหัสผ่านใหม่<input type="password" required minLength={8} placeholder="กรอกรหัสผ่านใหม่" /></label><ul><li>อย่างน้อย 8 ตัวอักษร</li><li>มีตัวเลขอย่างน้อย 1 ตัว</li><li>มีสัญลักษณ์พิเศษอย่างน้อย 1 ตัว</li></ul><label>ยืนยันรหัสผ่านใหม่<input type="password" required minLength={8} placeholder="กรอกรหัสผ่านใหม่อีกครั้ง" /></label><Link href="/forgot-password">ลืมรหัสผ่าน?</Link></div>;
+  return <div className="modal-fields"><label>รหัสผ่านปัจจุบัน<input type="password" required placeholder="กรอกรหัสผ่านปัจจุบัน" /></label><label>รหัสผ่านใหม่<input type="password" required minLength={8} placeholder="กรอกรหัสผ่านใหม่" /></label><ul><li>อย่างน้อย 8 ตัวอักษร</li><li>มีตัวเลขอย่างน้อย 1 ตัว</li><li>มีสัญลักษณ์พิเศษอย่างน้อย 1 ตัว</li></ul><label>ยืนยันรหัสผ่านใหม่<input type="password" required minLength={8} placeholder="กรอกรหัสผ่านใหม่อีกครั้ง" /></label><Link href="/gate/forgot-password">ลืมรหัสผ่าน?</Link></div>;
 }
 
 function DeleteSettings() {

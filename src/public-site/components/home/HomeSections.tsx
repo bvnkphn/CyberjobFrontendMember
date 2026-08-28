@@ -63,7 +63,7 @@ export function ResumeAccountSection() {
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/80">
             {t('resume.body')}
           </p>
-          <Link href="/profile" className="btn-accent mt-6">
+          <Link href="/profile/edit" className="btn-accent mt-6">
             {t('resume.cta')}
             <ChevronRightIcon width={16} height={16} />
           </Link>
