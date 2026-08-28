@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useI18n } from '@/public-site/i18n/LanguageProvider';
 import type { DictKey } from '@/public-site/i18n/dictionary';
 import { LanguageSwitcher } from './LanguageSwitcher';
@@ -12,24 +12,28 @@ import { UserMenu } from './UserMenu';
 import { useAuth } from '@/public-site/auth/AuthProvider';
 
 /** เมนูหลักตาม Feature 3.4 – มีอยู่ทุกหน้า */
-const NAV_ITEMS: { key: DictKey; href: string; requiresAuth?: boolean }[] = [
+const NAV_ITEMS: { key: DictKey; href: string; activePrefixes?: string[]; requiresAuth?: boolean }[] = [
   { key: 'nav.home', href: '/' },
-  { key: 'nav.jobs', href: '/jobs' },
-  { key: 'nav.resume', href: '/profile', requiresAuth: true },
-  { key: 'nav.articles', href: '/articles', requiresAuth: true },
-  { key: 'nav.about', href: '/about', requiresAuth: true },
-  { key: 'nav.contact', href: '/contact', requiresAuth: true },
+  { key: 'nav.jobs', href: '/jobs', activePrefixes: ['/jobs'] },
+  { key: 'nav.resume', href: '/profile/edit', activePrefixes: ['/profile'], requiresAuth: true },
+  { key: 'nav.articles', href: '/articles', activePrefixes: ['/articles'], requiresAuth: true },
+  { key: 'nav.about', href: '/about', activePrefixes: ['/about'], requiresAuth: true },
+  { key: 'nav.contact', href: '/contact', activePrefixes: ['/contact'], requiresAuth: true },
 ];
 
 export function Navbar() {
   const { t } = useI18n();
   const pathname = usePathname();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const visibleItems = NAV_ITEMS.filter((item) => !item.requiresAuth || user);
+  const visibleItems = loading ? [] : NAV_ITEMS.filter((item) => !item.requiresAuth || user);
 
-  const isActive = (href: string) =>
-    href === '/' ? pathname === '/' : pathname.startsWith(href);
+  const isActive = (item: (typeof NAV_ITEMS)[number]) =>
+    item.href === '/' ? pathname === '/' : (item.activePrefixes ?? [item.href]).some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
 
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
@@ -42,15 +46,16 @@ export function Navbar() {
             <li key={item.href}>
               <Link
                 href={item.href}
+                aria-current={isActive(item) ? 'page' : undefined}
                 className={`relative block rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                  isActive(item.href)
+                  isActive(item)
                     ? 'text-brand-700'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-brand-700'
                 }`}
               >
                 {t(item.key)}
                 {/* ขีดใต้เป็น absolute เพื่อไม่ให้ดันข้อความของเมนูที่เลือกอยู่ให้สูงกว่าตัวอื่น */}
-                {isActive(item.href) && (
+                {isActive(item) && (
                   <span className="absolute inset-x-3 bottom-1 h-0.5 rounded-full bg-accent-500" />
                 )}
               </Link>
@@ -88,9 +93,10 @@ export function Navbar() {
               <li key={item.href}>
                 <Link
                   href={item.href}
+                  aria-current={isActive(item) ? 'page' : undefined}
                   onClick={() => setMobileOpen(false)}
                   className={`block rounded-lg px-3 py-2.5 text-sm font-medium ${
-                    isActive(item.href)
+                    isActive(item)
                       ? 'bg-brand-50 text-brand-700'
                       : 'text-slate-700 hover:bg-slate-50'
                   }`}
