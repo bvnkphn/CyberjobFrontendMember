@@ -12,6 +12,13 @@ export const metadata: Metadata = {
   description: "แพลตฟอร์มหางานที่เชื่อมต่อคนทำงานกับองค์กรชั้นนำ ค้นหางาน ฝากประวัติ และสมัครงานได้ในที่เดียว",
 };
 
+// Hostinger hCDN otherwise keeps prerendered HTML for up to one year.
+// Render route documents per request so a deployment can never mix old HTML
+// with JavaScript/CSS chunks from a newer release. Hashed static assets remain
+// cacheable by Next.js as usual.
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="th">
