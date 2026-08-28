@@ -141,8 +141,6 @@
 }
 @media (max-width: 620px) {
   .profile-sidebar { grid-template-columns: 1fr; } .mobile-section-picker { grid-column: auto; }
-  .auth-placeholder-actions { gap: 5px; margin-left: 0; }
-  .auth-placeholder-button { min-width: 0; height: 36px; padding: 0 10px; font-size: 12px; }
   .profile-page-heading { gap: 12px; } .profile-page-heading h1 { font-size: 26px; } .profile-page-heading p { font-size: 12px; }
   .profile-back-link { min-height: 34px; }
   .completion-card { padding: 18px; } .completion-main { justify-content: space-between; }

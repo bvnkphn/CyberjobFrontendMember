@@ -127,42 +127,6 @@ a { color: inherit; text-decoration: none; }
   font-size: 14px;
   text-align: center;
 }
-/* ปุ่ม Log in สไตล์ Figma */
-.login-btn-outline {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 40px;
-  padding: 0 24px;
-  border: 1px solid var(--blue);
-  color: var(--blue);
-  border-radius: 20px; /* ขอบมนตามรูป */
-  font-weight: 600;
-  font-size: 15px;
-  background: transparent;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-
-.login-btn-outline:hover {
-  background: var(--blue-soft);
-}
-
-.auth-placeholder-actions { display: flex; align-items: center; gap: 8px; margin-left: 8px; }
-.auth-placeholder-button {
-  min-width: 84px;
-  height: 40px;
-  padding: 0 18px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1;
-  white-space: nowrap;
-  cursor: not-allowed;
-}
-.auth-placeholder-login { border: 1px solid var(--blue); background: #fff; color: var(--blue); }
-.auth-placeholder-register { border: 1px solid var(--blue-dark); background: var(--blue-dark); color: #fff; }
-
 .account-type { margin: 0 0 18px; padding: 0; border: 0; }
 .account-type legend { margin-bottom: 9px; color: var(--navy); font-size: 13px; font-weight: 800; }
 .account-type > div { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -171,31 +135,6 @@ a { color: inherit; text-decoration: none; }
 .account-type input { position: absolute; opacity: 0; pointer-events: none; }
 .account-type strong { color: var(--navy); font-size: 14px; }
 .account-type span { font-size: 11px; line-height: 1.35; }
-.auth-placeholder-button:disabled { opacity: .72; }
-.auth-placeholder-mobile { display: none; margin-left: 0; }
-.auth-simulated-profile {
-  display: inline-flex;
-  width: 40px;
-  height: 40px;
-  flex: 0 0 40px;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #d7e2f4;
-  border-radius: 999px;
-  color: var(--blue-dark);
-  background: #fff;
-  transition: border-color .2s ease, background .2s ease, color .2s ease;
-}
-.auth-simulated-profile:hover { border-color: var(--blue); background: var(--blue-soft); color: var(--blue); }
-.auth-simulated-profile svg { width: 20px; height: 20px; }
-
-@media (max-width: 620px) {
-  .auth-placeholder-desktop { display: none; }
-  .auth-placeholder-mobile { display: flex; }
-  .auth-simulated-profile.auth-placeholder-mobile { width: 100%; border-radius: 8px; gap: 8px; }
-  .auth-placeholder-mobile .auth-placeholder-button { flex: 1; height: 40px; font-size: 14px; }
-}
-
 /* OTP & Success UI Styles */
 .flex-col-center {
   display: flex;
