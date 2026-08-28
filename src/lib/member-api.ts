@@ -169,8 +169,11 @@ export type JobListing = {
   title: string;
   company: string;
   location: string;
+  workMode?: string;
   salary: string;
   type: string;
+  headcount?: string;
+  deadlineDays?: number;
   description: string;
   questions: ApplicationQuestion[];
 };
