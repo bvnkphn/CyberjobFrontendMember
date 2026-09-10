@@ -17,6 +17,7 @@ import { useI18n } from '@/public-site/i18n/LanguageProvider';
 import { useBookmarks } from '@/public-site/lib/bookmarks';
 import { formatNumber } from '@/public-site/lib/format';
 import { useDropdown } from '@/public-site/lib/useDropdown';
+import { useMediaQuery } from '@/public-site/lib/useMediaQuery';
 import { BriefcaseIcon, SortIcon } from '@/public-site/components/Icons';
 import {
   EMPTY_SEARCH,
@@ -55,6 +56,12 @@ export function JobsExplorer() {
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
+
+  /**
+   * ต่ำกว่า xl ไม่มีคอลัมน์รายละเอียดข้าง ๆ รายการ
+   * การเลือกงานจึงพาไปหน้ารายละเอียดเต็มแทนการกางต่อท้ายรายการ
+   */
+  const isCompact = useMediaQuery('(max-width: 1279.98px)');
 
   const bookmarks = useBookmarks();
   const listRef = useRef<HTMLDivElement>(null);
@@ -199,9 +206,11 @@ export function JobsExplorer() {
               <JobResultCard
                 key={job.id}
                 job={job}
-                selected={job.id === selectedId}
+                selected={!isCompact && job.id === selectedId}
                 bookmarked={bookmarks.has(job.id)}
-                onSelect={() => setSelectedId(job.id)}
+                {...(isCompact
+                  ? { href: `/jobs/${job.id}` }
+                  : { onSelect: () => setSelectedId(job.id) })}
                 onToggleBookmark={() => bookmarks.toggle(job.id)}
               />
             ))}
@@ -237,17 +246,6 @@ export function JobsExplorer() {
             </div>
           </div>
         </div>
-
-        {/* จอเล็ก – รายละเอียดต่อท้ายรายการ */}
-        {selected && (
-          <div className="mt-6 xl:hidden">
-            <JobDetailView
-              job={selected}
-              bookmarked={bookmarks.has(selected.id)}
-              onToggleBookmark={() => bookmarks.toggle(selected.id)}
-            />
-          </div>
-        )}
       </div>
     </div>
   );
