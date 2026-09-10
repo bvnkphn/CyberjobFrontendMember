@@ -21,13 +21,14 @@ export function UserMenu() {
   ] as const;
 
   if (loading) return <span className="h-10 w-10 animate-pulse rounded-full bg-slate-100" />;
-  if (!user) return <div className="flex items-center gap-2"><Link href="/gate/login" className="rounded-lg border border-brand-600 px-4 py-2 text-sm font-semibold text-brand-700">เข้าสู่ระบบ</Link><Link href="/gate/register" className="hidden rounded-lg bg-brand-700 px-4 py-2 text-sm font-semibold text-white sm:inline-flex">สมัครสมาชิก</Link></div>;
+  // ผู้ที่ยังไม่ล็อกอินเห็นเฉพาะปุ่มเข้าสู่ระบบ – ลิงก์สมัครสมาชิกอยู่ในหน้าเข้าสู่ระบบแล้ว
+  if (!user) return <Link href="/gate/login" className="rounded-lg border border-brand-600 px-4 py-2 text-sm font-semibold text-brand-700">{t('auth.login')}</Link>;
 
   return (
     <div ref={ref} className="relative">
-      <button type="button" onClick={toggle} aria-haspopup="menu" aria-expanded={open} aria-label={t('user.account')} className="flex h-10 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-2.5 text-brand-700 transition-colors hover:border-brand-300 hover:bg-brand-50 md:px-3.5">
+      {/* แสดงเฉพาะไอคอน – ชื่อเมนูอยู่ใน aria-label เพื่อให้ screen reader ยังอ่านได้ */}
+      <button type="button" onClick={toggle} aria-haspopup="menu" aria-expanded={open} aria-label={t('user.account')} title={t('user.account')} className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-brand-700 transition-colors hover:border-brand-300 hover:bg-brand-50">
         <UserIcon width={20} height={20} />
-        <span className="hidden text-sm font-semibold md:inline">{t('user.profile')}</span>
       </button>
       {open && (
         <div role="menu" className="absolute right-0 z-50 mt-2 w-64 overflow-hidden rounded-xl border border-slate-200 bg-white py-1.5 shadow-pop">
@@ -41,7 +42,7 @@ export function UserMenu() {
               {t(key)}
             </Link>
           ))}
-          <button type="button" role="menuitem" onClick={async () => { setOpen(false); await logout(); router.replace('/'); router.refresh(); }} className="flex w-full items-center gap-3 border-t border-slate-100 px-4 py-2.5 text-left text-sm text-red-600 hover:bg-red-50">ออกจากระบบ</button>
+          <button type="button" role="menuitem" onClick={async () => { setOpen(false); await logout(); router.replace('/'); router.refresh(); }} className="flex w-full items-center gap-3 border-t border-slate-100 px-4 py-2.5 text-left text-sm text-red-600 hover:bg-red-50">{t('user.logout')}</button>
         </div>
       )}
     </div>
