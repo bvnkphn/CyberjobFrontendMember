@@ -2,10 +2,11 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { WorkStyle } from '@cyberjob/shared';
-import { PROVINCES, WORK_STYLES } from '@cyberjob/shared';
-import { jobsService } from '@/public-site/services/jobs.service';
+import type { TreeNode, WorkStyle } from '@cyberjob/shared';
+import { WORK_STYLES } from '@cyberjob/shared';
+import { jobsService, metaService } from '@/public-site/services/jobs.service';
 import { useI18n } from '@/public-site/i18n/LanguageProvider';
+import { TreeSelect } from '@/public-site/components/jobs/TreeSelect';
 import { BriefcaseIcon, ChevronDownIcon, MapPinIcon, SearchIcon } from './Icons';
 
 export interface SearchValues {
@@ -39,6 +40,24 @@ export function SearchBar({
     initial?.workStyle ?? [],
   );
   const [province, setProvince] = useState(initial?.province ?? '');
+
+  // ใช้ตัวเลือกสถานที่ทำงานชุดเดียวกับหน้าค้นหางาน (จัดกลุ่มตามภาค + ค้นหาได้)
+  const [regionTree, setRegionTree] = useState<TreeNode[]>([]);
+
+  useEffect(() => {
+    let alive = true;
+    metaService
+      .filters()
+      .then((meta) => {
+        if (alive) setRegionTree(meta.regionTree);
+      })
+      .catch(() => {
+        /* หน้าแรกยังค้นหาได้แม้ตัวเลือกโหลดไม่สำเร็จ */
+      });
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   useEffect(() => {
     setQ(initial?.q ?? '');
@@ -83,31 +102,15 @@ export function SearchBar({
 
       <span className="hidden h-8 w-px bg-slate-200 md:block" />
 
-      <div className="relative md:w-52">
-        <MapPinIcon
-          width={18}
-          height={18}
-          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-        />
-        <select
-          aria-label={t('search.location')}
-          value={province}
-          onChange={(e) => setProvince(e.target.value)}
-          className="w-full appearance-none rounded-lg border-0 bg-transparent py-2.5 pl-9 pr-8 text-sm text-slate-700 outline-none focus:ring-0"
-        >
-          <option value="">{t('search.location')}</option>
-          {PROVINCES.map((p) => (
-            <option key={p} value={p}>
-              {p}
-            </option>
-          ))}
-        </select>
-        <ChevronDownIcon
-          width={16}
-          height={16}
-          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
-        />
-      </div>
+      <TreeSelect
+        icon={<MapPinIcon width={17} height={17} />}
+        placeholder={t('search.location')}
+        allLabel={t('search.allLocations')}
+        searchPlaceholder={t('search.findLocation')}
+        nodes={regionTree}
+        value={province}
+        onChange={setProvince}
+      />
 
       <button type="submit" className="btn-accent shrink-0 md:px-6">
         {t('search.submit')}
