@@ -6,8 +6,8 @@
     "dev": "powershell -ExecutionPolicy Bypass -File ./setup-dev.ps1 -SkipInstall",
     "dev:setup": "powershell -ExecutionPolicy Bypass -File ./setup-dev.ps1",
     "dev:frontend": "next dev",
-    "dev:stop": "docker compose -f ../CyberJobBackendMember/compose.yaml --project-directory ../CyberJobBackendMember down",
-    "dev:logs": "docker compose -f ../CyberJobBackendMember/compose.yaml --project-directory ../CyberJobBackendMember logs -f api postgres",
+    "dev:stop": "docker compose -f ../CyberJobBackendMember/docker-compose.yml --project-directory ../CyberJobBackendMember down",
+    "dev:logs": "docker compose -f ../CyberJobBackendMember/docker-compose.yml --project-directory ../CyberJobBackendMember logs -f api postgres",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
