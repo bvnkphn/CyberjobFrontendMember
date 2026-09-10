@@ -4,7 +4,7 @@
   --navy: #06154f; --navy-dark: #192d3e; --blue: #3479ed; --blue-dark: #1737bd;
   --blue-soft: #e8f0ff; --green: #00d477; --red: #f01823; --ink: #111c43;
   --muted: #77808e; --line: #dfe3ea; --background: #f5f7fb; --radius: 12px;
-  --page-max-width: 1200px; --page-gutter: 32px;
+  --page-max-width: 1440px; --page-gutter: 32px;
   font-family: "Noto Sans Thai", system-ui, sans-serif; color: var(--ink); background: var(--background);
 }
 * { box-sizing: border-box; }

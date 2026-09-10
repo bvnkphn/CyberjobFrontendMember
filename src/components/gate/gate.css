@@ -1,5 +1,5 @@
 .gate-page { min-height: 1000px; padding: 68px 32px 120px; background: radial-gradient(circle at 50% 0,#fff 0,#f5f7fb 360px); }
-.gate-layout { max-width: 1200px; margin: auto; }
+.gate-layout { max-width: var(--page-max-width); margin: auto; }
 .gate-intro { max-width: 620px; margin: 0 auto 28px; text-align: center; }
 .gate-eyebrow { margin: 0 0 8px; color: var(--blue); font-size: 13px; font-weight: 800; letter-spacing: .08em; }
 .gate-intro h1 { margin: 0; color: var(--navy); font-size: clamp(28px,4vw,38px); }

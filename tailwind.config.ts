@@ -42,7 +42,7 @@ const config: Config = {
         pop: '0 12px 32px -8px rgba(15, 42, 107, 0.22)',
       },
       maxWidth: {
-        page: '1200px',
+        page: '1440px',
       },
     },
   },
