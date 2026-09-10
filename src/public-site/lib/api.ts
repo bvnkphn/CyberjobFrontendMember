@@ -5,8 +5,20 @@
  * access token เก็บไว้ในหน่วยความจำ (และสำรองใน localStorage เพื่อให้รอด refresh หน้า)
  * ส่วน refresh token อยู่ใน httpOnly cookie ที่ JavaScript อ่านไม่ได้
  */
+const trim = (url?: string) => url?.replace(/\/$/, '');
+
+/** URL ที่เบราว์เซอร์ใช้ (ฝังตอน build เพราะเป็น NEXT_PUBLIC_) */
+const PUBLIC_API_URL = trim(process.env.NEXT_PUBLIC_API_URL) ?? 'http://localhost:4000/api';
+
+/**
+ * URL ที่โค้ดฝั่งเซิร์ฟเวอร์ใช้ (Server Component / SSR)
+ * ใน Docker ต้องเรียกผ่านชื่อ service เพราะ localhost ในคอนเทนเนอร์ web
+ * หมายถึงตัว web เอง ไม่ใช่ API — ถ้าไม่ตั้งค่าไว้จะใช้ URL สาธารณะเหมือนเดิม
+ */
+const INTERNAL_API_URL = trim(process.env.INTERNAL_API_URL);
+
 export const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') ?? 'http://localhost:4000/api';
+  typeof window === 'undefined' ? (INTERNAL_API_URL ?? PUBLIC_API_URL) : PUBLIC_API_URL;
 
 const TOKEN_KEY = 'cyberjob.accessToken';
 const LEGACY_TOKEN_KEY = 'accessToken';
