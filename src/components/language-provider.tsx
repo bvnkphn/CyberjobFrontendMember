@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useState, type ReactNode } from "react";
+import { useI18n } from "@/public-site/i18n/LanguageProvider";
 
 export type Locale = "th" | "en";
 
@@ -14,6 +15,9 @@ const translations: Array<[string, string]> = [
   ["เข้าสู่ระบบด้วยบัญชี Google", "Login with Google"],
   ["ลืมรหัสผ่าน?", "Forgot password?"],
   ["เป็นสมาชิก CYBERJOB?", "New to CYBERJOB? "],
+  ["ผู้หางาน", "Job Seeker"],
+  ["ผู้ประกอบการ", "Employer"],
+  ["ข้อกำหนดการให้บริการ", "the term of service"],
   // --- หมวดหมู่ OTP & Success ---
   ["ยืนยันรหัส", "Verify "],
   ["ระบบได้ส่งรหัส 6 หลัก ไปที่อีเมล", "A 6-digit code has been sent to "],
@@ -273,11 +277,13 @@ export function useLanguage() { return useContext(LanguageContext); }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [locale, setLocale] = useState<Locale>("th");
+  // ปุ่มสลับภาษาบน Nav bar เป็นแหล่งความจริงเดียว ตัวนี้จึงเดินตามค่านั้น
+  // มิฉะนั้นหน้าที่แปลด้วยการแทนที่ข้อความ (เช่น gate/login) จะไม่เปลี่ยนตามปุ่ม
+  const { lang } = useI18n();
 
   useEffect(() => {
-    const saved = window.localStorage.getItem("cyberjobLocale");
-    if (saved === "en") setLocale("en");
-  }, []);
+    setLocale(lang);
+  }, [lang]);
 
   useLayoutEffect(() => {
     document.documentElement.lang = locale;

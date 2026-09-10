@@ -6,6 +6,7 @@ export const DICT = {
     'lang.th': 'ภาษาไทย',
     'lang.en': 'English',
     'lang.current': 'ภาษาไทย',
+    'lang.toggle': 'สลับภาษา ไทย / อังกฤษ',
 
     'nav.home': 'หน้าแรก',
     'nav.jobs': 'ค้นหางาน',
@@ -193,6 +194,7 @@ export const DICT = {
     'lang.th': 'ภาษาไทย',
     'lang.en': 'English',
     'lang.current': 'English',
+    'lang.toggle': 'Switch language: Thai / English',
 
     'nav.home': 'Home',
     'nav.jobs': 'Find jobs',

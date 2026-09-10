@@ -36,7 +36,10 @@ export function Navbar() {
   }, [pathname]);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
+    // ข้อความใน Nav bar มาจากพจนานุกรมของ public-site อยู่แล้ว
+    // จึงกันไม่ให้ตัวแปลแบบแทนที่ข้อความเข้ามาแปลซ้ำจนคำเพี้ยน
+    // (เช่น aria-label ของปุ่มภาษาเคยกลายเป็น "สลับLanguage Thai / อังกฤษ")
+    <header data-no-translate className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
       <nav className="container-page flex h-16 items-center gap-4">
         <Logo />
 
