@@ -29,6 +29,8 @@ import {
   VerifiedIcon,
 } from '@/public-site/components/Icons';
 import { CompanyProfileCard } from './CompanyProfileCard';
+import { ApplyQuestionsDialog } from './ApplyQuestionsDialog';
+import { apiGet } from '@/public-site/lib/api';
 
 interface Props {
   job: Job;
@@ -51,22 +53,47 @@ export function JobDetailView({
   const pathname = usePathname();
   const [applied, setApplied] = useState(false);
   const [applyError, setApplyError] = useState<string | null>(null);
+  const [applying, setApplying] = useState(false);
+  const [questions, setQuestions] = useState<NonNullable<Job['questions']> | null>(null);
 
-  /** ยังไม่ล็อกอิน → พาไปหน้าเข้าสู่ระบบก่อน แล้วค่อยกลับมา */
+  async function submitApplication(answers: Array<{ questionId: string; answer: string | string[] }> = []) {
+    setApplyError(null);
+    setApplying(true);
+    try {
+      await meService.apply(job.id, answers);
+      setApplied(true);
+      setQuestions(null);
+    } catch (err) {
+      // สมัครซ้ำก็ถือว่าสมัครแล้ว
+      if (err instanceof ApiError && err.status === 409) {
+        setApplied(true);
+        setQuestions(null);
+      } else {
+        setApplyError(err instanceof ApiError ? err.message : t('auth.failed'));
+      }
+    } finally {
+      setApplying(false);
+    }
+  }
+
+  /** ยังไม่ล็อกอิน → พาไปหน้าเข้าสู่ระบบก่อน แล้วค่อยกลับมา · มีคำถามคัดกรอง → ให้ตอบก่อนส่ง */
   async function handleApply() {
     if (!user) {
       router.push(`/gate/login?next=${encodeURIComponent(pathname)}`);
       return;
     }
     setApplyError(null);
-    try {
-      await meService.apply(job.id);
-      setApplied(true);
-    } catch (err) {
-      // สมัครซ้ำก็ถือว่าสมัครแล้ว
-      if (err instanceof ApiError && err.status === 409) setApplied(true);
-      else setApplyError(err instanceof ApiError ? err.message : t('auth.failed'));
+    // การ์ดในหน้าค้นหาไม่มีคำถามมาด้วย ต้องโหลดรายละเอียดงานก่อน
+    let list = job.questions;
+    if (!list) {
+      try {
+        list = (await apiGet<Job>(`/jobs/${encodeURIComponent(job.id)}`)).questions ?? [];
+      } catch {
+        list = [];
+      }
     }
+    if (list.length) setQuestions(list);
+    else await submitApplication();
   }
 
   const employment = EMPLOYMENT_TYPES.find((e) => e.value === job.employmentType);
@@ -140,7 +167,7 @@ export function JobDetailView({
           <button
             type="button"
             onClick={handleApply}
-            disabled={applied}
+            disabled={applied || applying}
             className="btn-brand min-w-[120px]"
           >
             {applied ? (
@@ -163,10 +190,24 @@ export function JobDetailView({
           </button>
         </div>
 
-        {applyError && (
+        {applyError && !questions && (
           <p className="mt-2 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-600">
             {applyError}
           </p>
+        )}
+
+        {questions && (
+          <ApplyQuestionsDialog
+            jobTitle={job.title}
+            questions={questions}
+            submitting={applying}
+            error={applyError}
+            onCancel={() => {
+              setQuestions(null);
+              setApplyError(null);
+            }}
+            onSubmit={submitApplication}
+          />
         )}
 
         {/* เนื้อหาประกาศ */}
@@ -176,13 +217,17 @@ export function JobDetailView({
           </p>
         </Section>
 
-        <Section title={t('job.requirement')}>
-          <Bullets items={job.requirements} />
-        </Section>
+        {job.requirements.length > 0 && (
+          <Section title={t('job.requirement')}>
+            <Bullets items={job.requirements} />
+          </Section>
+        )}
 
-        <Section title={t('job.additional')}>
-          <Bullets items={job.additionalQualifications} />
-        </Section>
+        {job.additionalQualifications.length > 0 && (
+          <Section title={t('job.additional')}>
+            <Bullets items={job.additionalQualifications} />
+          </Section>
+        )}
 
         <Section title={t('job.skills')}>
           <div className="flex flex-wrap gap-2">
@@ -195,16 +240,20 @@ export function JobDetailView({
           </div>
         </Section>
 
-        <Section title={t('job.employerAnswers')}>
-          <p className="mb-2 text-[13px] text-slate-500">
-            {t('job.employerAnswersHint')}
-          </p>
-          <Bullets items={job.employerAnswers} />
-        </Section>
+        {job.employerAnswers.length > 0 && (
+          <Section title={t('job.employerAnswers')}>
+            <p className="mb-2 text-[13px] text-slate-500">
+              {t('job.employerAnswersHint')}
+            </p>
+            <Bullets items={job.employerAnswers} />
+          </Section>
+        )}
 
-        <Section title={t('job.benefits')}>
-          <Bullets items={job.benefits} />
-        </Section>
+        {job.benefits.length > 0 && (
+          <Section title={t('job.benefits')}>
+            <Bullets items={job.benefits} />
+          </Section>
+        )}
 
         <Section title={t('job.companyProfile')} last>
           <CompanyProfileCard company={job.company} />

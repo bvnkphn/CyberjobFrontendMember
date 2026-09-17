@@ -8,6 +8,21 @@ export function CompanyLogo({
   company: Company;
   size?: number;
 }) {
+  // โลโก้ที่ผู้ประกอบการอัปโหลดเองจากหลังบ้าน Owner
+  if (company.logoUrl) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={company.logoUrl}
+        alt=""
+        width={size}
+        height={size}
+        className="shrink-0 rounded-lg bg-white object-cover"
+        style={{ width: size, height: size }}
+      />
+    );
+  }
+
   return (
     <span
       aria-hidden

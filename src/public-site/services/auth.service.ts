@@ -1,18 +1,5 @@
-import type {
-  AuthResult,
-  AuthUser,
-  Job,
-  JobApplication,
-  LoginRequest,
-  RegisterRequest,
-} from '@cyberjob/shared';
-import {
-  API_BASE,
-  apiDelete,
-  apiGet,
-  apiPost,
-  setAccessToken,
-} from '@/public-site/lib/api';
+import type { AuthResult, AuthUser, Job, JobApplication, LoginRequest, RegisterRequest, MemberInvitation } from '@cyberjob/shared';
+import { API_BASE, apiDelete, apiGet, apiPost, setAccessToken, apiPatch } from '@/public-site/lib/api';
 
 export const authService = {
   register(payload: RegisterRequest): Promise<AuthResult> {
@@ -70,8 +57,22 @@ export const meService = {
     return apiGet<JobApplication[]>('/me/applications');
   },
 
-  apply(jobId: string, coverLetter?: string): Promise<JobApplication> {
-    return apiPost<JobApplication>('/me/applications', { jobId, coverLetter });
+  /** answers = คำตอบคำถามคัดกรองของประกาศ (Owner Feature 4.2.1) */
+  apply(
+    jobId: string,
+    answers: Array<{ questionId: string; answer: string | string[] }> = [],
+    coverLetter?: string,
+  ): Promise<JobApplication> {
+    return apiPost<JobApplication>('/me/applications', { jobId, coverLetter, answers });
+  },
+
+  /** คำเชิญจากบริษัท */
+  invitations(): Promise<MemberInvitation[]> {
+    return apiGet<MemberInvitation[]>('/me/invitations');
+  },
+
+  respondInvitation(id: string, status: 'accepted' | 'declined'): Promise<MemberInvitation> {
+    return apiPatch<MemberInvitation>(`/me/invitations/${encodeURIComponent(id)}`, { status });
   },
 };
 
