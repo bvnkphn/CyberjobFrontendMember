@@ -20,7 +20,10 @@ RUN addgroup --system nodejs && adduser --system --ingroup nodejs nextjs
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --chown=nextjs:nodejs entrypoint.js ./
+COPY --chown=nextjs:nodejs certs ./certs
 USER nextjs
 EXPOSE 3000
 ENV PORT=3000 HOSTNAME=0.0.0.0
-CMD ["node", "server.js"]
+CMD ["node", "entrypoint.js"]
+
