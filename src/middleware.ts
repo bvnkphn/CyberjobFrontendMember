@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// Suspicious patterns in query parameters (LFI, XSS, SSTI, SSRF, wrappers)
-const DANGEROUS_PARAM_REGEX = /(?:(?:javascript|vbscript|data|file|php|phar|dict|gopher|zip|bzip2|zlib):|<\s*(?:script|svg|img|iframe|object|embed)|(?:onerror|onload)\s*=|alert\s*\(|eval\s*\(|prompt\s*\(|confirm\s*\(|\{\{.*?\}\}|\$\{.*?\}|\[\[.*?\]\]|PD9waH|PD9QSFA|(?:\.\.[\/\\])|(?:https?:\/\/)|(?:127\.0\.0\.1)|(?:localhost)|(?:169\.254\.169\.254))/i;
+// Comprehensive regex for injection payloads (LFI, XSS, SSTI, SSRF, command injection, templates)
+const DANGEROUS_PARAM_REGEX = /(?:(?:javascript|vbscript|data|file|php|phar|dict|gopher|zip|bzip2|zlib):|<\s*(?:script|svg|img|iframe|object|embed)|(?:onerror|onload)\s*=|alert\s*\(|eval\s*\(|prompt\s*\(|confirm\s*\(|[#{%@$<>*]|[0-9]+\s*[*+\-\/]\s*[0-9]+|PD9waH|PD9QSFA|(?:\.\.[\/\\])|(?:https?:\/\/)|(?:127\.0\.0\.1)|(?:localhost)|(?:169\.254\.169\.254))/i;
 
 export function middleware(req: NextRequest) {
   const { pathname, searchParams } = req.nextUrl;
@@ -39,7 +39,23 @@ export function middleware(req: NextRequest) {
     );
   }
 
-  // 3. Inspect query parameters for malicious payloads (LFI, reflected XSS, SSTI, SSRF wrappers)
+  // 3. Strict validation for specific routes (e.g. /my-jobs?tab=...)
+  if (pathname === "/my-jobs") {
+    const tab = searchParams.get("tab");
+    if (tab && tab !== "saved" && tab !== "applied") {
+      return new NextResponse(
+        JSON.stringify({ error: "Bad Request: Invalid tab parameter." }),
+        {
+          status: 400,
+          headers: {
+            "content-type": "application/json",
+          },
+        }
+      );
+    }
+  }
+
+  // 4. Inspect query parameters for malicious payloads (LFI, XSS, SSTI, SSRF)
   for (const [key, value] of searchParams.entries()) {
     if (DANGEROUS_PARAM_REGEX.test(value) || DANGEROUS_PARAM_REGEX.test(key)) {
       return new NextResponse(
@@ -59,12 +75,6 @@ export function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico, images, and static assets
-     */
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
   ],
 };
