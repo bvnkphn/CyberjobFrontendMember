@@ -36,7 +36,7 @@ export default function RegisterForm() {
     try {
       const user = await register(form.email, form.password, form.name, form.role);
       if (user.role === "EMPLOYER") {
-        window.location.assign(`${process.env.NEXT_PUBLIC_OWNER_URL ?? "http://localhost:3102"}/gate`);
+        window.location.assign("/gate-owner");
         return;
       }
       router.replace("/gate");

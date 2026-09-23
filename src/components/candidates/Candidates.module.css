@@ -1,0 +1,768 @@
+/* สไตล์ที่ใช้ร่วมกันทั้ง 4 หน้าของหมวดผู้สมัคร */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--color-navy-900);
+}
+
+.header p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--color-gray-500);
+}
+
+/* ---------- layout ตัวกรอง + ผลลัพธ์ ---------- */
+.layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: start;
+}
+
+@media (max-width: 1080px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.panel {
+  background: #fff;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 12px;
+}
+
+.filters {
+  composes: panel;
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.filtersHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.filtersTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-navy-900);
+}
+
+.clearButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 0;
+  background: none;
+  padding: 0;
+  font-size: 13px;
+  color: var(--color-gray-500);
+  cursor: pointer;
+}
+
+.clearButton:hover {
+  color: var(--color-blue);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fieldLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-gray-500);
+}
+
+.fieldHint {
+  margin: -4px 0 0;
+  font-size: 12px;
+  color: var(--color-gray-400);
+}
+
+.sourceOption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 9px;
+  background: #fff;
+  font-size: 13px;
+  color: var(--color-gray-600);
+  text-align: left;
+  cursor: pointer;
+}
+
+.sourceOption + .sourceOption {
+  margin-top: 8px;
+}
+
+.sourceOptionActive {
+  border-color: var(--color-blue);
+  background: var(--color-blue-light);
+  color: var(--color-navy-700);
+  font-weight: 700;
+}
+
+.rangeRow {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 8px;
+}
+
+.rangeRow span {
+  color: var(--color-gray-400);
+}
+
+.input {
+  width: 100%;
+  min-width: 0;
+  padding: 9px 12px;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 9px;
+  background: #fff;
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+.input:focus {
+  outline: 2px solid var(--color-blue-light);
+  border-color: var(--color-blue);
+}
+
+.skillBox {
+  max-height: 132px;
+  overflow-y: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 9px;
+}
+
+.skillChip {
+  padding: 5px 10px;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 999px;
+  background: #fff;
+  font-size: 12px;
+  color: var(--color-gray-600);
+  cursor: pointer;
+}
+
+.skillChipActive {
+  border-color: var(--color-blue);
+  background: var(--color-blue-light);
+  color: var(--color-navy-700);
+  font-weight: 700;
+}
+
+.slider {
+  width: 100%;
+  accent-color: var(--color-blue);
+}
+
+.select {
+  composes: input;
+  cursor: pointer;
+}
+
+/* ---------- ฝั่งผลลัพธ์ ---------- */
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.searchBar {
+  composes: panel;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  color: var(--color-gray-400);
+}
+
+.searchBar input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  font-size: 14px;
+  color: var(--color-text);
+  background: transparent;
+}
+
+.tableCard {
+  composes: panel;
+  padding: var(--space-2) 0;
+}
+
+.tableScroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 860px;
+}
+
+.table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-gray-500);
+  border-bottom: 1px solid var(--color-gray-100);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 12px 16px;
+  font-size: 14px;
+  color: var(--color-gray-600);
+  border-bottom: 1px solid var(--color-gray-100);
+  vertical-align: middle;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.table tbody tr:hover {
+  background: var(--color-gray-50);
+}
+
+.person {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-navy-700);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.personName {
+  display: block;
+  font-weight: 700;
+  color: var(--color-navy-900);
+}
+
+.personRole {
+  display: block;
+  font-size: 12px;
+  color: var(--color-gray-400);
+}
+
+.chip {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: var(--color-gray-100);
+  font-size: 12px;
+  color: var(--color-gray-600);
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.ghostButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 8px;
+  background: #fff;
+  font-size: 13px;
+  color: var(--color-navy-700);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.ghostButton:hover {
+  border-color: var(--color-blue);
+  color: var(--color-blue);
+}
+
+.iconButton {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--color-gray-400);
+  cursor: pointer;
+}
+
+.iconButton:hover {
+  background: var(--color-gray-100);
+  color: var(--color-blue);
+}
+
+.iconButtonActive {
+  color: var(--color-gold-dark);
+}
+
+.iconButtonDanger:hover {
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+}
+
+/* ---------- คะแนนแบบวงแหวน ---------- */
+.score {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.score span {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- pagination ---------- */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: var(--space-4) 0 var(--space-2);
+  font-size: 13px;
+}
+
+.pageButton {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--color-gray-500);
+  cursor: pointer;
+}
+
+.pageButton:hover:not(:disabled) {
+  background: var(--color-gray-100);
+}
+
+.pageButton:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.pageButtonActive {
+  background: var(--color-blue);
+  color: #fff;
+  font-weight: 700;
+}
+
+.pageButtonActive:hover:not(:disabled) {
+  background: var(--color-blue);
+}
+
+/* ---------- สถานะว่าง ---------- */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 56px 20px;
+  text-align: center;
+  color: var(--color-gray-400);
+}
+
+.empty strong {
+  color: var(--color-gray-600);
+}
+
+/* ---------- การ์ดสรุป (หน้าคำเชิญ) ---------- */
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+}
+
+.statCard {
+  composes: panel;
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.statIcon {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+}
+
+.statValue {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--color-navy-900);
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 13px;
+  color: var(--color-gray-500);
+}
+
+.toolbar {
+  composes: panel;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 12px 16px;
+  flex-wrap: wrap;
+}
+
+.toolbar .input {
+  flex: 1 1 240px;
+  border: 0;
+  padding-left: 0;
+}
+
+.toolbar .select {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 150px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.badgeSent {
+  background: var(--color-blue-light);
+  color: var(--color-blue);
+}
+
+.badgeAccepted {
+  background: #e4f6ee;
+  color: var(--color-green);
+}
+
+.badgeDeclined {
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+}
+
+/* ---------- หน้าคำตอบผู้สมัคร ---------- */
+.splitLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: start;
+}
+
+@media (max-width: 1080px) {
+  .splitLayout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.candidateList {
+  composes: panel;
+  padding: var(--space-3);
+  max-height: 520px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.candidateItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 9px;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.candidateItem:hover {
+  background: var(--color-gray-50);
+}
+
+.candidateItemActive {
+  background: var(--color-blue-light);
+}
+
+.candidateItemTime {
+  display: block;
+  font-size: 12px;
+  color: var(--color-blue);
+}
+
+.answerCard {
+  composes: panel;
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.answerHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.answerHead .avatar {
+  width: 44px;
+  height: 44px;
+  font-size: 14px;
+}
+
+.question {
+  display: flex;
+  gap: 10px;
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--color-gray-100);
+}
+
+.question:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.questionIndex {
+  flex: 0 0 auto;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-blue);
+}
+
+.questionBody {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.questionText {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-navy-900);
+}
+
+.answerLabel {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: var(--color-gray-400);
+}
+
+.answerText {
+  margin: 0;
+  padding: 10px 14px;
+  border: 1px solid var(--color-gray-100);
+  border-radius: 9px;
+  background: var(--color-gray-50);
+  font-size: 14px;
+  color: var(--color-gray-700);
+}
+
+/* ---------- หน้าต่างรายละเอียดผู้สมัคร ---------- */
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: var(--space-5);
+  background: rgb(13 22 66 / 45%);
+}
+
+.modal {
+  width: min(560px, 100%);
+  max-height: 86vh;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 14px;
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.modalHead {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.modalHead .avatar {
+  width: 48px;
+  height: 48px;
+  font-size: 15px;
+}
+
+.modalScores {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.modalScore {
+  flex: 1 1 0;
+  padding: 12px 14px;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.definitionList {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 8px 14px;
+  font-size: 14px;
+}
+
+.definitionList dt {
+  color: var(--color-gray-400);
+}
+
+.definitionList dd {
+  margin: 0;
+  color: var(--color-gray-700);
+  word-break: break-word;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+.primaryButton {
+  padding: 9px 18px;
+  border: 0;
+  border-radius: 9px;
+  background: var(--color-blue);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primaryButton:hover {
+  background: var(--color-navy-700);
+}
+
+.primaryButton:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+@media (max-width: 640px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .toolbar .input,
+  .toolbar .select {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+
+  .modalBackdrop {
+    padding: var(--space-3);
+  }
+
+  .modal {
+    padding: var(--space-4);
+  }
+
+  .modalScores {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .modalFooter {
+    flex-direction: column;
+  }
+
+  .modalFooter button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .definitionList {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+

@@ -1,0 +1,247 @@
+.sidebar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--sidebar-width);
+  background: var(--sidebar-gradient);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 20;
+  transition: width 0.2s ease;
+}
+
+.collapsed {
+  width: var(--sidebar-width-collapsed);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: var(--space-6) var(--space-5) var(--space-5);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  white-space: nowrap;
+}
+
+.collapsed .brand {
+  display: none;
+}
+
+.headerButtons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.closeMobileButton {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border: none;
+  background: none;
+  color: #d6dbea;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.closeMobileButton:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.collapseButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border: none;
+  background: none;
+  color: #d6dbea;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.collapseButton:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.collapsed .collapseButton {
+  margin: 0 auto;
+}
+
+.logoCyber {
+  color: #fff;
+}
+
+.logoJob {
+  color: var(--color-gold);
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--space-3) var(--space-6);
+}
+
+.collapsed .nav {
+  padding: 0 var(--space-3);
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--space-3);
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--space-3) var(--space-3);
+  margin-bottom: 2px;
+  border: none;
+  background: none;
+  color: #cfd6e8;
+  font-family: inherit;
+  font-size: 14px;
+  text-align: left;
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.collapsed .navItem {
+  justify-content: center;
+  padding: var(--space-3) 0;
+}
+
+.navItem:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+.navIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 20px;
+}
+
+.navLabel {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.collapsed .navLabel {
+  display: none;
+}
+
+.collapsed .caret {
+  display: none;
+}
+
+.navGroup {
+  font-weight: 600;
+}
+
+.caret {
+  font-size: 11px;
+  color: #9aa5c0;
+  transition: transform 0.15s ease;
+}
+
+.caretOpen {
+  transform: rotate(180deg);
+}
+
+.navItemActive {
+  background-color: var(--color-blue);
+  color: #fff;
+  font-weight: 700;
+}
+
+.submenu {
+  list-style: none;
+  margin: 0 0 4px;
+  padding: 0 0 0 var(--space-4);
+}
+
+.submenuItem {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  font-size: 13.5px;
+  color: #b6bed4;
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+}
+
+.submenuItemActive {
+  background-color: var(--color-blue);
+  color: #fff;
+  font-weight: 700;
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px !important;
+    max-width: 85vw;
+    z-index: 50;
+    transform: translateX(-100%);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: none;
+  }
+
+  .mobileOpen {
+    transform: translateX(0) !important;
+    box-shadow: 0 0 32px rgba(0, 0, 0, 0.45);
+  }
+
+  /* When open on mobile, always show full brand and labels even if collapsed was set */
+  .collapsed .brand {
+    display: flex !important;
+  }
+
+  .collapsed .navLabel,
+  .collapsed .caret {
+    display: block !important;
+  }
+
+  .collapsed .navItem {
+    justify-content: flex-start !important;
+    padding: var(--space-3) var(--space-3) !important;
+  }
+
+  .collapseButton {
+    display: none;
+  }
+
+  .closeMobileButton {
+    display: flex;
+  }
+}
+

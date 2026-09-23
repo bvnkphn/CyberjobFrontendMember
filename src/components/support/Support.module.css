@@ -1,0 +1,409 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-width: 1120px;
+}
+
+.pageHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pageIcon {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--color-blue-light);
+  color: var(--color-blue);
+}
+
+.pageHead h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--color-navy-900);
+}
+
+.pageHead p {
+  margin: 2px 0 0;
+  font-size: 14px;
+  color: var(--color-gray-500);
+}
+
+.sectionLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-green);
+}
+
+.sectionLabel::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+}
+
+/* ---------- แบนเนอร์ LINE ---------- */
+.lineCard {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+  padding: var(--space-6);
+  border-radius: 14px;
+  background: linear-gradient(105deg, #12b455 0%, #22c55e 55%, #2ad06a 100%);
+  color: #fff;
+}
+
+.lineLogo {
+  width: 62px;
+  height: 62px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: #fff;
+  color: #06c755;
+  font-weight: 800;
+  font-size: 15px;
+}
+
+.lineBody {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.lineTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.lineTitleRow h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.lineBadge {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--color-gold);
+  color: var(--color-navy-900);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.lineBody p {
+  margin: 6px 0 12px;
+  font-size: 14px;
+  opacity: 0.92;
+}
+
+.lineId {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 8px;
+  background: rgb(255 255 255 / 22%);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.qrBox {
+  width: 96px;
+  height: 96px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  padding: 6px;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.lineCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  padding: 14px 24px;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: #0f9d47;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.lineCta:hover {
+  background: #f2fbf5;
+}
+
+/* ---------- ช่องทางติดต่ออื่น ---------- */
+.contactGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-5);
+}
+
+.contactCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: var(--space-5);
+  background: #fff;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 12px;
+}
+
+.contactIcon {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+}
+
+.contactLabel {
+  display: block;
+  font-size: 12px;
+  color: var(--color-gray-400);
+}
+
+.contactValue {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-navy-900);
+  word-break: break-all;
+}
+
+.contactValue:hover {
+  color: var(--color-blue);
+}
+
+/* ---------- คำถามที่พบบ่อย ---------- */
+.faqCard {
+  padding: var(--space-6);
+  background: #fff;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 12px;
+}
+
+.faqCard h2 {
+  margin: 0 0 var(--space-4);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--color-navy-900);
+}
+
+.faqItem {
+  border-top: 1px solid var(--color-gray-100);
+}
+
+.faqItem:first-of-type {
+  border-top: 0;
+}
+
+.faqQuestion {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 0;
+  border: 0;
+  background: none;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.faqQuestion:hover {
+  color: var(--color-blue);
+}
+
+.faqChevron {
+  flex: 0 0 auto;
+  color: var(--color-gray-400);
+  transition: transform 0.18s ease;
+}
+
+.faqChevronOpen {
+  transform: rotate(180deg);
+}
+
+.faqAnswer {
+  margin: 0;
+  padding: 0 0 18px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--color-gray-500);
+  max-width: 80ch;
+}
+
+.tutorialLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 18px 0;
+  padding: 10px 16px;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
+  background: #fff;
+  color: var(--color-navy-700);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.reportCard {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+  padding: 22px;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  background: #fff;
+}
+
+.reportCard h2 {
+  margin: 0;
+  color: var(--color-navy-900);
+  font-size: 18px;
+}
+
+.reportHint {
+  margin: -8px 0 0;
+  color: var(--color-gray-500);
+  font-size: 13.5px;
+}
+
+.reportGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.reportField {
+  display: grid;
+  gap: 6px;
+  color: var(--color-gray-700);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.reportField small {
+  color: var(--color-gray-500);
+  font-weight: 400;
+}
+
+.reportField input,
+.reportField select,
+.reportField textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  font: inherit;
+  font-weight: 400;
+}
+
+.reportImages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.reportImage,
+.reportAdd {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.reportImage {
+  background: var(--color-blue-light);
+  color: var(--color-navy-700);
+}
+
+.reportImage button {
+  border: 0;
+  background: none;
+  color: inherit;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.reportAdd {
+  border: 1px dashed var(--color-gray-300);
+  color: var(--color-gray-600);
+  cursor: pointer;
+}
+
+.reportSubmit {
+  justify-self: start;
+  padding: 10px 22px;
+  border: 1px solid var(--color-gold-dark);
+  border-radius: var(--radius-md);
+  background: var(--color-gold);
+  color: #2b1d00;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.reportSubmit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 700px) {
+  .reportGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .lineCard {
+    padding: var(--space-4);
+    gap: var(--space-4);
+  }
+
+  .lineCta {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .contactGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .reportCard {
+    padding: 16px;
+  }
+
+  .reportSubmit {
+    width: 100%;
+    text-align: center;
+  }
+}
+

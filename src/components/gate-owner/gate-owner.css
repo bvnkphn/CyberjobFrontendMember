@@ -1,0 +1,94 @@
+.gate-shell { min-height: 100vh; color: var(--ink); background: var(--page); }
+.gate-topbar { height: 76px; padding: 0 max(24px, calc((100% - 1180px) / 2)); display: flex; align-items: center; justify-content: space-between; background: #fff; border-bottom: 1px solid var(--line); }
+.gate-logo { font-weight: 900; font-size: 20px; letter-spacing: -1px; color: #f3ac00; }
+.gate-logo span { color: #082b8e; }
+.gate-topbar nav { display: flex; align-items: center; gap: 8px; }
+.gate-topbar button { border: 0; background: transparent; color: #3c465a; min-width: 40px; height: 40px; display: grid; place-items: center; cursor: pointer; border-radius: 50%; }
+.gate-topbar button:hover { background: #f0f4fb; }
+.gate-topbar .gate-avatar { color: #fff; background: #1538aa; }
+.gate-main { width: min(1180px, calc(100% - 40px)); margin: 0 auto; padding: 62px 0 100px; }
+.gate-heading > span { color: var(--blue); font-size: 13px; font-weight: 800; }
+.gate-heading h1 { margin: 8px 0 4px; font-size: clamp(28px, 3vw, 38px); letter-spacing: -.5px; }
+.gate-heading p { color: var(--muted); margin: 0; font-size: 14px; }
+.gate-steps { list-style: none; padding: 0; margin: 46px auto 56px; max-width: 800px; display: grid; grid-template-columns: repeat(4, 1fr); }
+.gate-steps li { position: relative; text-align: center; color: #a7b0bb; font-weight: 700; }
+.gate-steps li:not(:last-child)::after { content: ""; height: 2px; background: #e2e7ed; position: absolute; top: 24px; left: calc(50% + 34px); right: calc(-50% + 34px); }
+.gate-steps b { width: 50px; height: 50px; margin: 0 auto 12px; border-radius: 50%; background: #e8ecf1; display: grid; place-items: center; font-size: 22px; }
+.gate-steps span { display: block; }
+.gate-steps .active { color: #2469f3; }
+.gate-steps .active b { color: #fff; background: #2c70f8; box-shadow: 0 0 0 7px #dfeaff; }
+.gate-layout { display: grid; grid-template-columns: minmax(0, 760px) minmax(280px, 360px); gap: 28px; align-items: start; }
+.gate-form, .gate-side { display: grid; gap: 20px; }
+.gate-card, .gate-preview, .gate-completion, .gate-privacy, .gate-wait { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 5px 18px rgba(26, 49, 91, .04); }
+.gate-section-title { min-height: 76px; padding: 18px 24px; border-bottom: 1px solid #edf0f4; display: flex; align-items: center; gap: 10px; }
+.gate-section-icon { width: 38px; height: 38px; display: grid; place-items: center; color: var(--navy); border-radius: 9px; background: #eef3f8; }
+.gate-marker { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 7px; color: #fff; background: var(--navy); font-size: 12px; font-weight: 800; }
+.gate-section-title strong, .gate-section-title small { display: block; }
+.gate-section-title strong { font-size: 16px; }
+.gate-section-title small { margin-top: 3px; color: #8a94a6; font-size: 11px; font-weight: 400; }
+.gate-fields { padding: 24px; display: grid; gap: 18px; }
+.gate-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.gate-field { min-width: 0; display: grid; gap: 8px; color: #263149; font-size: 13px; font-weight: 700; }
+.gate-field b, .gate-upload b { color: #ef4651; }
+.gate-field small { color: #8a94a6; font-size: 11px; font-weight: 400; margin-top: -4px; }
+.gate-field input, .gate-field select, .gate-field textarea { width: 100%; min-height: 45px; padding: 0 14px; border: 1px solid #d9e0e9; border-radius: 8px; outline: 0; color: #15213a; background: #fff; transition: .18s; }
+.gate-field textarea { min-height: 86px; resize: vertical; padding-top: 12px; }
+.gate-field input:focus, .gate-field select:focus, .gate-field textarea:focus { border-color: #4a7ef3; box-shadow: 0 0 0 3px rgba(45, 109, 246, .12); }
+.gate-field input::placeholder, .gate-field textarea::placeholder { color: #aab2c1; }
+.gate-prefix { display: flex; border: 1px solid #d9e0e9; border-radius: 8px; overflow: hidden; background: #fff; }
+.gate-prefix:focus-within { border-color: #4a7ef3; box-shadow: 0 0 0 3px rgba(45,109,246,.12); }
+.gate-prefix span { width: 42px; display: grid; place-items: center; color: #98a2b4; border-right: 1px solid #edf0f4; }
+.gate-prefix input { border: 0; box-shadow: none !important; }
+.gate-map { height: 190px; position: relative; overflow: hidden; display: grid; place-content: center; text-align: center; border-radius: 10px; border: 1px solid #dce7ef; background: linear-gradient(140deg, #e9f3fb 0 32%, #deedf7 32% 60%, #e5f2ec 60%); }
+.gate-map::before, .gate-map::after { content: ""; width: 120%; height: 54px; position: absolute; left: -10%; border: 4px solid #a9d2ed; border-left: 0; border-right: 0; border-radius: 50%; transform: rotate(-5deg); }
+.gate-map::before { top: 54px; }.gate-map::after { bottom: -32px; }
+.gate-map > * { position: relative; z-index: 1; }
+.gate-map-pin { margin: 0 auto 8px; width: 42px; height: 42px; color: #fff; background: var(--navy); border: 4px solid #fff; border-radius: 50%; display: grid; place-items: center; box-shadow: 0 4px 10px #789; }
+.gate-map span { font-size: 13px; font-weight: 700; }.gate-map small { margin-top: 4px; color: #758298; }
+.gate-uploads { padding: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.gate-upload { min-width: 0; border: 1px solid #e1e6ed; border-radius: 10px; padding: 14px; }
+.gate-upload > div strong, .gate-upload > div small { display: block; }
+.gate-upload > div strong { font-size: 13px; }.gate-upload > div small { color: #8c96a8; font-size: 10px; margin: 4px 0 12px; }
+.gate-upload-zone { min-height: 64px; padding: 8px 12px; display: flex; align-items: center; justify-content: center; gap: 8px; color: #51627b; border: 1px dashed #bfcbda; border-radius: 8px; background: #fbfcfe; cursor: pointer; font-size: 11px; text-align: center; overflow-wrap: anywhere; }
+.gate-upload-zone:hover { border-color: var(--blue); color: var(--blue); background: #f5f8ff; }
+.gate-upload-zone input { position: absolute; opacity: 0; pointer-events: none; }
+.gate-secure { padding: 22px; display: flex; gap: 14px; border: 1px solid #e1ddd3; border-radius: 12px; background: #f5f3ef; }
+.gate-secure > span { flex: 0 0 auto; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 9px; color: #ffc237; background: #172c52; }
+.gate-secure strong { font-size: 14px; }.gate-secure p { margin: 5px 0 12px; color: #697486; font-size: 11px; }
+.gate-secure-tags { display: flex; flex-wrap: wrap; gap: 6px; }.gate-secure-tags span { padding: 5px 8px; border-radius: 5px; color: #4f5d74; background: #fff; font-size: 9px; }
+.gate-notice { margin: 0; padding: 12px 16px; color: #9a5a00; background: #fff5da; border: 1px solid #f1d486; border-radius: 8px; font-size: 13px; }
+.gate-actions { padding: 12px; display: grid; grid-template-columns: 1fr 2.2fr; gap: 12px; background: #fff; border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 5px 18px rgba(26,49,91,.06); }
+.gate-actions button, .gate-success-actions a, .gate-success-actions button, .gate-modal footer button { height: 48px; border-radius: 8px; border: 1px solid #ccd4df; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; font-weight: 800; }
+.gate-draft { color: #4c5b70; background: #fff; }.gate-submit { color: #fff; background: var(--navy); border-color: var(--navy) !important; }.gate-submit:hover { background: #0b2248; }
+.gate-side { position: sticky; top: 20px; }
+.gate-preview { overflow: hidden; }
+.gate-preview > header { min-height: 78px; padding: 16px 20px; display: flex; align-items: center; gap: 12px; color: #fff; background: linear-gradient(110deg, #132e5b, #294961); }
+.gate-preview > header > span { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 9px; color: var(--navy); background: #fff; }
+.gate-preview > header strong, .gate-preview > header small { display: block; }.gate-preview > header small { opacity: .76; margin-top: 3px; }
+.gate-review { display: inline-block; margin: 14px 18px 4px; padding: 5px 9px; color: #b96e00; background: #fff6dc; border: 1px solid #f2d47f; border-radius: 20px; font-size: 11px; font-weight: 800; }
+.gate-preview dl { margin: 8px 18px; border-top: 1px solid #e9edf2; }
+.gate-preview dl div { padding: 10px 0; border-bottom: 1px solid #edf0f3; }
+.gate-preview dt { display: flex; align-items: center; gap: 7px; color: #8390a4; font-size: 10px; }.gate-preview dd { margin: 3px 0 0 25px; font-size: 12px; overflow-wrap: anywhere; }
+.gate-mini-map { height: 110px; margin: 14px 18px 18px; display: grid; place-items: center; color: #fff; background: linear-gradient(150deg, #deeff9, #dceae4); border-radius: 8px; border: 1px solid #d9e4ec; }.gate-mini-map svg { padding: 7px; width: 36px; height: 36px; border-radius: 50%; background: var(--navy); }
+.gate-wait { padding: 14px 16px; color: #996000; background: #fff9e7; border-color: #f0d88e; }.gate-wait strong { font-size: 12px; }.gate-wait p { margin: 5px 0 0; color: #a1701c; font-size: 10px; }
+.gate-completion { padding: 18px; }.gate-completion header { display: flex; justify-content: space-between; font-size: 12px; }.gate-completion header span { color: #60708a; }
+.gate-progress { height: 5px; margin: 10px 0 13px; overflow: hidden; border-radius: 10px; background: #e8edf3; }.gate-progress i { display: block; height: 100%; background: #26b988; transition: width .25s; }
+.gate-completion ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 9px; }.gate-completion li { display: flex; align-items: center; gap: 8px; color: #929bac; font-size: 11px; }.gate-completion li span { width: 16px; height: 16px; display: grid; place-items: center; border-radius: 50%; background: #eef1f5; }.gate-completion li.done { color: #327e66; }.gate-completion li.done span { color: #fff; background: #28b68a; }
+.gate-privacy { padding: 16px; display: flex; gap: 12px; color: #56667d; }.gate-privacy svg { flex: 0 0 auto; }.gate-privacy strong { color: #28364d; font-size: 12px; }.gate-privacy p { margin: 5px 0 0; font-size: 10px; line-height: 1.5; }
+.gate-footer { position: relative; min-height: 300px; padding: 66px max(24px, calc((100% - 1180px) / 2)) 48px; display: grid; grid-template-columns: 1fr 1.5fr; gap: 50px; color: #fff; background: linear-gradient(120deg, #1b3fd1, #0e246f); }
+.gate-logo-footer { color: #ffc400; }.gate-logo-footer span { color: #fff; }.gate-footer p { color: #d6ddfa; line-height: 1.7; font-size: 13px; }
+.gate-footer-links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }.gate-footer-links div { display: flex; flex-direction: column; gap: 9px; }.gate-footer-links strong { margin-bottom: 4px; }.gate-footer-links a { color: #e2e7ff; font-size: 13px; }
+.gate-footer > small { position: absolute; bottom: 18px; left: max(24px, calc((100% - 1180px) / 2)); color: #b9c4ee; }
+.gate-modal-backdrop { position: fixed; inset: 0; z-index: 20; padding: 24px; display: grid; place-items: center; background: rgba(15, 24, 42, .58); backdrop-filter: blur(2px); }
+.gate-modal { width: min(100%, 520px); background: #fff; border-radius: 14px; box-shadow: 0 24px 70px rgba(0,0,0,.25); animation: gate-pop .18s ease-out; }
+@keyframes gate-pop { from { opacity: 0; transform: translateY(12px) scale(.98); } }
+.gate-modal > header { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); }.gate-modal h2 { margin: 0; font-size: 20px; }.gate-modal header button { border: 0; background: transparent; font-size: 24px; cursor: pointer; }
+.gate-modal-body { padding: 24px; }.gate-warning { float: left; width: 46px; height: 46px; margin-right: 14px; display: grid; place-items: center; color: #d68800; background: #fff3cd; border-radius: 50%; font-size: 25px; }.gate-modal-body p { min-height: 46px; margin: 0; color: #59667b; line-height: 1.5; font-size: 13px; }.gate-modal-body ul { clear: both; list-style: none; margin: 20px 0 0; padding: 14px; display: grid; gap: 9px; color: #347f68; background: #f8fafc; border: 1px solid #e4e9ef; border-radius: 8px; font-size: 13px; }
+.gate-modal footer { padding: 0 24px 24px; display: grid; grid-template-columns: 1fr 1.25fr; gap: 12px; }.gate-modal footer button { background: #fff; }.gate-modal footer button:last-child { color: #fff; border-color: #122aa8; background: #122aa8; }
+.gate-success { min-height: calc(100vh - 376px); padding: 130px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; }.gate-success-check { width: 92px; height: 92px; display: grid; place-items: center; color: #fff; background: #0ebe8a; border-radius: 50%; box-shadow: 0 12px 28px rgba(14,190,138,.25); }.gate-success h1 { margin: 28px 0 14px; font-size: 34px; }.gate-success p { color: #707d91; }.gate-success p strong { color: #e67e00; }.gate-status-pill { margin: 20px 0 36px; padding: 13px 24px; color: #a95e00; background: #fff5d8; border-radius: 30px; font-weight: 800; }.gate-success-actions { display: flex; gap: 14px; }.gate-success-actions a, .gate-success-actions button { min-width: 190px; padding: 0 20px; background: #fff; }.gate-success-actions button { color: #fff; border-color: var(--navy); background: var(--navy); }
+@media (max-width: 900px) {
+  .gate-main { width: min(100% - 28px, 720px); padding-top: 36px; }.gate-layout { grid-template-columns: 1fr; }.gate-side { position: static; grid-row: 1; }.gate-preview { display: none; }.gate-side { grid-template-columns: 1fr 1fr; }.gate-privacy { grid-column: 1 / -1; }.gate-steps { margin: 38px 0; }.gate-footer { grid-template-columns: 1fr; }.gate-footer-links { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 600px) {
+  .gate-topbar { height: 64px; padding: 0 16px; }.gate-logo { font-size: 18px; }.gate-main { width: calc(100% - 24px); padding-bottom: 56px; }.gate-heading h1 { font-size: 27px; }.gate-steps { margin: 32px -2px; }.gate-steps b { width: 38px; height: 38px; font-size: 17px; }.gate-steps li:not(:last-child)::after { top: 18px; left: calc(50% + 25px); right: calc(-50% + 25px); }.gate-steps span { font-size: 10px; }.gate-layout { gap: 16px; }.gate-side { grid-template-columns: 1fr; }.gate-privacy { grid-column: auto; }.gate-section-title, .gate-fields { padding-left: 16px; padding-right: 16px; }.gate-grid, .gate-uploads { grid-template-columns: 1fr; }.gate-actions { grid-template-columns: 1fr; }.gate-actions .gate-submit { grid-row: 1; }.gate-footer { padding: 48px 24px 70px; }.gate-footer-links { grid-template-columns: 1fr 1fr; }.gate-footer > small { left: 24px; right: 24px; }.gate-modal footer { grid-template-columns: 1fr; }.gate-modal footer button:last-child { grid-row: 1; }.gate-success { padding: 90px 20px; }.gate-success-actions { width: 100%; flex-direction: column; }
+}

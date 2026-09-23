@@ -25,7 +25,8 @@ export default function LoginForm() {
     try {
       const user = await login(email, password);
       if (user.role === "EMPLOYER") {
-        window.location.assign(`${process.env.NEXT_PUBLIC_OWNER_URL ?? "http://localhost:3102"}/gate`);
+        const next = new URLSearchParams(window.location.search).get("next");
+        window.location.assign(next || "/dashboard");
         return;
       }
       const next = new URLSearchParams(window.location.search).get("next");

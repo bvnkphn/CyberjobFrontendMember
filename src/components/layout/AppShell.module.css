@@ -1,0 +1,66 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--color-gray-50);
+  color: var(--color-text);
+}
+
+.body {
+  position: relative;
+  display: flex;
+  width: 100%;
+  flex: 1 1 auto;
+}
+
+.content {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-left: var(--sidebar-width);
+  transition: margin-left 0.2s ease;
+}
+
+.main {
+  padding: var(--space-6) var(--space-6) var(--space-8);
+}
+
+.collapsed {
+  --sidebar-width: var(--sidebar-width-collapsed);
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 16, 48, 0.55);
+  backdrop-filter: blur(2px);
+  z-index: 45;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1024px) {
+  .content {
+    margin-left: 0;
+  }
+
+  .main {
+    padding: var(--space-5) var(--space-4) var(--space-6);
+  }
+}
+
+@media (max-width: 640px) {
+  .main {
+    padding: var(--space-4) var(--space-3) var(--space-5);
+  }
+}
+
+

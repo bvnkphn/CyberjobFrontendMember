@@ -1,0 +1,171 @@
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pageHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.heading {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--color-navy-900);
+}
+
+.subheading {
+  margin: var(--space-1) 0 0;
+  font-size: 14px;
+  color: var(--color-gray-500);
+}
+
+.createButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  background: var(--color-gold);
+  color: var(--color-navy-900);
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  padding: 10px 18px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  white-space: nowrap;
+}
+
+.createButton:hover {
+  background: var(--color-gold-dark);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.listColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.detailColumn {
+  min-width: 0;
+}
+
+.empty {
+  margin: var(--space-8) 0;
+  text-align: center;
+  color: var(--color-gray-500);
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.usage {
+  margin: calc(var(--space-4) * -1) 0 var(--space-4);
+  color: var(--color-gray-600);
+  font-size: 13.5px;
+}
+
+.usage a {
+  color: var(--color-navy-700);
+  font-weight: 700;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-full);
+  background: #fff;
+  color: var(--color-gray-600);
+  font: inherit;
+  font-size: 13.5px;
+  cursor: pointer;
+}
+
+.filter span {
+  min-width: 20px;
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-gray-100);
+  font-size: 12px;
+}
+
+.filterActive {
+  border-color: var(--color-navy-700);
+  background: var(--color-navy-700);
+  color: #fff;
+}
+
+.filterActive span {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.backToList {
+  display: none;
+  margin-bottom: var(--space-3);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-navy-700);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* จอเล็ก: เห็นรายการก่อน กดประกาศแล้วรายละเอียดเปิดเต็มจอ (Feature 4.1.1) */
+@media (max-width: 900px) {
+  .layout:not(.showDetail) .detailColumn {
+    display: none;
+  }
+
+  .showDetail .listColumn {
+    display: none;
+  }
+
+  .backToList {
+    display: inline-block;
+  }
+}
+
+@media (max-width: 640px) {
+  .pageHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+  }
+
+  .createButton {
+    justify-content: center;
+  }
+
+  .filters {
+    gap: 6px;
+  }
+
+  .filter {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+}
+

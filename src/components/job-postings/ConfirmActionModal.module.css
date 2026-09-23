@@ -1,0 +1,126 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(13, 16, 30, 0.45);
+  padding: var(--space-4);
+}
+
+.modal {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.iconWrap {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-4);
+}
+
+.modal[data-variant="warning"] .iconWrap {
+  background: rgba(245, 166, 35, 0.12);
+  color: var(--color-gold);
+}
+
+.modal[data-variant="danger"] .iconWrap {
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+}
+
+.title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--color-navy-900);
+}
+
+.message {
+  margin: var(--space-3) 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-gray-600);
+}
+
+.targetName {
+  font-weight: 600;
+  color: var(--color-navy-700);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  align-self: stretch;
+  margin-top: var(--space-6);
+}
+
+.cancelButton {
+  padding: 9px 20px;
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: var(--color-navy-900);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cancelButton:hover {
+  background: var(--color-gray-50);
+}
+
+.confirmButton {
+  padding: 9px 20px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #fff;
+}
+
+.confirmButton[data-variant="warning"] {
+  background: var(--color-gold);
+}
+
+.confirmButton[data-variant="warning"]:hover {
+  background: var(--color-gold-dark);
+}
+
+.confirmButton[data-variant="danger"] {
+  background: var(--color-danger);
+}
+
+.confirmButton[data-variant="danger"]:hover {
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+}
+
+@media (max-width: 480px) {
+  .actions {
+    flex-direction: column-reverse;
+  }
+
+  .cancelButton,
+  .confirmButton {
+    width: 100%;
+  }
+}
+

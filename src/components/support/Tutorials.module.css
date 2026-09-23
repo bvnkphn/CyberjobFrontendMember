@@ -1,0 +1,139 @@
+.page {
+  max-width: 1120px;
+  margin: 0 auto;
+  color: var(--color-text);
+}
+
+.head h1 {
+  margin: 0 0 6px;
+  color: var(--color-navy-900);
+  font-size: 26px;
+}
+
+.head p {
+  margin: 0 0 22px;
+  color: var(--color-gray-500);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.player {
+  overflow: hidden;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  background: #fff;
+}
+
+.player iframe,
+.placeholder {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+}
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(120deg, #233fc2, #122990);
+  color: #fff;
+}
+
+.placeholder span {
+  display: grid;
+  width: 64px;
+  height: 64px;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  font-size: 24px;
+}
+
+.placeholder small {
+  color: #d6dfff;
+}
+
+.info {
+  padding: 18px 22px 22px;
+}
+
+.info h2 {
+  margin: 0 0 10px;
+  color: var(--color-navy-900);
+  font-size: 18px;
+}
+
+.info ol {
+  display: grid;
+  gap: 6px;
+  margin: 0 0 14px;
+  padding-left: 20px;
+}
+
+.tryIt {
+  color: var(--color-navy-700);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
+  background: #fff;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.list .itemActive {
+  border-color: var(--color-navy-700);
+  background: var(--color-blue-light);
+}
+
+.list b,
+.list small {
+  display: block;
+}
+
+.list small {
+  color: var(--color-gray-500);
+  font-size: 12.5px;
+}
+
+.thumb {
+  display: grid;
+  flex-shrink: 0;
+  width: 56px;
+  height: 40px;
+  place-items: center;
+  border-radius: var(--radius-sm);
+  background: var(--color-navy-700);
+  color: #fff;
+}
+
+@media (max-width: 860px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}

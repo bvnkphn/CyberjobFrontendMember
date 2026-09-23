@@ -1,0 +1,113 @@
+.footer {
+  background: linear-gradient(
+    180deg,
+    #162caf 15%,
+    #0e1d71 100%
+  );
+  color: #dfe4f2;
+  width: 100%;
+  padding: var(--space-8) var(--space-6) var(--space-4);
+  box-sizing: border-box;
+}
+
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: var(--space-8);
+  flex-wrap: wrap;
+}
+
+.brand {
+  flex: 1 1 260px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.logoCyber {
+  color: #fff;
+}
+
+.logoJob {
+  color: var(--color-gold);
+}
+
+.description {
+  margin: var(--space-3) 0 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #aeb6cf;
+  max-width: 340px;
+}
+
+.columns {
+  flex: 1 1 520px;
+  display: flex;
+  gap: var(--space-8);
+  flex-wrap: wrap;
+}
+
+.column {
+  flex: 1 1 140px;
+}
+
+.columnTitle {
+  margin: 0 0 var(--space-3);
+  font-size: 14px;
+  color: #fff;
+}
+
+.columnList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.columnLink {
+  font-size: 13px;
+  color: #aeb6cf;
+  cursor: pointer;
+}
+
+.columnLink:hover {
+  color: var(--color-gold);
+}
+
+.bottom {
+  max-width: 1200px;
+  margin: var(--space-6) auto 0;
+  padding-top: var(--space-4);
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  font-size: 12.5px;
+  color: #8b94b0;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: var(--space-6) var(--space-4) var(--space-4);
+  }
+
+  .main {
+    gap: var(--space-6);
+  }
+
+  .columns {
+    gap: var(--space-5);
+    flex-basis: 100%;
+  }
+
+  .column {
+    flex: 1 1 120px;
+  }
+}
+

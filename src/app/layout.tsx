@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import "./public-site.css";
+import "./tokens.css";
 import "./globals.css";
 import { LanguageProvider } from "@/components/language-provider";
+import { LanguageProvider as OwnerLanguageProvider } from "@/lib/i18n/LanguageContext";
 import { AuthProvider } from "@/public-site/auth/AuthProvider";
 import { LanguageProvider as PublicLanguageProvider } from "@/public-site/i18n/LanguageProvider";
 import { AccessControl } from "@/components/access-control";
 import { SiteLayout } from "@/components/site-layout";
+import { OwnerProvider } from "@/lib/owner";
 
 export const metadata: Metadata = {
   title: "CyberJob – ค้นหาอนาคตของคุณ",
@@ -26,9 +29,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <PublicLanguageProvider>
           <AuthProvider>
             <LanguageProvider>
-              <SiteLayout>
-                <AccessControl>{children}</AccessControl>
-              </SiteLayout>
+              <OwnerLanguageProvider>
+                <OwnerProvider>
+                  <SiteLayout>
+                    <AccessControl>{children}</AccessControl>
+                  </SiteLayout>
+                </OwnerProvider>
+              </OwnerLanguageProvider>
             </LanguageProvider>
           </AuthProvider>
         </PublicLanguageProvider>
@@ -36,3 +43,4 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     </html>
   );
 }
+

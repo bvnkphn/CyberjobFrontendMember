@@ -1,0 +1,286 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 960px;
+}
+
+.pageHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pageIcon {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--color-blue-light);
+  color: var(--color-blue);
+}
+
+.pageHead h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--color-navy-900);
+}
+
+.card {
+  padding: var(--space-6);
+  background: #fff;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cardIcon {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: var(--color-blue-light);
+  color: var(--color-blue);
+}
+
+.cardIconDanger {
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+}
+
+.cardHead h2 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-navy-900);
+}
+
+.hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-gray-500);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 13px;
+  color: var(--color-gray-600);
+}
+
+.input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 9px;
+  background: #fff;
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+.input:focus {
+  outline: 2px solid var(--color-blue-light);
+  border-color: var(--color-blue);
+}
+
+/* ---------- ตัวเลือกความเป็นส่วนตัว ---------- */
+.fieldset {
+  margin: 0;
+  padding: var(--space-5);
+  border: 1px solid var(--color-gray-200);
+  border-radius: 10px;
+}
+
+.legend {
+  padding: 0 4px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-navy-900);
+}
+
+.optionList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-gray-100);
+}
+
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.optionSelected {
+  border-color: var(--color-blue);
+  background: #fbfcff;
+}
+
+.option input {
+  margin-top: 3px;
+  accent-color: var(--color-blue);
+}
+
+.optionTitle {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-navy-900);
+}
+
+.optionHint {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--color-gray-500);
+}
+
+/* ---------- ปุ่ม ---------- */
+.primaryButton {
+  align-self: flex-start;
+  padding: 11px 22px;
+  border: 0;
+  border-radius: 9px;
+  background: var(--color-gold);
+  color: var(--color-navy-900);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primaryButton:hover:not(:disabled) {
+  background: var(--color-gold-dark);
+}
+
+.primaryButton:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.dangerButton {
+  align-self: flex-start;
+  padding: 11px 22px;
+  border: 0;
+  border-radius: 9px;
+  background: var(--color-danger);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.dangerButton:disabled {
+  background: #f3a6a8;
+  cursor: not-allowed;
+}
+
+.outlineDangerButton {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: 1px solid var(--color-danger);
+  border-radius: 9px;
+  background: #fff;
+  color: var(--color-danger);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.outlineDangerButton:hover:not(:disabled) {
+  background: var(--color-danger-light);
+}
+
+.outlineDangerButton:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.warning {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-danger);
+}
+
+.checkboxRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--color-gray-600);
+  cursor: pointer;
+}
+
+.checkboxRow input {
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-danger);
+}
+
+/* ---------- ข้อความแจ้งผล ---------- */
+.notice {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 9px;
+  font-size: 13px;
+}
+
+.noticeInfo {
+  background: var(--color-blue-light);
+  color: var(--color-navy-700);
+}
+
+.noticeError {
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+}
+
+@media (max-width: 640px) {
+  .card {
+    padding: var(--space-4);
+  }
+
+  .primaryButton,
+  .dangerButton,
+  .outlineDangerButton {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .fieldset {
+    padding: var(--space-4);
+  }
+
+  .option {
+    padding: 10px 12px;
+  }
+}
+

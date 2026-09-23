@@ -1,11 +1,21 @@
+"use client";
+
+import { usePathname } from 'next/navigation';
 import { Navbar } from '@/public-site/components/Navbar';
 import { Footer } from '@/public-site/components/Footer';
+import { isOwnerRoute } from '@/lib/owner';
 
 /**
- * โครงหลักเพียงจุดเดียวของ Member app
- * ทุก route จึงใช้ Navbar และ Footer instance เดียวกันโดยไม่ต้องประกอบเองใน page
+ * โครงหลักสำหรับ Member app
+ * สำหรับ Owner routes จะข้าม Navbar/Footer ของ Member เพื่อให้ Owner AppShell ทำงานสมบูรณ์
  */
 export function SiteLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+
+  if (isOwnerRoute(pathname)) {
+    return <>{children}</>;
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
@@ -14,3 +24,4 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
+

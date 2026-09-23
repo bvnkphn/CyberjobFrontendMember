@@ -1,0 +1,449 @@
+.form {
+  background: #fff;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+/* ปุ่มย้อนกลับ */
+.backButton {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  text-decoration: none;
+  color: var(--color-gray-600);
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.backButton:hover {
+  color: var(--color-gray-700);
+}
+
+/* หัวข้อหลัก */
+.pageHeading {
+  margin-bottom: var(--space-5);
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pageTitle {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--color-navy-900);
+}
+
+.pageSubtitle {
+  margin: var(--space-2) 0 0;
+  font-size: 14px;
+  color: var(--color-gray-500);
+}
+
+/* 1. การ์ดข้อมูลบริษัท */
+.companyCard {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-100);
+  margin-bottom: var(--space-6);
+}
+
+.companyLogo {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--color-navy-700), var(--color-navy-500));
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.companyInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.companyLabel {
+  font-size: 12px;
+  color: var(--color-gray-400);
+}
+
+.companyName {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-navy-900);
+}
+
+/* 2. ฟอร์ม */
+.fieldRow {
+  margin-bottom: var(--space-5);
+}
+
+.twoColRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+  margin-bottom: var(--space-5);
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-navy-900);
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--color-text);
+  background: #fff;
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-sm);
+  box-sizing: border-box;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-blue);
+  box-shadow: 0 0 0 3px var(--color-blue-light);
+}
+
+.input.placeholder {
+  color: var(--color-gray-400);
+}
+
+select.input {
+  cursor: pointer;
+}
+
+/* segmented */
+.segmented {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.segment {
+  padding: 8px 16px;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--color-navy-700);
+  background: #fff;
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+}
+
+.segment:hover {
+  border-color: var(--color-gray-400);
+}
+
+.segmentActive {
+  background: var(--color-blue-light);
+  color: var(--color-navy-900);
+  border-color: var(--color-blue);
+}
+
+/* ช่วงเงินเดือน */
+.salaryRow {
+  display: flex;
+  gap: var(--space-3);
+}
+
+/* editor */
+.editor {
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 8px;
+  background: var(--color-gray-50);
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.toolButton {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--color-gray-600);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.toolButton:hover {
+  background: var(--color-gray-200);
+  color: var(--color-navy-900);
+}
+
+.toolbarSelect {
+  padding: 4px 8px;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--color-navy-900);
+  background: #fff;
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  height: 28px;
+}
+
+.toolbarDivider {
+  width: 1px;
+  height: 20px;
+  background: var(--color-gray-300);
+  margin: 0 6px;
+  flex-shrink: 0;
+}
+
+.toolUnderline {
+  text-decoration: underline;
+}
+
+.toolStrike {
+  text-decoration: line-through;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 160px;
+  padding: 12px;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-text);
+  border: none;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.textarea:focus {
+  outline: none;
+}
+
+/* tags */
+.skillInputWrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 8px 10px;
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-sm);
+}
+
+.skillInputWrap:focus-within {
+  border-color: var(--color-blue);
+  box-shadow: 0 0 0 3px var(--color-blue-light);
+}
+
+.skillInput {
+  flex: 1;
+  min-width: 140px;
+  border: none;
+  padding: 4px 0;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+.skillInput:focus {
+  outline: none;
+}
+
+.skillTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-navy-700);
+  background: var(--color-blue-light);
+  border-radius: var(--radius-full);
+}
+
+.skillRemove {
+  border: none;
+  background: none;
+  color: var(--color-navy-500);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+.skillRemove:hover {
+  color: var(--color-danger);
+}
+
+/* คำถามคัดกรอง */
+.questionList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.addQuestionButton {
+  align-self: flex-start;
+  margin-top: var(--space-2);
+  padding: 8px 16px;
+  border: 1px dashed var(--color-gray-400);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: var(--color-blue);
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.addQuestionButton:hover {
+  background: var(--color-blue-light);
+  border-color: var(--color-blue);
+}
+
+/* 3. ปุ่มด้านล่าง */
+.footerActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-gray-200);
+}
+
+.saveButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: var(--color-navy-900);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.saveButton:hover {
+  background: var(--color-gray-50);
+}
+
+.publishButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--color-gold);
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.publishButton:hover {
+  background: var(--color-gold-dark);
+}
+
+.checkRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-2);
+  color: var(--color-gray-600);
+  font-size: 13.5px;
+}
+
+.checkRow label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.hint {
+  display: block;
+  margin-top: 4px;
+  color: var(--color-gray-500);
+  font-size: 12.5px;
+}
+
+.saveButton:disabled,
+.publishButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+a.saveButton {
+  text-decoration: none;
+}
+
+@media (max-width: 640px) {
+  .form {
+    padding: var(--space-4);
+  }
+
+  .twoColRow {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .salaryRow {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .footerActions {
+    flex-direction: column-reverse;
+  }
+
+  .saveButton,
+  .publishButton {
+    width: 100%;
+    justify-content: center;
+  }
+}
+

@@ -36,12 +36,33 @@ export function UserMenu() {
             <p className="text-sm font-semibold text-brand-900">{user.name}</p>
             <p className="truncate text-xs text-slate-500">{user.email}</p>
           </div>
-          {items.map(({ key, href, icon: Icon }) => (
-            <Link key={key} href={href} role="menuitem" onClick={() => setOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 transition-colors hover:bg-slate-50">
-              <Icon width={18} height={18} className="text-slate-400" />
-              {t(key)}
-            </Link>
-          ))}
+          {user.role === 'EMPLOYER' ? (
+            <>
+              <Link href="/dashboard" role="menuitem" onClick={() => setOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-brand-700 transition-colors hover:bg-slate-50">
+                <BriefcaseIcon width={18} height={18} className="text-brand-600" />
+                ระบบจัดการผู้ประกอบการ
+              </Link>
+              <Link href="/job-postings" role="menuitem" onClick={() => setOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 transition-colors hover:bg-slate-50">
+                <PencilIcon width={18} height={18} className="text-slate-400" />
+                จัดการประกาศงาน
+              </Link>
+              <Link href="/candidates" role="menuitem" onClick={() => setOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 transition-colors hover:bg-slate-50">
+                <UserIcon width={18} height={18} className="text-slate-400" />
+                ค้นหาผู้สมัคร
+              </Link>
+              <Link href="/company" role="menuitem" onClick={() => setOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 transition-colors hover:bg-slate-50">
+                <EyeIcon width={18} height={18} className="text-slate-400" />
+                ข้อมูลบริษัท
+              </Link>
+            </>
+          ) : (
+            items.map(({ key, href, icon: Icon }) => (
+              <Link key={key} href={href} role="menuitem" onClick={() => setOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 transition-colors hover:bg-slate-50">
+                <Icon width={18} height={18} className="text-slate-400" />
+                {t(key)}
+              </Link>
+            ))
+          )}
           <button type="button" role="menuitem" onClick={async () => { setOpen(false); await logout(); router.replace('/'); router.refresh(); }} className="flex w-full items-center gap-3 border-t border-slate-100 px-4 py-2.5 text-left text-sm text-red-600 hover:bg-red-50">{t('user.logout')}</button>
         </div>
       )}
