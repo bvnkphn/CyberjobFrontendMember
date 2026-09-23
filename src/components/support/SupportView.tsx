@@ -120,7 +120,7 @@ export function SupportView() {
         {FAQ.map((item, index) => {
           const open = openIndex === index;
           return (
-            <div key={item.question} className={styles.faqItem}>
+            <div key={item.question} className={`${styles.faqItem} ${open ? styles.faqItemOpen : ""}`}>
               <button
                 type="button"
                 className={styles.faqQuestion}
@@ -143,7 +143,9 @@ export function SupportView() {
                   <polyline points="6 9 12 15 18 9" />
                 </svg>
               </button>
-              {open && <p className={styles.faqAnswer}>{t(item.answer)}</p>}
+              <div className={styles.faqBody}>
+                <p className={styles.faqAnswer}>{t(item.answer)}</p>
+              </div>
             </div>
           );
         })}

@@ -15,6 +15,7 @@ import { provincesOfRegion } from '@cyberjob/shared';
 import { jobsService, metaService } from '@/public-site/services/jobs.service';
 import { useI18n } from '@/public-site/i18n/LanguageProvider';
 import { useBookmarks } from '@/public-site/lib/bookmarks';
+import { useHiddenJobs } from '@/public-site/lib/useHiddenJobs';
 import { formatNumber } from '@/public-site/lib/format';
 import { useDropdown } from '@/public-site/lib/useDropdown';
 import { useMediaQuery } from '@/public-site/lib/useMediaQuery';
@@ -64,6 +65,7 @@ export function JobsExplorer() {
   const isCompact = useMediaQuery('(max-width: 1279.98px)');
 
   const bookmarks = useBookmarks();
+  const { hiddenIds, hideJob, unhideJob, unhideAll, lastHidden, clearLastHidden } = useHiddenJobs();
   const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -156,7 +158,8 @@ export function JobsExplorer() {
     setPage(1);
   }, []);
 
-  const selected = jobs.find((j) => j.id === selectedId) ?? null;
+  const visibleJobs = useMemo(() => jobs.filter((j) => !hiddenIds.has(j.id)), [jobs, hiddenIds]);
+  const selected = visibleJobs.find((j) => j.id === selectedId) ?? visibleJobs[0] ?? null;
 
   return (
     <div className="bg-white">
@@ -171,9 +174,23 @@ export function JobsExplorer() {
       <div className="container-page py-6">
         {/* จำนวนงาน + ปุ่มเรียงลำดับ */}
         <div className="mb-4 flex items-center justify-between gap-3">
-          <p className="text-sm font-medium text-slate-600">
-            {loading ? t('jobs.loading') : t('jobs.count', { n: formatNumber(total) })}
-          </p>
+          <div className="flex items-center gap-3">
+            <p className="text-sm font-medium text-slate-600">
+              {loading ? t('jobs.loading') : t('jobs.count', { n: formatNumber(Math.max(0, total - hiddenIds.size)) })}
+            </p>
+            {hiddenIds.size > 0 && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">
+                มุดไว้ {hiddenIds.size} งาน
+                <button
+                  type="button"
+                  onClick={unhideAll}
+                  className="font-semibold text-blue-600 hover:underline"
+                >
+                  (ยกเลิกทั้งหมด)
+                </button>
+              </span>
+            )}
+          </div>
           <SortMenu
             sorts={meta?.sorts ?? []}
             value={sort}
@@ -188,21 +205,27 @@ export function JobsExplorer() {
         <div className="grid gap-5 xl:grid-cols-[minmax(0,390px)_minmax(0,1fr)]">
           {/* ครึ่งซ้าย – ประกาศงานโดยย่อ */}
           <div ref={listRef} className="space-y-3">
-            {loading && jobs.length === 0 && <ListSkeleton />}
+            {loading && visibleJobs.length === 0 && <ListSkeleton />}
 
-            {!loading && jobs.length === 0 && (
+            {!loading && visibleJobs.length === 0 && (
               <div className="rounded-xl border border-slate-200 p-10 text-center">
                 <p className="font-semibold text-brand-900">{t('jobs.empty')}</p>
                 <p className="mt-1 text-sm text-slate-500">
-                  {t('jobs.emptyHint')}
+                  {hiddenIds.size > 0 ? 'คุณได้มุดงานทั้งหมดในหน้านี้ไว้' : t('jobs.emptyHint')}
                 </p>
-                <button type="button" onClick={reset} className="btn-outline mt-4">
-                  {t('filter.reset')}
-                </button>
+                {hiddenIds.size > 0 ? (
+                  <button type="button" onClick={unhideAll} className="btn-outline mt-4">
+                    ยกเลิกการมุดทั้งหมด
+                  </button>
+                ) : (
+                  <button type="button" onClick={reset} className="btn-outline mt-4">
+                    {t('filter.reset')}
+                  </button>
+                )}
               </div>
             )}
 
-            {jobs.map((job) => (
+            {visibleJobs.map((job) => (
               <JobResultCard
                 key={job.id}
                 job={job}
@@ -212,6 +235,7 @@ export function JobsExplorer() {
                   ? { href: `/jobs/${job.id}` }
                   : { onSelect: () => setSelectedId(job.id) })}
                 onToggleBookmark={() => bookmarks.toggle(job.id)}
+                onHide={() => hideJob(job.id, job.title)}
               />
             ))}
 
@@ -247,6 +271,30 @@ export function JobsExplorer() {
           </div>
         </div>
       </div>
+
+      {lastHidden && (
+        <aside aria-label="แจ้งเตือนการมุดงาน" className="fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-2xl bg-slate-900/95 px-5 py-3.5 text-sm text-white shadow-2xl backdrop-blur">
+          <span className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-amber-400"></span>
+            มุดงาน &ldquo;<strong className="max-w-[200px] truncate inline-block align-bottom">{lastHidden.title}</strong>&rdquo; เรียบร้อยแล้ว
+          </span>
+          <button
+            type="button"
+            onClick={() => unhideJob(lastHidden.id)}
+            className="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-blue-500 transition-colors shadow-sm"
+          >
+            เลิกทำ (Undo)
+          </button>
+          <button
+            type="button"
+            onClick={clearLastHidden}
+            aria-label="ปิดการแจ้งเตือน"
+            className="ml-1 text-slate-400 hover:text-white"
+          >
+            ✕
+          </button>
+        </aside>
+      )}
     </div>
   );
 }

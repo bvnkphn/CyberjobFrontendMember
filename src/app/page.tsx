@@ -16,7 +16,7 @@ export default async function HomePage() {
 
   return (
       <>
-        <main>
+        <main data-no-translate>
           <HeroSection />
           <ResumeAccountSection />
           <AboutSection />

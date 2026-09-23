@@ -5,6 +5,7 @@ import Link from "next/link";
 import { MemberRouteGuard } from "@/components/member-route-guard";
 import { PageHeading } from "@/components/page-heading";
 import { getApplications, SAMPLE_JOBS, type JobApplication } from "@/lib/member-api";
+import { useHiddenJobs } from "@/public-site/lib/useHiddenJobs";
 import "./my-jobs.css";
 
 /* ── Icons ──────────────────────────────────────────────────────── */
@@ -397,11 +398,12 @@ export default function MyJobsPage() {
 }
 
 function MyJobsContent() {
-  const [activeTab, setActiveTab] = useState<"saved" | "applied">("saved");
+  const [activeTab, setActiveTab] = useState<"saved" | "applied" | "hidden">("saved");
   const [selectedJobId, setSelectedJobId] = useState<string | null>(SAVED_JOBS[0].id);
   const [bookmarks, setBookmarks] = useState<Set<string>>(
     () => new Set(SAVED_JOBS.map((j) => j.id))
   );
+  const { hiddenIds, unhideJob, unhideAll } = useHiddenJobs();
   const [sortBy, setSortBy] = useState("latest");
   const [page, setPage] = useState(1);
   const [mobileDetail, setMobileDetail] = useState(false);
@@ -456,6 +458,40 @@ function MyJobsContent() {
     }
     return list;
   }, [savedJobs, sortBy]);
+
+  const hiddenJobsList = useMemo(() => {
+    const list: MyJob[] = [];
+    const seen = new Set<string>();
+    for (const id of Array.from(hiddenIds)) {
+      const found = savedJobs.find((j) => j.id === id) || SAMPLE_JOBS.find((j) => j.id === id);
+      if (found && !seen.has(id)) {
+        seen.add(id);
+        if ("companyInitial" in found) {
+          list.push(found as MyJob);
+        } else {
+          list.push({
+            id: found.id,
+            title: found.title,
+            company: found.company,
+            companyInitial: found.company.substring(0, 2).toUpperCase(),
+            location: found.location,
+            salary: found.salary,
+            type: found.type,
+            experience: "3-5 ปี",
+            headcount: "1 อัตรา",
+            deadlineDays: 15,
+            description: found.description,
+            postedDate: "เมื่อเร็วๆ นี้",
+            requirements: [],
+            qualifications: [],
+            employerQuestions: [],
+            benefits: [],
+          });
+        }
+      }
+    }
+    return list;
+  }, [hiddenIds, savedJobs]);
 
   const currentList = activeTab === "saved" ? sortedSaved : filteredApplied;
   const totalCount = currentList.length;
@@ -522,6 +558,16 @@ function MyJobsContent() {
           >
             <IconCheck /> งานที่สมัครแล้ว
             <span className={`mj-tab-badge ${activeTab === "applied" ? "active" : ""}`}>{appliedJobs.length}</span>
+          </button>
+          <button
+            className={`mj-tab ${activeTab === "hidden" ? "active" : ""}`}
+            onClick={() => { setActiveTab("hidden"); setPage(1); setSelectedJobId(null); setMobileDetail(false); exitSelectMode(); }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+              <line x1="1" y1="1" x2="23" y2="23" />
+            </svg> งานที่มุด
+            <span className={`mj-tab-badge ${activeTab === "hidden" ? "active" : ""}`}>{hiddenIds.size}</span>
           </button>
         </div>
 
@@ -730,6 +776,78 @@ function MyJobsContent() {
                 ))}
                 <button className="mj-page-btn" disabled={page === totalPages} onClick={() => setPage((p) => Math.min(totalPages, p + 1))} aria-label="หน้าถัดไป">›</button>
               </div>
+            )}
+          </div>
+        )}
+
+        {/* ── "hidden" tab view (งานที่มุดไว้) ── */}
+        {activeTab === "hidden" && (
+          <div className="mj-applied-list">
+            <div className="mj-applied-header" style={{ marginBottom: "20px" }}>
+              <div className="mj-applied-title-row">
+                <span className="mj-applied-title">
+                  งานที่มุดไว้ <span className="mj-applied-count">({hiddenJobsList.length})</span>
+                </span>
+                {hiddenJobsList.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={unhideAll}
+                    className="mj-filter-pill"
+                    style={{ marginLeft: "auto", color: "var(--blue)" }}
+                  >
+                    ยกเลิกการมุดทั้งหมด
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {hiddenJobsList.length === 0 ? (
+              <div className="mj-empty-state" style={{ textAlign: "center", padding: "48px 20px" }}>
+                <p style={{ color: "#64748b", fontSize: "15px" }}>คุณยังไม่ได้มุดงานใดๆ</p>
+                <p style={{ color: "#94a3b8", fontSize: "13px", marginTop: "6px" }}>คุณสามารถกดปุ่ม &quot;มุด&quot; บนการ์ดงานในหน้าค้นหาเพื่อซ่อนงานที่ไม่สนใจได้</p>
+                <Link href="/jobs" className="primary-button" style={{ marginTop: "20px", display: "inline-flex" }}>
+                  ไปที่หน้าค้นหางาน
+                </Link>
+              </div>
+            ) : (
+              hiddenJobsList.map((job) => (
+                <div key={job.id} className="mj-applied-card">
+                  <div className="mj-applied-card-row">
+                    <div className="mj-applied-logo" style={{ background: getLogoColor(job.companyInitial) }}>
+                      {job.companyInitial}
+                    </div>
+                    <div className="mj-applied-info">
+                      <h3 className="mj-applied-title-card">{job.title}</h3>
+                      <p className="mj-applied-meta">{job.company} · {job.salary}</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => unhideJob(job.id)}
+                      style={{
+                        padding: "8px 18px",
+                        borderRadius: "999px",
+                        border: "1px solid #cbd5e1",
+                        background: "#fff",
+                        color: "#334155",
+                        fontWeight: 600,
+                        fontSize: "13px",
+                        cursor: "pointer",
+                        transition: "all 0.15s ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = "#3479ed";
+                        e.currentTarget.style.color = "#3479ed";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = "#cbd5e1";
+                        e.currentTarget.style.color = "#334155";
+                      }}
+                    >
+                      ยกเลิกการมุด
+                    </button>
+                  </div>
+                </div>
+              ))
             )}
           </div>
         )}

@@ -260,6 +260,77 @@ const translations: Array<[string, string]> = [
   ["บทความ", "Articles"], ["เคล็ดลับและความรู้เพื่อการทำงานและพัฒนาตัวเอง", "Tips and knowledge for work and self-development"], ["ทั้งหมด", "All"], ["เรซูเม่", "Resume"], ["การทำงาน", "Work"], ["สมัครงาน", "Job applications"], ["อาชีพ", "Career"], ["อ่านต่อ", "Read more"], ["ย้อนกลับ", "Previous"], ["ถัดไป", "Next"], ["หน้าบทความ", "Article pages"], ["ยังไม่มีบทความในหมวดนี้", "There are no articles in this category"], ["5 เคล็ดลับเขียนเรซูเม่ให้โดดเด่นและได้งาน", "5 tips to write a standout resume and get hired"], ["เทรนด์การทำงานแห่งอนาคต 2026", "Future of work trends in 2026"], ["เตรียมตัวสัมภาษณ์งานอย่างไรให้มั่นใจ", "How to prepare confidently for a job interview"], ["การหางานสำหรับนักศึกษาจบใหม่", "Job search tips for new graduates"], ["รวมเคล็ดลับเขียนเรซูเม่ให้โดดเด่น อ่านง่าย และช่วยเพิ่มโอกาสได้งานที่ใช่", "Tips to make your resume stand out, easy to read, and more likely to land the right job"], ["ทักษะและรูปแบบการทำงานที่กำลังเปลี่ยนโลกการทำงานของคนรุ่นใหม่", "Skills and work styles shaping the future of work"], ["แนวทางเตรียมตัวก่อนสัมภาษณ์ ตั้งแต่การค้นคว้าบริษัทจนถึงการตอบคำถาม", "A guide to preparing for interviews, from researching the company to answering questions"], ["เริ่มต้นเส้นทางอาชีพอย่างมั่นใจ พร้อมเทคนิคค้นหางานแรกที่เหมาะกับคุณ", "Start your career with confidence and find your first suitable job"],
   ["บริษัท", "Company"], ["จำกัด", "Limited"], ["บริษัท เอซีซี จำกัด", "ACC Company Limited"], ["บริษัท เอสเอส จำกัด", "SS Company Limited"], ["บริษัท คลีน จำกัด", "Clean Company Limited"], ["บริษัท เอ็นเอส จำกัด", "NS Company Limited"], ["บริษัท เอซีซี จำกัด เงินเดือน 15,000 - 20,000 บาท", "ACC Company Limited Salary 15,000 - 20,000 THB"], ["บริษัท เอสเอส จำกัด เงินเดือน 30,000 - 50,000 บาท", "SS Company Limited Salary 30,000 - 50,000 THB"], ["บริษัท คลีน จำกัด เงินเดือน 30,000 - 55,000 บาท", "Clean Company Limited Salary 30,000 - 55,000 THB"], ["บริษัท เอ็นเอส จำกัด เงินเดือน 15,000 - 20,000 บาท", "NS Company Limited Salary 15,000 - 20,000 THB"], ["52 ถูกใจ", "52 likes"], ["256 ความคิดเห็น", "256 comments"], ["158 เข้าชม", "158 views"], ["บทความล่าสุด", "Latest articles"], ["หมวดหมู่", "Categories"], ["แท็กที่เกี่ยวข้อง", "Related tags"], ["ผู้เขียน", "Author"], ["โพสต์ใกล้เคียง", "Related posts"], ["ดูโปรไฟล์", "View profile"], ["ดูบทความทั้งหมด", "View all articles"], ["แชร์", "Share"], ["ความคิดเห็น (3)", "Comments (3)"], ["ส่งความคิดเห็น", "Submit comment"], ["เขียนความคิดเห็นของคุณ...", "Write your comment..."], ["ก่อนหน้า", "Previous"], ["ถัดไป", "Next"], ["เรซูเม่", "Resume"], ["สมัครงาน", "Job applications"], ["ทีมงาน CyberJob", "CyberJob team"], ["ผู้เขียน", "Author"], ["มิ.ย.", "Jun"], ["ส.ค.", "Aug"], ["อัปเดตล่าสุด", "Last updated"],
   ["สมัครสมาชิกฟรีหรือไม่?", "Is registration free?"], ["ผู้หางานสามารถสมัครสมาชิก สร้างโปรไฟล์ ค้นหางาน และสมัครงานได้โดยไม่มีค่าใช้จ่าย", "Job seekers can register, create a profile, search for jobs, and apply at no cost"], ["บริษัทลงทะเบียนอย่างไร?", "How can a company register?"], ["ผู้ประกอบการสามารถติดต่อทีมงานเพื่อขอข้อมูลการลงทะเบียนและเริ่มต้นใช้งานได้", "Employers can contact our team for registration information and onboarding"], ["สมัครงานได้อย่างไร?", "How do I apply for a job?"], ["เลือกตำแหน่งที่สนใจ ตรวจสอบรายละเอียด แล้วกดสมัครงานหรือส่งประวัติให้บริษัทตามช่องทางที่ระบุ", "Choose a position, review the details, then apply or send your resume through the listed channel"], ["มีแอปมือถือหรือไม่?", "Is there a mobile app?"], ["ขณะนี้สามารถใช้งาน CyberJob ผ่านเว็บไซต์บนโทรศัพท์มือถือได้ และเรากำลังพัฒนาประสบการณ์ให้ดียิ่งขึ้น", "You can use CyberJob through our mobile-friendly website while we continue improving the experience"],
+  // --- หน้า About ---
+  ["เรื่องราวของเรา", "Our Story"],
+  ["CyberJob เกิดขึ้นจากความตั้งใจที่จะเชื่อมโยงคนหางานกับนายจ้าง ให้กระบวนการหางานง่ายและตรงประเด็นมากขึ้น เราเชื่อว่าทุกคนสมควรได้รับโอกาสในการทำงานที่เหมาะสมกับทักษะและความต้องการ แพลตฟอร์มของเราออกแบบมาเพื่อช่วยให้ผู้หางานค้นพบอาชีพที่ใช่ พร้อมทั้งเป็นสะพานเชื่อมระหว่างองค์กรกับบุคลากรคุณภาพ", "CyberJob was founded to connect job seekers with employers, making the hiring process simpler and more precise. We believe everyone deserves the opportunity to work in a role fitting their skills and needs. Our platform is designed to help professionals discover the right career while bridging organisations with high-calibre talent."],
+  ["พันธกิจ", "Mission"],
+  ["มุ่งมั่นพัฒนาแพลตฟอร์มหางานที่เข้าถึงง่าย ปลอดภัย และตรงกับความต้องการของผู้ใช้ทุกคน", "Dedicated to developing an accessible, safe, and tailored job platform for all users."],
+  ["วิสัยทัศน์", "Vision"],
+  ["เป็นแพลตฟอร์มหางานอันดับหนึ่งของไทยที่ทุกคนนึกถึงเมื่อต้องการโอกาสใหม่ในอาชีพ", "To be Thailand's premier job platform everyone turns to for new career opportunities."],
+  ["บริการของเรา", "Our Services"],
+  ["หางานออนไลน์", "Online Job Search"],
+  ["ค้นหางานที่ตรงกับความสามารถของคุณ", "Find jobs matching your skills"],
+  ["สร้างเรซูเม่", "Resume Builder"],
+  ["เครื่องมือสร้างเรซูเม่มืออาชีพฟรี", "Free professional resume building tool"],
+  ["งานจบใหม่", "New Graduate Jobs"],
+  ["โอกาสสำหรับนักศึกษาและเด็กจบใหม่", "Opportunities for students and fresh graduates"],
+  ["สำหรับบริษัท", "For Employers"],
+  ["ช่องทางคัดเลือกผู้สมัครที่มีคุณภาพ", "Quality candidate recruitment channel"],
+  ["ทำไมต้อง CyberJob", "Why CyberJob"],
+  ["ผู้ใช้มากมาย", "Vast Community"],
+  ["ผู้ใช้งานที่ไว้วางใจในระบบ", "Trusted by a growing user base"],
+  ["ไว้ใจได้", "Reliable & Secure"],
+  ["ระบบยืนยันตัวตนที่ปลอดภัย", "Secure identity verification system"],
+  ["รวดเร็ว", "Fast & Responsive"],
+  ["สมัครงานได้ในไม่กี่คลิก", "Apply for jobs in just a few clicks"],
+  ["ฟรีจริง", "Completely Free"],
+  ["สร้างเรซูเม่และสมัครงานฟรีทั้งหมด", "Create resumes and apply for jobs 100% free"],
+  ["รู้จักเรื่องราว พันธกิจ และบริการที่ CyberJob ตั้งใจสร้างเพื่อคนหางาน", "Discover the story, mission, and services CyberJob creates for job seekers."],
+  // --- หน้า Contact & LINE ---
+  ["มีคำถามหรือต้องการความช่วยเหลือ? ทีมงาน CyberJob พร้อมดูแลคุณ", "Have questions or need assistance? The CyberJob team is here to help."],
+  ["ช่องทางที่ตอบเร็วที่สุด", "Fastest response channel"],
+  ["LINE Official Account", "LINE Official Account"],
+  ["แชทกับทีมงานเพื่อสอบถามเรื่องบัญชี การสมัครงาน หรือการใช้งานเว็บไซต์", "Chat with our support team regarding accounts, applications, or website guidance."],
+  ["แชทกับเรา", "Chat with us"],
+  ["ช่องทางติดต่ออื่น", "Other contact methods"],
+  ["ตอบกลับภายใน 1 วันทำการ", "Reply within 1 business day"],
+  ["จันทร์–ศุกร์ เวลา 09:00–18:00 น.", "Mon–Fri 09:00–18:00"],
+  ["คำตอบสำหรับคำถามเกี่ยวกับการใช้งาน CyberJob", "Answers to common questions about using CyberJob."],
+  // --- หน้า Invitations & Always Allow ---
+  ["ตรวจสอบและตอบรับคำเชิญจากบริษัทที่สนใจโปรไฟล์ของคุณ", "Review and respond to invitations from companies interested in your profile."],
+  ["ยังไม่มีคำเชิญจากบริษัท", "No company invitations yet"],
+  ["อนุญาตให้บริษัทส่งคำเชิญเสมอ", "Always allow company invitations"],
+  ["เปิดรับคำเชิญเสมอ", "Always allow invitations"],
+  ["เปิดรับคำเชิญ", "Accepting invitations"],
+  ["ปิดรับคำเชิญ", "Invitations paused"],
+  ["อนุญาตให้บริษัทที่สนใจสามารถค้นพบโปรไฟล์และส่งคำเชิญสมัครงานถึงคุณได้โดยตรง", "Allow interested employers to discover your profile and send job invitations directly."],
+  // --- มุดงาน (Hide Job) ---
+  ["มุดงานนี้", "Hide this job"],
+  ["มุดงาน", "Hide job"],
+  ["ยกเลิกการมุด", "Unhide"],
+  ["งานที่มุด", "Hidden jobs"],
+  ["งานที่ซ่อนไว้", "Hidden jobs"],
+  ["มุดงานเรียบร้อยแล้ว", "Job hidden successfully"],
+  ["เลิกทำ", "Undo"],
+  ["คุณยังไม่ได้มุดงานใดๆ", "You haven't hidden any jobs yet"],
+  ["จัดการงานที่คุณเลือกซ่อนไว้จากหน้าค้นหา", "Manage jobs you have hidden from search results"],
+  // --- หน้าแรก & ทั่วไป ---
+  ["ค้นหาอนาคตของคุณกับ CyberJob", "Find your future with CyberJob"],
+  ["แพลตฟอร์มหางานที่เชื่อมต่อคนทำงานกับองค์กรชั้นนำ เพื่อให้คุณได้พบกับโอกาสที่ใช่ในสายอาชีพที่คุณต้องการ", "A job platform that connects talent with leading organisations, so you can find the right opportunity in the career you want."],
+  ["สร้างบัญชีฝากเรซูเม่ฟรี", "Create a free resume account"],
+  ["สำหรับนักศึกษาจบใหม่และผู้หางานทั่วไป สร้างโปรไฟล์ของคุณให้โดดเด่นและเพิ่มโอกาสให้ถูกมองเห็นจากบริษัทชั้นนำได้ง่ายขึ้น โดยไม่มีค่าใช้จ่าย", "For graduates and job seekers alike — build a standout profile and get discovered by leading companies, at no cost."],
+  ["ลงทะเบียนฝากข้อมูล", "Register and upload"],
+  ["รูปแบบงาน", "Work Style"],
+  ["สถานที่ทำงาน", "Location"],
+  ["ค้นหางาน", "Search jobs"],
+  ["ชื่อตำแหน่ง คำค้นหา", "Job title or keyword"],
+  ["สาขาอาชีพ", "Job category"],
+  ["งานของฉัน", "My Jobs"],
+  ["จัดการงานที่บันทึกและติดตามสถานะใบสมัครของคุณ", "Manage saved jobs and track your applications."],
+  ["งานที่ปักหมุด", "Saved Jobs"],
+  ["งานที่สมัครแล้ว", "Applied Jobs"],
+  ["งานที่บันทึก", "Saved Jobs"],
+  ["งานที่สมัคร", "Applied Jobs"],
 ];
 
 const orderedTranslations = [...translations].sort((a, b) => b[0].length - a[0].length);
@@ -301,7 +372,14 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
         if (parent && !parent.closest("script, style") && !parent.closest("[data-no-translate]")) {
           if (!textOriginal.has(textNode)) textOriginal.set(textNode, textNode.nodeValue ?? "");
           const original = textOriginal.get(textNode) ?? "";
-          textNode.nodeValue = locale === "en" ? translateText(original) : original;
+          if (locale === "en") {
+            const translated = translateText(original);
+            if (translated !== original) {
+              textNode.nodeValue = translated;
+            }
+          } else {
+            textNode.nodeValue = original;
+          }
         }
         node = walker.nextNode();
       }
@@ -313,7 +391,14 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
         for (const attribute of ["placeholder", "aria-label", "title"]) {
           const value = element.getAttribute(attribute);
           if (value !== null && !(attribute in originals)) originals[attribute] = value;
-          if (attribute in originals) element.setAttribute(attribute, locale === "en" ? translateText(originals[attribute]) : originals[attribute]);
+          if (attribute in originals) {
+            if (locale === "en") {
+              const trans = translateText(originals[attribute]);
+              if (trans !== originals[attribute]) element.setAttribute(attribute, trans);
+            } else {
+              element.setAttribute(attribute, originals[attribute]);
+            }
+          }
         }
         attributeOriginal.set(element, originals);
       }

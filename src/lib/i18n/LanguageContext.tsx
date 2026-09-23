@@ -43,17 +43,36 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     try {
-      const saved = window.localStorage.getItem(STORAGE_KEY);
+      const saved = window.localStorage.getItem("cyberjob.lang") || window.localStorage.getItem(STORAGE_KEY);
       if (saved === "en" || saved === "th") setLanguageState(saved);
     } catch {
       // โหมดส่วนตัวของเบราว์เซอร์อาจปิด storage ไว้
     }
+
+    const handleSync = (e: Event) => {
+      const customEvent = e as CustomEvent<Language>;
+      if (customEvent.detail === 'en' || customEvent.detail === 'th') {
+        setLanguageState(customEvent.detail);
+      } else {
+        const saved = window.localStorage.getItem("cyberjob.lang") || window.localStorage.getItem(STORAGE_KEY);
+        if (saved === "en" || saved === "th") setLanguageState(saved);
+      }
+    };
+    window.addEventListener('cyberjob:lang', handleSync);
+    window.addEventListener('storage', handleSync);
+    return () => {
+      window.removeEventListener('cyberjob:lang', handleSync);
+      window.removeEventListener('storage', handleSync);
+    };
   }, []);
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
     try {
       window.localStorage.setItem(STORAGE_KEY, lang);
+      window.localStorage.setItem("cyberjob.lang", lang);
+      window.localStorage.setItem("cyberjobLocale", lang);
+      window.dispatchEvent(new CustomEvent('cyberjob:lang', { detail: lang }));
     } catch {
       // เปลี่ยนภาษาได้ตามปกติ แค่จำไว้ข้ามหน้าไม่ได้
     }

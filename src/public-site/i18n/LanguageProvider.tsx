@@ -29,8 +29,24 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>('th');
 
   useEffect(() => {
-    const saved = window.localStorage.getItem(STORAGE_KEY);
+    const saved = window.localStorage.getItem(STORAGE_KEY) || window.localStorage.getItem('cyberjob_owner_language');
     if (saved === 'en' || saved === 'th') setLangState(saved);
+
+    const handleSync = (e: Event) => {
+      const customEvent = e as CustomEvent<Lang>;
+      if (customEvent.detail === 'en' || customEvent.detail === 'th') {
+        setLangState(customEvent.detail);
+      } else {
+        const nextSaved = window.localStorage.getItem(STORAGE_KEY) || window.localStorage.getItem('cyberjob_owner_language');
+        if (nextSaved === 'en' || nextSaved === 'th') setLangState(nextSaved);
+      }
+    };
+    window.addEventListener('cyberjob:lang', handleSync);
+    window.addEventListener('storage', handleSync);
+    return () => {
+      window.removeEventListener('cyberjob:lang', handleSync);
+      window.removeEventListener('storage', handleSync);
+    };
   }, []);
 
   useEffect(() => {
@@ -41,6 +57,9 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     setLangState(next);
     try {
       window.localStorage.setItem(STORAGE_KEY, next);
+      window.localStorage.setItem('cyberjob_owner_language', next);
+      window.localStorage.setItem('cyberjobLocale', next);
+      window.dispatchEvent(new CustomEvent('cyberjob:lang', { detail: next }));
     } catch {
       /* โหมดส่วนตัวของเบราว์เซอร์อาจปิด storage ไว้ */
     }
