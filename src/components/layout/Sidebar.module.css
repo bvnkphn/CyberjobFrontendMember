@@ -1,8 +1,9 @@
 .sidebar {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
+  height: 100vh;
   width: var(--sidebar-width);
   background: var(--sidebar-gradient);
   color: #fff;
@@ -10,7 +11,7 @@
   flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden;
-  z-index: 20;
+  z-index: 40;
   transition: width 0.2s ease;
 }
 
