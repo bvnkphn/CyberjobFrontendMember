@@ -38,10 +38,24 @@ export default function ContactPage() {
             <p>แชทกับทีมงานเพื่อสอบถามเรื่องบัญชี การสมัครงาน หรือการใช้งานเว็บไซต์</p>
             <small>@cyberjob</small>
           </div>
-          <div className="qr-code" aria-label="QR Code สำหรับติดต่อ CyberJob">
+          <a
+            href="https://lin.ee/qYT9XuK"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="qr-code"
+            aria-label="QR Code สำหรับติดต่อ CyberJob"
+            title="สแกนหรือคลิกเพื่อเพิ่มเพื่อนทาง LINE"
+          >
             <img src="/contact/line-qr.png" alt="QR Code สำหรับติดต่อ CyberJob" onError={(event) => { event.currentTarget.style.display = "none"; }} />
-          </div>
-          <button type="button" className="line-action">แชทกับเรา <span aria-hidden="true">→</span></button>
+          </a>
+          <a
+            href="https://lin.ee/qYT9XuK"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="line-action"
+          >
+            แชทกับเรา <span aria-hidden="true">→</span>
+          </a>
         </section>
 
         <section className="contact-methods" aria-label="ช่องทางติดต่ออื่น">

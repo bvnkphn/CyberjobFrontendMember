@@ -9,7 +9,7 @@ import { errorMessage, useApi, useOwner } from "@/lib/owner";
 import styles from "./Support.module.css";
 
 const LINE_ID = "@cyberjob";
-const LINE_URL = "https://line.me/R/ti/p/~@cyberjob";
+const LINE_URL = "https://lin.ee/qYT9XuK";
 const SUPPORT_EMAIL = "support@cyberjob.th";
 const SUPPORT_PHONE = "02-123-4567";
 
@@ -57,10 +57,10 @@ export function SupportView() {
           <span className={styles.lineId}>{LINE_ID}</span>
         </div>
 
-        <span className={styles.qrBox}>
+        <a className={styles.qrBox} href={LINE_URL} target="_blank" rel="noopener noreferrer" title="สแกนหรือคลิกเพื่อเพิ่มเพื่อนทาง LINE">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/contact/line-qr.png" alt={t("support.qrAlt")} width={84} height={84} />
-        </span>
+        </a>
 
         <a className={styles.lineCta} href={LINE_URL} target="_blank" rel="noreferrer">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
