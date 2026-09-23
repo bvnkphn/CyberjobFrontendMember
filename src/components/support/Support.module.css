@@ -236,11 +236,18 @@
 }
 
 .faqItem {
+  display: grid;
+  grid-template-rows: auto 0fr;
   border-top: 1px solid var(--color-gray-100);
+  transition: grid-template-rows 0.28s ease;
 }
 
 .faqItem:first-of-type {
   border-top: 0;
+}
+
+.faqItemOpen {
+  grid-template-rows: auto 1fr;
 }
 
 .faqQuestion {
@@ -267,11 +274,16 @@
 .faqChevron {
   flex: 0 0 auto;
   color: var(--color-gray-400);
-  transition: transform 0.18s ease;
+  transition: transform 0.25s ease, color 0.2s;
 }
 
 .faqChevronOpen {
   transform: rotate(180deg);
+  color: var(--color-blue);
+}
+
+.faqBody {
+  overflow: hidden;
 }
 
 .faqAnswer {
