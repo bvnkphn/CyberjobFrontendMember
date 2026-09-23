@@ -67,8 +67,12 @@ function handleRequest(req, res) {
 
   const proxyReq = http.request(options, (proxyRes) => {
     const resHeaders = { ...proxyRes.headers };
-    if (isHttps && !resHeaders['strict-transport-security']) {
-      resHeaders['strict-transport-security'] = 'max-age=31536000; includeSubDomains; preload';
+    if (isHttps) {
+      if (!resHeaders['strict-transport-security']) {
+        resHeaders['strict-transport-security'] = 'max-age=31536000; includeSubDomains; preload';
+      }
+    } else {
+      resHeaders['strict-transport-security'] = 'max-age=0';
     }
     res.writeHead(proxyRes.statusCode, resHeaders);
     proxyRes.pipe(res, { end: true });
