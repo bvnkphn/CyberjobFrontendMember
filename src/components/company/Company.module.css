@@ -11,12 +11,22 @@
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.15s ease;
+}
+
+.back:hover {
+  color: var(--color-blue);
 }
 
 .title {
   margin: 0;
   color: var(--color-navy-900);
-  font-size: 26px;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 .hero {
@@ -24,6 +34,7 @@
   border: 1px solid var(--color-gray-200);
   border-radius: var(--radius-lg);
   background: #fff;
+  box-shadow: var(--shadow-sm);
 }
 
 .cover {
@@ -55,12 +66,15 @@
 .heroText h1 {
   margin: 12px 0 4px;
   color: var(--color-navy-900);
-  font-size: 24px;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 .heroText p {
   margin: 0 0 8px;
   color: var(--color-gray-500);
+  font-size: 14px;
 }
 
 .heroActions,
@@ -78,27 +92,32 @@
 }
 
 .status {
-  display: inline-block;
-  padding: 3px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
   border-radius: var(--radius-full);
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 700;
 }
 
 .approved {
-  background: #e4f6ee;
-  color: #146c47;
+  background: var(--badge-green-bg);
+  color: var(--badge-green-text);
+  border: 1px solid var(--badge-green-border);
 }
 
 .pending {
-  background: #fdf1dc;
-  color: #8a5a07;
+  background: var(--badge-gold-bg);
+  color: var(--badge-gold-text);
+  border: 1px solid var(--badge-gold-border);
 }
 
 .rejected,
 .not_submitted {
-  background: var(--color-danger-light);
-  color: #b4232a;
+  background: var(--badge-red-bg);
+  color: var(--badge-red-text);
+  border: 1px solid var(--badge-red-border);
 }
 
 .primary,
@@ -113,12 +132,20 @@
   font-weight: 700;
   text-decoration: none;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .primary {
-  border: 1px solid var(--color-gold-dark);
-  background: var(--color-gold);
-  color: #2b1d00;
+  border: 1px solid var(--color-blue);
+  background: var(--color-blue);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(62, 111, 240, 0.25);
+}
+
+.primary:hover:not(:disabled) {
+  background: var(--color-blue-dark);
+  box-shadow: 0 6px 16px rgba(62, 111, 240, 0.35);
+  transform: translateY(-1px);
 }
 
 .secondary {
@@ -127,9 +154,16 @@
   color: var(--color-gray-700);
 }
 
+.secondary:hover {
+  background: var(--color-gray-50);
+  border-color: var(--color-gray-400);
+}
+
 .primary:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .linkDanger {
@@ -138,7 +172,13 @@
   color: var(--color-danger);
   font: inherit;
   font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
+  padding: 4px 8px;
+}
+
+.linkDanger:hover {
+  text-decoration: underline;
 }
 
 .grid {
@@ -154,16 +194,18 @@
 }
 
 .card {
-  padding: 22px;
+  padding: 24px;
   border: 1px solid var(--color-gray-200);
   border-radius: var(--radius-lg);
   background: #fff;
+  box-shadow: var(--shadow-sm);
 }
 
 .card h2 {
-  margin: 0 0 12px;
+  margin: 0 0 14px;
   color: var(--color-navy-900);
-  font-size: 17px;
+  font-size: 16px;
+  font-weight: 800;
 }
 
 .card p {
@@ -177,6 +219,8 @@
 
 .about {
   white-space: pre-wrap;
+  color: var(--color-text);
+  font-size: 14px;
 }
 
 .muted {
@@ -187,7 +231,7 @@
 .definitions {
   display: grid;
   grid-template-columns: max-content 1fr;
-  gap: 8px 14px;
+  gap: 10px 16px;
   margin: 0;
   font-size: 14px;
 }
@@ -199,11 +243,19 @@
 .definitions dd {
   margin: 0;
   overflow-wrap: anywhere;
+  color: var(--color-text);
 }
 
 .definitions a,
 .card a {
-  color: var(--color-navy-700);
+  color: var(--color-blue);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.definitions a:hover,
+.card a:hover {
+  text-decoration: underline;
 }
 
 .map {
@@ -240,10 +292,17 @@
   height: 26px;
   border: 0;
   border-radius: 50%;
-  background: rgba(13, 22, 66, 0.7);
+  background: rgba(13, 22, 66, 0.75);
   color: #fff;
   font-size: 16px;
   cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 0.15s ease;
+}
+
+.galleryItem button:hover {
+  background: rgba(13, 22, 66, 0.95);
 }
 
 .galleryAdd {
@@ -255,6 +314,13 @@
   color: var(--color-gray-500);
   font-size: 14px;
   cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.galleryAdd:hover {
+  border-color: var(--color-blue);
+  color: var(--color-blue);
+  background: var(--color-blue-light);
 }
 
 .imageGrid {
@@ -305,12 +371,22 @@
 .field select,
 .field textarea {
   width: 100%;
-  padding: 10px 12px;
+  padding: 10px 14px;
   border: 1px solid var(--color-gray-300);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   background: #fff;
   font: inherit;
   font-size: 14px;
+  color: var(--color-text);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--color-blue);
+  box-shadow: 0 0 0 3px rgba(62, 111, 240, 0.15);
 }
 
 .segmented {
@@ -320,19 +396,26 @@
 }
 
 .segmented button {
-  padding: 9px 14px;
+  padding: 8px 14px;
   border: 1px solid var(--color-gray-300);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   background: #fff;
   color: var(--color-gray-600);
   font: inherit;
   font-size: 13.5px;
+  font-weight: 600;
   cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.segmented button:hover {
+  border-color: var(--color-gray-400);
+  background: var(--color-gray-50);
 }
 
 .segmented .segmentActive {
-  border-color: var(--color-navy-700);
-  background: var(--color-navy-700);
+  border-color: var(--color-navy-900);
+  background: var(--color-navy-900);
   color: #fff;
 }
 
@@ -377,4 +460,3 @@
     gap: 4px;
   }
 }
-

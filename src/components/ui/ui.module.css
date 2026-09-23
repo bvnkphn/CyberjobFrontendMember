@@ -233,3 +233,138 @@
   background: var(--color-navy-700);
   color: #fff;
 }
+
+/* Page Header มาตรฐานสำหรับทุกหน้าฝั่ง Owner */
+.pageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.pageHeaderMain {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.pageHeaderIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--color-blue-light);
+  color: var(--color-blue);
+  flex-shrink: 0;
+}
+
+.pageHeaderTitleCol {
+  min-width: 0;
+}
+
+.pageHeaderTitleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.pageHeaderTitle {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-navy-900);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.pageHeaderBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--badge-blue-bg);
+  color: var(--badge-blue-text);
+}
+
+.pageHeaderSubtitle {
+  margin: 4px 0 0;
+  font-size: 13.5px;
+  color: var(--color-gray-500);
+  line-height: 1.45;
+}
+
+.pageHeaderAction {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* Status Badges มาตรฐาน */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.badgeSuccess {
+  background: var(--badge-green-bg);
+  color: var(--badge-green-text);
+  border: 1px solid var(--badge-green-border);
+}
+
+.badgeWarning {
+  background: var(--badge-gold-bg);
+  color: var(--badge-gold-text);
+  border: 1px solid var(--badge-gold-border);
+}
+
+.badgeInfo {
+  background: var(--badge-blue-bg);
+  color: var(--badge-blue-text);
+  border: 1px solid var(--badge-blue-border);
+}
+
+.badgeNeutral {
+  background: var(--badge-gray-bg);
+  color: var(--badge-gray-text);
+  border: 1px solid var(--badge-gray-border);
+}
+
+.badgeDanger {
+  background: var(--badge-red-bg);
+  color: var(--badge-red-text);
+  border: 1px solid var(--badge-red-border);
+}
+
+@media (max-width: 640px) {
+  .pageHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .pageHeaderAction {
+    width: 100%;
+  }
+
+  .pageHeaderAction > * {
+    width: 100%;
+    justify-content: center;
+  }
+}
+

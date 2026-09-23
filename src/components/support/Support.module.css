@@ -3,6 +3,8 @@
   flex-direction: column;
   gap: var(--space-6);
   max-width: 1120px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .pageHead {
@@ -24,8 +26,9 @@
 
 .pageHead h1 {
   margin: 0;
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 800;
+  letter-spacing: -0.01em;
   color: var(--color-navy-900);
 }
 
@@ -39,16 +42,16 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
   color: var(--color-green);
 }
 
 .sectionLabel::before {
   content: "";
-  width: 14px;
-  height: 14px;
-  border: 2px solid currentColor;
+  width: 10px;
+  height: 10px;
+  background: currentColor;
   border-radius: 50%;
 }
 
@@ -59,9 +62,10 @@
   gap: var(--space-6);
   flex-wrap: wrap;
   padding: var(--space-6);
-  border-radius: 14px;
+  border-radius: var(--radius-lg);
   background: linear-gradient(105deg, #12b455 0%, #22c55e 55%, #2ad06a 100%);
   color: #fff;
+  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.25);
 }
 
 .lineLogo {
@@ -91,32 +95,34 @@
 
 .lineTitleRow h2 {
   margin: 0;
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 .lineBadge {
   padding: 4px 12px;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: var(--color-gold);
   color: var(--color-navy-900);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .lineBody p {
   margin: 6px 0 12px;
   font-size: 14px;
-  opacity: 0.92;
+  opacity: 0.94;
 }
 
 .lineId {
   display: inline-block;
   padding: 6px 16px;
-  border-radius: 8px;
-  background: rgb(255 255 255 / 22%);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.22);
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
 .qrBox {
@@ -126,8 +132,14 @@
   display: grid;
   place-items: center;
   padding: 6px;
-  border-radius: 10px;
+  border-radius: 12px;
   background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+}
+
+.qrBox:hover {
+  transform: scale(1.04);
 }
 
 .lineCta {
@@ -135,19 +147,23 @@
   align-items: center;
   gap: 8px;
   flex: 0 0 auto;
-  padding: 14px 24px;
+  padding: 12px 24px;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: #fff;
   color: #0f9d47;
-  font-size: 15px;
-  font-weight: 700;
+  font-size: 14.5px;
+  font-weight: 800;
   cursor: pointer;
   text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  transition: all 0.2s ease;
 }
 
 .lineCta:hover {
   background: #f2fbf5;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
 }
 
 /* ---------- ช่องทางติดต่ออื่น ---------- */
@@ -161,24 +177,31 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: var(--space-5);
+  padding: 20px 22px;
   background: #fff;
   border: 1px solid var(--color-gray-200);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.15s ease;
+}
+
+.contactCard:hover {
+  border-color: var(--color-gray-300);
 }
 
 .contactIcon {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   flex: 0 0 auto;
   display: grid;
   place-items: center;
-  border-radius: 9px;
+  border-radius: 10px;
 }
 
 .contactLabel {
   display: block;
   font-size: 12px;
+  font-weight: 600;
   color: var(--color-gray-400);
 }
 
@@ -188,6 +211,8 @@
   font-weight: 700;
   color: var(--color-navy-900);
   word-break: break-all;
+  text-decoration: none;
+  transition: color 0.15s ease;
 }
 
 .contactValue:hover {
@@ -196,15 +221,16 @@
 
 /* ---------- คำถามที่พบบ่อย ---------- */
 .faqCard {
-  padding: var(--space-6);
+  padding: 24px;
   background: #fff;
   border: 1px solid var(--color-gray-200);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
 }
 
 .faqCard h2 {
   margin: 0 0 var(--space-4);
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 800;
   color: var(--color-navy-900);
 }
@@ -223,14 +249,15 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 18px 0;
+  padding: 16px 0;
   border: 0;
   background: none;
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--color-text);
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--color-navy-900);
   text-align: left;
   cursor: pointer;
+  transition: color 0.15s ease;
 }
 
 .faqQuestion:hover {
@@ -249,10 +276,10 @@
 
 .faqAnswer {
   margin: 0;
-  padding: 0 0 18px;
+  padding: 0 0 16px;
   font-size: 14px;
   line-height: 1.7;
-  color: var(--color-gray-500);
+  color: var(--color-gray-600);
   max-width: 80ch;
 }
 
@@ -260,30 +287,39 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin: 18px 0;
-  padding: 10px 16px;
+  margin: 4px 0;
+  padding: 10px 18px;
   border: 1px solid var(--color-gray-200);
   border-radius: var(--radius-md);
   background: #fff;
   color: var(--color-navy-700);
   font-weight: 700;
+  font-size: 14px;
   text-decoration: none;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.15s ease;
+}
+
+.tutorialLink:hover {
+  border-color: var(--color-blue);
+  color: var(--color-blue);
 }
 
 .reportCard {
   display: grid;
-  gap: 14px;
-  margin-top: 18px;
-  padding: 22px;
+  gap: 16px;
+  padding: 24px;
   border: 1px solid var(--color-gray-200);
   border-radius: var(--radius-lg);
   background: #fff;
+  box-shadow: var(--shadow-sm);
 }
 
 .reportCard h2 {
   margin: 0;
   color: var(--color-navy-900);
   font-size: 18px;
+  font-weight: 800;
 }
 
 .reportHint {
@@ -295,7 +331,7 @@
 .reportGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  gap: 16px;
 }
 
 .reportField {
@@ -315,12 +351,23 @@
 .reportField select,
 .reportField textarea {
   width: 100%;
-  padding: 10px 12px;
+  padding: 10px 14px;
   border: 1px solid var(--color-gray-300);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   background: #fff;
   font: inherit;
   font-weight: 400;
+  font-size: 14px;
+  color: var(--color-text);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.reportField input:focus,
+.reportField select:focus,
+.reportField textarea:focus {
+  outline: none;
+  border-color: var(--color-blue);
+  box-shadow: 0 0 0 3px rgba(62, 111, 240, 0.15);
 }
 
 .reportImages {
@@ -337,7 +384,7 @@
   padding: 7px 12px;
   border-radius: var(--radius-full);
   font-size: 13px;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 .reportImage {
@@ -357,23 +404,41 @@
   border: 1px dashed var(--color-gray-300);
   color: var(--color-gray-600);
   cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.reportAdd:hover {
+  border-color: var(--color-blue);
+  color: var(--color-blue);
+  background: var(--color-blue-light);
 }
 
 .reportSubmit {
   justify-self: start;
   padding: 10px 22px;
-  border: 1px solid var(--color-gold-dark);
+  border: 1px solid var(--color-blue);
   border-radius: var(--radius-md);
-  background: var(--color-gold);
-  color: #2b1d00;
+  background: var(--color-blue);
+  color: #fff;
   font: inherit;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(62, 111, 240, 0.25);
+  transition: all 0.2s ease;
+}
+
+.reportSubmit:hover:not(:disabled) {
+  background: var(--color-blue-dark);
+  box-shadow: 0 6px 16px rgba(62, 111, 240, 0.35);
+  transform: translateY(-1px);
 }
 
 .reportSubmit:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 @media (max-width: 700px) {
@@ -406,4 +471,3 @@
     text-align: center;
   }
 }
-

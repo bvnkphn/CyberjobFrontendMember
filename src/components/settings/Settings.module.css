@@ -3,6 +3,8 @@
   flex-direction: column;
   gap: var(--space-5);
   max-width: 960px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .pageHead {
@@ -24,16 +26,18 @@
 
 .pageHead h1 {
   margin: 0;
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 800;
+  letter-spacing: -0.01em;
   color: var(--color-navy-900);
 }
 
 .card {
-  padding: var(--space-6);
+  padding: 24px;
   background: #fff;
   border: 1px solid var(--color-gray-200);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
@@ -63,14 +67,14 @@
 
 .cardHead h2 {
   margin: 0;
-  font-size: 17px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 800;
   color: var(--color-navy-900);
 }
 
 .hint {
   margin: 0;
-  font-size: 13px;
+  font-size: 13.5px;
   color: var(--color-gray-500);
 }
 
@@ -82,22 +86,25 @@
 
 .label {
   font-size: 13px;
-  color: var(--color-gray-600);
+  font-weight: 600;
+  color: var(--color-gray-700);
 }
 
 .input {
   width: 100%;
-  padding: 11px 14px;
-  border: 1px solid var(--color-gray-200);
-  border-radius: 9px;
+  padding: 10px 14px;
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
   background: #fff;
   font-size: 14px;
   color: var(--color-text);
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .input:focus {
-  outline: 2px solid var(--color-blue-light);
+  outline: none;
   border-color: var(--color-blue);
+  box-shadow: 0 0 0 3px rgba(62, 111, 240, 0.15);
 }
 
 /* ---------- ตัวเลือกความเป็นส่วนตัว ---------- */
@@ -105,12 +112,12 @@
   margin: 0;
   padding: var(--space-5);
   border: 1px solid var(--color-gray-200);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
 }
 
 .legend {
   padding: 0 4px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--color-navy-900);
 }
@@ -118,7 +125,7 @@
 .optionList {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   margin-top: var(--space-4);
   padding-top: var(--space-4);
   border-top: 1px solid var(--color-gray-100);
@@ -128,10 +135,16 @@
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  padding: 14px 16px;
+  padding: 12px 16px;
   border: 1px solid var(--color-gray-200);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.option:hover {
+  border-color: var(--color-gray-300);
+  background: var(--color-gray-50);
 }
 
 .optionSelected {
@@ -161,40 +174,56 @@
 /* ---------- ปุ่ม ---------- */
 .primaryButton {
   align-self: flex-start;
-  padding: 11px 22px;
-  border: 0;
-  border-radius: 9px;
-  background: var(--color-gold);
-  color: var(--color-navy-900);
+  padding: 10px 22px;
+  border: 1px solid var(--color-blue);
+  border-radius: var(--radius-md);
+  background: var(--color-blue);
+  color: #fff;
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(62, 111, 240, 0.25);
+  transition: all 0.2s ease;
 }
 
 .primaryButton:hover:not(:disabled) {
-  background: var(--color-gold-dark);
+  background: var(--color-blue-dark);
+  box-shadow: 0 6px 16px rgba(62, 111, 240, 0.35);
+  transform: translateY(-1px);
 }
 
 .primaryButton:disabled {
   opacity: 0.6;
-  cursor: default;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .dangerButton {
   align-self: flex-start;
-  padding: 11px 22px;
-  border: 0;
-  border-radius: 9px;
+  padding: 10px 22px;
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius-md);
   background: var(--color-danger);
   color: #fff;
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+  transition: all 0.2s ease;
+}
+
+.dangerButton:hover:not(:disabled) {
+  background: #b91c1c;
+  transform: translateY(-1px);
 }
 
 .dangerButton:disabled {
   background: #f3a6a8;
+  border-color: #f3a6a8;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .outlineDangerButton {
@@ -202,14 +231,15 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 20px;
+  padding: 9px 20px;
   border: 1px solid var(--color-danger);
-  border-radius: 9px;
+  border-radius: var(--radius-md);
   background: #fff;
   color: var(--color-danger);
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
+  transition: all 0.15s ease;
 }
 
 .outlineDangerButton:hover:not(:disabled) {
@@ -218,12 +248,12 @@
 
 .outlineDangerButton:disabled {
   opacity: 0.6;
-  cursor: default;
+  cursor: not-allowed;
 }
 
 .warning {
   margin: 0;
-  font-size: 13px;
+  font-size: 13.5px;
   line-height: 1.6;
   color: var(--color-danger);
 }
@@ -232,13 +262,13 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  font-size: 13px;
+  font-size: 13.5px;
   color: var(--color-gray-600);
   cursor: pointer;
 }
 
 .checkboxRow input {
-  margin-top: 2px;
+  margin-top: 3px;
   width: 16px;
   height: 16px;
   accent-color: var(--color-danger);
@@ -248,23 +278,25 @@
 .notice {
   margin: 0;
   padding: 10px 14px;
-  border-radius: 9px;
+  border-radius: var(--radius-md);
   font-size: 13px;
 }
 
 .noticeInfo {
   background: var(--color-blue-light);
   color: var(--color-navy-700);
+  border: 1px solid rgba(62, 111, 240, 0.2);
 }
 
 .noticeError {
   background: var(--color-danger-light);
   color: var(--color-danger);
+  border: 1px solid rgba(220, 38, 38, 0.2);
 }
 
 @media (max-width: 640px) {
   .card {
-    padding: var(--space-4);
+    padding: 16px;
   }
 
   .primaryButton,
@@ -276,11 +308,10 @@
   }
 
   .fieldset {
-    padding: var(--space-4);
+    padding: 14px;
   }
 
   .option {
     padding: 10px 12px;
   }
 }
-

@@ -207,3 +207,58 @@ export function Pagination({
     </nav>
   );
 }
+
+/** ส่วนหัวของหน้าจอ (Page Header) มาตรฐานสำหรับทุกหน้าในฝั่ง Owner */
+export function PageHeader({
+  title,
+  subtitle,
+  icon,
+  badge,
+  action,
+  className,
+}: {
+  title: ReactNode;
+  subtitle?: ReactNode;
+  icon?: ReactNode;
+  badge?: ReactNode;
+  action?: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={`${styles.pageHeader} ${className ?? ""}`}>
+      <div className={styles.pageHeaderMain}>
+        {icon && <span className={styles.pageHeaderIcon} aria-hidden>{icon}</span>}
+        <div className={styles.pageHeaderTitleCol}>
+          <div className={styles.pageHeaderTitleRow}>
+            <h1 className={styles.pageHeaderTitle}>{title}</h1>
+            {badge && <span className={styles.pageHeaderBadge}>{badge}</span>}
+          </div>
+          {subtitle && <p className={styles.pageHeaderSubtitle}>{subtitle}</p>}
+        </div>
+      </div>
+      {action && <div className={styles.pageHeaderAction}>{action}</div>}
+    </div>
+  );
+}
+
+/** ป้ายกำกับสถานะ (Status Badge) ดีไซน์มน สะอาดตา */
+export function StatusBadge({
+  tone = "neutral",
+  children,
+  className,
+}: {
+  tone?: "success" | "warning" | "info" | "neutral" | "danger";
+  children: ReactNode;
+  className?: string;
+}) {
+  const toneClass = {
+    success: styles.badgeSuccess,
+    warning: styles.badgeWarning,
+    info: styles.badgeInfo,
+    neutral: styles.badgeNeutral,
+    danger: styles.badgeDanger,
+  }[tone];
+
+  return <span className={`${styles.badge} ${toneClass} ${className ?? ""}`}>{children}</span>;
+}
+

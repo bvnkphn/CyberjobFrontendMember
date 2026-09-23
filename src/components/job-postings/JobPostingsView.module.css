@@ -13,14 +13,15 @@
 
 .heading {
   margin: 0;
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 800;
   color: var(--color-navy-900);
+  letter-spacing: -0.01em;
 }
 
 .subheading {
-  margin: var(--space-1) 0 0;
-  font-size: 14px;
+  margin: 4px 0 0;
+  font-size: 13.5px;
   color: var(--color-gray-500);
 }
 
@@ -28,19 +29,22 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  background: var(--color-gold);
-  color: var(--color-navy-900);
+  background: var(--color-blue);
+  color: #fff;
   font-weight: 700;
   font-size: 14px;
   text-decoration: none;
   padding: 10px 18px;
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 12px rgba(62, 111, 240, 0.25);
   white-space: nowrap;
+  transition: transform 0.15s, background 0.15s, box-shadow 0.15s;
 }
 
 .createButton:hover {
-  background: var(--color-gold-dark);
+  background: #2b5ce6;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(62, 111, 240, 0.32);
 }
 
 .layout {
@@ -101,6 +105,7 @@
   font: inherit;
   font-size: 13.5px;
   cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
 }
 
 .filter span {
@@ -112,13 +117,14 @@
 }
 
 .filterActive {
-  border-color: var(--color-navy-700);
-  background: var(--color-navy-700);
+  border-color: var(--color-blue);
+  background: var(--color-blue);
   color: #fff;
 }
 
 .filterActive span {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
 }
 
 .backToList {
@@ -168,4 +174,3 @@
     font-size: 13px;
   }
 }
-
