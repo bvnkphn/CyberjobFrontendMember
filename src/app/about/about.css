@@ -1,22 +1,23 @@
 /* ===== Page ===== */
 .about-page {
   min-height: 100vh;
-  padding-top: 72px;
+  padding-top: 64px;
   padding-bottom: 80px;
 }
 .about-title {
   margin: 0 0 48px;
 }
+
 /* ===== Cards (shared) ===== */
 .about-card {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: #fff;
-  box-shadow: 0 8px 30px rgb(17 28 67 / 5%);
+  box-shadow: 0 4px 20px rgb(17 28 67 / 5%);
   padding: 28px;
 }
 .about-card h2 { margin: 0 0 12px; color: var(--navy); font-size: 18px; font-weight: 700; }
-.about-card h3 { margin: 0 0 8px; color: var(--navy); font-size: 16px; font-weight: 700; }
+.about-card h3 { margin: 0 0 8px; color: var(--navy); font-size: 15px; font-weight: 700; }
 .about-card p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
 
 /* ===== Section 1: 2-column grid ===== */
@@ -24,7 +25,7 @@
   display: grid;
   grid-template-columns: 1.5fr 1fr;
   gap: 24px;
-  margin-bottom: 80px;
+  margin-bottom: 64px;
 }
 
 /* Story card */
@@ -32,17 +33,17 @@
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: #fff;
-  box-shadow: 0 8px 30px rgb(17 28 67 / 5%);
+  box-shadow: 0 4px 20px rgb(17 28 67 / 5%);
   padding: 32px;
 }
 .about-story-card h2 { margin: 0 0 16px; color: var(--navy); font-size: 20px; font-weight: 700; }
-.about-story-card p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.8; }
+.about-story-card p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.85; }
 
 /* Side cards (mission + vision stacked) */
 .about-side-cards {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
 /* Card icons (square, top-left) */
@@ -52,11 +53,11 @@
   border-radius: 12px;
   display: grid;
   place-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 .about-card-icon svg { width: 22px; height: 22px; }
 .about-icon-blue { background: var(--blue-soft); color: var(--blue); }
-.about-icon-green { background: #f0fdf4; color: var(--green); }
+.about-icon-green { background: #f0fdf4; color: #16a34a; }
 
 /* Mission card */
 .about-mission-card { background: var(--blue-soft); border-color: #dbeafe; }
@@ -66,10 +67,10 @@
 
 /* ===== Section title ===== */
 .about-section {
-  margin-bottom: 80px;
+  margin-bottom: 64px;
 }
 .about-section-title {
-  margin: 0 0 32px;
+  margin: 0 0 28px;
   color: var(--navy);
   font-size: 22px;
   font-weight: 700;
@@ -77,8 +78,8 @@
   align-items: center;
   gap: 10px;
 }
-.about-section-icon { width: 24px; height: 24px; flex-shrink: 0; }
-.about-section-title-lg { font-size: 28px; }
+.about-section-icon { width: 22px; height: 22px; flex-shrink: 0; }
+.about-section-title-lg { font-size: 24px; }
 
 /* ===== Section 2: Services grid ===== */
 .about-services-grid {
@@ -89,7 +90,27 @@
 .about-service-card {
   padding: 28px 24px;
   text-align: left;
+  transition: box-shadow 0.2s, transform 0.2s;
 }
+.about-service-card:hover {
+  box-shadow: 0 8px 28px rgb(17 28 67 / 10%);
+  transform: translateY(-2px);
+}
+
+/* Service card icons */
+.about-service-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 16px;
+}
+.about-service-icon svg { width: 22px; height: 22px; }
+.about-svc-blue   { background: var(--blue-soft); color: var(--blue); }
+.about-svc-purple { background: #f3e8ff; color: #9333ea; }
+.about-svc-green  { background: #f0fdf4; color: #16a34a; }
+.about-svc-orange { background: #fff7ed; color: #ea7b10; }
 
 /* ===== Section 3: Why CyberJob grid ===== */
 .about-why-grid {
@@ -103,6 +124,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.about-why-card:hover {
+  box-shadow: 0 8px 28px rgb(17 28 67 / 10%);
+  transform: translateY(-2px);
 }
 
 /* Icon circles (centered, section 3) */
@@ -115,10 +141,10 @@
   margin-bottom: 16px;
 }
 .about-card-icon-circle svg { width: 26px; height: 26px; }
-.about-circle-blue { background: var(--blue-soft); color: var(--blue); }
+.about-circle-blue   { background: var(--blue-soft); color: var(--blue); }
 .about-circle-purple { background: #f3e8ff; color: #9333ea; }
 .about-circle-yellow { background: #fef9c3; color: #ca8a04; }
-.about-circle-green { background: #f0fdf4; color: var(--green); }
+.about-circle-green  { background: #f0fdf4; color: #16a34a; }
 
 /* ===== Responsive ===== */
 @media (max-width: 900px) {
@@ -128,9 +154,9 @@
 }
 @media (max-width: 620px) {
   .about-page { padding-top: 40px; padding-bottom: 60px; }
-  .about-title { margin-bottom: 34px; }
+  .about-title { margin-bottom: 32px; }
   .about-section-title { font-size: 20px; }
-  .about-section-title-lg { font-size: 24px; }
+  .about-section-title-lg { font-size: 22px; }
   .about-services-grid { grid-template-columns: 1fr; }
   .about-why-grid { grid-template-columns: 1fr; }
 }

@@ -56,18 +56,47 @@ export default function AboutPage() {
           </h2>
           <div className="about-services-grid">
             <div className="about-card about-service-card">
+              <div className="about-service-icon about-svc-blue">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.35-4.35" />
+                </svg>
+              </div>
               <h3>หางานออนไลน์</h3>
               <p>ค้นหางานที่ตรงกับความสามารถของคุณ</p>
             </div>
             <div className="about-card about-service-card">
+              <div className="about-service-icon about-svc-purple">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="16" y1="13" x2="8" y2="13" />
+                  <line x1="16" y1="17" x2="8" y2="17" />
+                  <polyline points="10 9 9 9 8 9" />
+                </svg>
+              </div>
               <h3>สร้างเรซูเม่</h3>
               <p>เครื่องมือสร้างเรซูเม่มืออาชีพฟรี</p>
             </div>
             <div className="about-card about-service-card">
+              <div className="about-service-icon about-svc-green">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                  <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                </svg>
+              </div>
               <h3>งานจบใหม่</h3>
               <p>โอกาสสำหรับนักศึกษาและเด็กจบใหม่</p>
             </div>
             <div className="about-card about-service-card">
+              <div className="about-service-icon about-svc-orange">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <rect x="2" y="7" width="20" height="14" rx="2" />
+                  <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                  <line x1="12" y1="12" x2="12" y2="16" />
+                  <line x1="10" y1="14" x2="14" y2="14" />
+                </svg>
+              </div>
               <h3>สำหรับบริษัท</h3>
               <p>ช่องทางคัดเลือกผู้สมัครที่มีคุณภาพ</p>
             </div>
