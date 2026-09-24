@@ -257,26 +257,6 @@ export default function InvitationsPage() {
             </span>
             <span className="api-status-chip">ออนไลน์ (Active)</span>
           </div>
-
-          <div className="api-bar-right">
-            {isDemoMode ? (
-              <button
-                type="button"
-                className="mode-toggle-btn active-demo"
-                onClick={() => setIsDemoMode(false)}
-              >
-                <span>กลับสู่ระบบจริง (Live API)</span>
-              </button>
-            ) : (
-              <button
-                type="button"
-                className="mode-toggle-btn"
-                onClick={() => setIsDemoMode(true)}
-              >
-                <span>👁️ ดูตัวอย่างคำเชิญจากบริษัท (Preview)</span>
-              </button>
-            )}
-          </div>
         </div>
 
         {/* ── Demo Mode Active Banner ── */}
@@ -449,20 +429,6 @@ export default function InvitationsPage() {
             ) : (
               /* ── ระบบรอรับคำเชิญจากผู้ประกอบการ (Owner Waiting System) ── */
               <div className="owner-waiting-card">
-                <div className="waiting-radar-circle">
-                  <div className="radar-pulse"></div>
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="radar-icon">
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                    <path d="M2 12h20" />
-                  </svg>
-                </div>
-
-                <div className="waiting-badge">
-                  <span className="pulse-dot"></span>
-                  ระบบพร้อมรับคำเชิญอัตโนมัติ (Listening for Owner Invitations)
-                </div>
-
                 <h3 className="waiting-title">
                   {filter === "pending"
                     ? "ไม่มีคำเชิญที่รอการตอบกลับ"
@@ -505,25 +471,6 @@ export default function InvitationsPage() {
                       </Link>
                     </div>
                   </div>
-                </div>
-
-                {/* Preview Trigger Button */}
-                <div className="waiting-actions">
-                  <button
-                    type="button"
-                    className="demo-preview-button"
-                    onClick={() => setIsDemoMode(true)}
-                  >
-                    <span>👁️ ดูตัวอย่างหน้าตาคำเชิญจากบริษัท (Demo Preview)</span>
-                  </button>
-                  <button
-                    type="button"
-                    className="refresh-secondary-button"
-                    onClick={fetchInvitations}
-                    disabled={isRefreshing}
-                  >
-                    {isRefreshing ? "กำลังตรวจสอบ..." : "🔄 รีเฟรชตรวจสอบคำเชิญ"}
-                  </button>
                 </div>
               </div>
             )}
