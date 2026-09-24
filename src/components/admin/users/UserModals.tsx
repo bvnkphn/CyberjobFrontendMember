@@ -1,0 +1,324 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { readError, useAdminAuth } from "@/lib/admin/auth";
+import type { AdminUser, CandidateSource, CertificateList, Resume, UserDetail } from "@/lib/admin/types";
+import { AwardIcon } from "../icons";
+import { Modal } from "../ui/Modal";
+import ui from "../ui/ui.module.css";
+import styles from "./Users.module.css";
+
+export const SOURCE_OPTIONS: { value: CandidateSource; label: string }[] = [
+  { value: "OUTSIDER", label: "คนภายนอก" },
+  { value: "CYBERPAY_INTERN", label: "เด็กฝึกจาก Cyberpay" },
+];
+
+/** โหลดข้อมูลของ modal ครั้งเดียวตอนเปิด */
+function useModalData<T>(path: string) {
+  const { adminFetch } = useAdminAuth();
+  const [data, setData] = useState<T | null>(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let alive = true;
+    void adminFetch(path)
+      .then(async (response) => {
+        if (!response.ok) throw await readError(response, "โหลดข้อมูลไม่สำเร็จ");
+        return (await response.json()) as T;
+      })
+      .then((value) => alive && setData(value))
+      .catch((reason: unknown) => alive && setError(reason instanceof Error ? reason.message : "โหลดข้อมูลไม่สำเร็จ"));
+    return () => {
+      alive = false;
+    };
+  }, [adminFetch, path]);
+
+  return { data, error };
+}
+
+function Loading({ error }: { error: string }) {
+  return error ? (
+    <p className={ui.error} role="alert">
+      {error}
+    </p>
+  ) : (
+    <p className={ui.empty}>กำลังโหลด...</p>
+  );
+}
+
+/* ---------------------------------------------------------------- */
+/* Popup "ดู Resume"                                                 */
+/* ---------------------------------------------------------------- */
+
+export function ResumeModal({ user, onClose }: { user: AdminUser; onClose: () => void }) {
+  const { data, error } = useModalData<Resume>(`/admin/users/${user.id}/resume`);
+
+  return (
+    <Modal title={`Resume · ${user.code}`} wide onClose={onClose}>
+      {!data ? (
+        <Loading error={error} />
+      ) : (
+        <>
+          <h2 className={styles.resumeName}>{data.contact.name}</h2>
+          <div className={styles.contactLine}>
+            <span>{data.contact.email}</span>
+            {data.contact.phone && <span>{data.contact.phone}</span>}
+            {data.contact.address && <span>{data.contact.address}</span>}
+          </div>
+
+          <div className={styles.resumeGrid}>
+            <div>
+              <section className={styles.resumeSection}>
+                <h3>เป้าหมายทางอาชีพ</h3>
+                <span className={styles.muted}>ตำแหน่งที่ต้องการ</span>
+                {data.desiredPositions.length ? (
+                  <div className={styles.chips}>
+                    {data.desiredPositions.map((position) => (
+                      <span key={position} className={styles.chip}>
+                        {position}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <p className={styles.muted}>ยังไม่ได้ระบุ</p>
+                )}
+              </section>
+
+              <section className={styles.resumeSection}>
+                <h3>การศึกษา</h3>
+                {data.educations.length ? (
+                  data.educations.map((education) => (
+                    <div key={`${education.institution}-${education.year}`} style={{ marginBottom: 12 }}>
+                      <p className={styles.eduTitle}>
+                        {education.degree}
+                        {education.major ? ` สาขา${education.major}` : ""}
+                      </p>
+                      <span className={styles.muted}>{education.institution}</span>
+                      <div className={styles.eduMeta}>
+                        <span>{education.year ?? ""}</span>
+                        {education.gpa && <span className={styles.gpa}>GPA: {education.gpa}</span>}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className={styles.muted}>ยังไม่ได้ระบุ</p>
+                )}
+              </section>
+
+              <section className={styles.resumeSection}>
+                <h3>ทักษะเฉพาะทาง</h3>
+                {data.specialties.length ? (
+                  <ul className={styles.list}>
+                    {data.specialties.map((specialty) => (
+                      <li key={specialty}>{specialty}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className={styles.muted}>ยังไม่ได้ระบุ</p>
+                )}
+                {data.languages.length > 0 && (
+                  <>
+                    <p className={styles.muted} style={{ margin: "14px 0 6px" }}>
+                      ภาษา
+                    </p>
+                    {data.languages.map((language) => (
+                      <div key={language.name} className={styles.languageRow}>
+                        <span>{language.name}</span>
+                        <span>{language.level}</span>
+                      </div>
+                    ))}
+                  </>
+                )}
+              </section>
+            </div>
+
+            <div>
+              <section className={styles.resumeSection}>
+                <h3>ประสบการณ์การทำงาน</h3>
+                {data.workExperiences.length ? (
+                  <div className={styles.timeline}>
+                    {data.workExperiences.map((work) => (
+                      <div key={`${work.company}-${work.period}`} style={{ marginBottom: 16 }}>
+                        <p className={styles.jobTitle}>{work.position}</p>
+                        <div className={styles.jobMeta}>
+                          <span className={styles.jobCompany}>{work.company}</span>
+                          <span>{work.period}</span>
+                        </div>
+                        {work.description && <p className={styles.paragraph}>{work.description}</p>}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className={styles.muted}>ยังไม่มีประสบการณ์การทำงาน</p>
+                )}
+              </section>
+
+              <section className={styles.resumeSection}>
+                <h3>โปรเจกต์และผลงาน</h3>
+                {data.projects ? (
+                  <p className={styles.paragraph}>{data.projects}</p>
+                ) : (
+                  <p className={styles.muted}>ยังไม่ได้ระบุ</p>
+                )}
+              </section>
+            </div>
+          </div>
+        </>
+      )}
+    </Modal>
+  );
+}
+
+/* ---------------------------------------------------------------- */
+/* Modal "ใบประกาศนียบัตรของฉัน"                                     */
+/* ---------------------------------------------------------------- */
+
+export function CertificatesModal({ user, onClose }: { user: AdminUser; onClose: () => void }) {
+  const { data, error } = useModalData<CertificateList>(`/admin/users/${user.id}/certificates`);
+
+  return (
+    <Modal
+      title="ใบประกาศนียบัตรของฉัน"
+      subtitle={data && <span className={styles.countLink}>ทั้งหมด {data.total} ใบ</span>}
+      wide
+      onClose={onClose}
+      footer={
+        <button type="button" className={`${ui.button} ${ui.buttonPrimary}`} onClick={onClose}>
+          ปิด
+        </button>
+      }
+    >
+      {!data ? (
+        <Loading error={error} />
+      ) : data.items.length === 0 ? (
+        <p className={ui.empty}>ผู้สมัครรายนี้ยังไม่มีใบประกาศนียบัตร</p>
+      ) : (
+        <div className={styles.certGrid}>
+          {data.items.map((certificate, index) => (
+            <article key={`${certificate.title}-${index}`} className={styles.cert}>
+              {/* ฝั่ง member ยังไม่เก็บไฟล์จริง จึงยังไม่มีรูปหรือลิงก์ให้เปิด */}
+              <div className={styles.certPreview} aria-hidden>
+                <AwardIcon size={36} />
+              </div>
+              <div className={styles.certBody}>
+                <p className={styles.certTitle}>{certificate.title}</p>
+                {certificate.issuer && <p className={styles.certIssuer}>{certificate.issuer}</p>}
+                {certificate.fileName && <p className={styles.certFile}>{certificate.fileName}</p>}
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
+    </Modal>
+  );
+}
+
+/* ---------------------------------------------------------------- */
+/* แก้ไขข้อมูลผู้สมัคร – แก้ได้เฉพาะแหล่งที่มา                       */
+/* ---------------------------------------------------------------- */
+
+export function EditUserModal({
+  user,
+  onClose,
+  onSaved,
+}: {
+  user: AdminUser;
+  onClose: () => void;
+  onSaved: () => void;
+}) {
+  const { adminFetch } = useAdminAuth();
+  const { data, error } = useModalData<UserDetail>(`/admin/users/${user.id}`);
+  const [source, setSource] = useState<CandidateSource>(user.source);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
+
+  useEffect(() => {
+    if (data) setSource(data.source);
+  }, [data]);
+
+  const save = async () => {
+    setSaving(true);
+    setSaveError("");
+    try {
+      const response = await adminFetch(`/admin/users/${user.id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ candidateSource: source }),
+      });
+      if (!response.ok) throw await readError(response, "บันทึกไม่สำเร็จ");
+      onSaved();
+    } catch (reason) {
+      setSaveError(reason instanceof Error ? reason.message : "บันทึกไม่สำเร็จ");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const readonly = (label: string, value: string) => (
+    <div className={styles.field}>
+      <label>{label}</label>
+      <input className={styles.readonly} value={value} readOnly aria-readonly="true" />
+    </div>
+  );
+
+  return (
+    <Modal
+      title="แก้ไขข้อมูลผู้สมัคร"
+      onClose={onClose}
+      footer={
+        <>
+          <button type="button" className={ui.button} onClick={onClose} disabled={saving}>
+            ยกเลิก
+          </button>
+          <button
+            type="button"
+            className={`${ui.button} ${ui.buttonGold}`}
+            onClick={save}
+            disabled={!data || saving || source === data.source}
+          >
+            {saving ? "กำลังบันทึก..." : "บันทึก"}
+          </button>
+        </>
+      }
+    >
+      {!data ? (
+        <Loading error={error} />
+      ) : (
+        <>
+          <p className={styles.notice}>
+            แก้ไขได้เฉพาะ &quot;แหล่งที่มา&quot; เท่านั้น ฟิลด์อื่นเป็นแบบอ่านอย่างเดียว
+          </p>
+          {saveError && (
+            <p className={ui.error} role="alert">
+              {saveError}
+            </p>
+          )}
+          <div className={styles.formGrid}>
+            {readonly("UserID", data.code)}
+            {readonly("ชื่อผู้สมัคร", data.name)}
+            {readonly("Email", data.email)}
+            {readonly("เบอร์โทร", data.phone ?? "-")}
+            {readonly("อายุงาน", `${data.experienceYears} ปี`)}
+            {readonly("ตำแหน่งที่สนใจ", data.desiredPosition ?? "-")}
+            <div className={`${styles.field} ${styles.fieldFull}`}>
+              <label htmlFor="candidate-source">
+                แหล่งที่มา <span className={styles.required}>*</span>
+              </label>
+              <select
+                id="candidate-source"
+                className={styles.sourceSelect}
+                value={source}
+                onChange={(event) => setSource(event.target.value as CandidateSource)}
+              >
+                {SOURCE_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </>
+      )}
+    </Modal>
+  );
+}

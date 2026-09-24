@@ -331,14 +331,224 @@ const translations: Array<[string, string]> = [
   ["งานที่สมัครแล้ว", "Applied Jobs"],
   ["งานที่บันทึก", "Saved Jobs"],
   ["งานที่สมัคร", "Applied Jobs"],
+
+  // --- สถานะใบสมัครงาน (My Jobs) ---
+  ["รอพิจารณา", "Pending Review"],
+  ["ผ่านการคัดเลือก", "Shortlisted"],
+  ["ไม่ผ่านการคัดเลือก", "Not Selected"],
+  ["นัดสัมภาษณ์", "Interview Scheduled"],
+  ["กรอกใบสมัคร", "Application Submitted"],
+  ["สลับแท็บเพื่อดูประวัติ", "Switch tabs to view history"],
+  ["วันสุดท้ายของการรับสมัคร", "Application deadline"],
+  ["เหลืออีก", "Remaining"],
+  ["ยกเลิกการสมัคร", "Withdraw Application"],
+  ["ดูรายละเอียดงาน", "View Job Details"],
+  ["คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการสมัครงานนี้?", "Are you sure you want to withdraw this application?"],
+
+  // --- พรีวิวและแถบในหน้าแรก (Home Sections) ---
+  ["เปิดรับสมัครเร็วๆ นี้", "Opening Soon"],
+  ["ฝากเรซูเม่ล่วงหน้า →", "Pre-register Resume →"],
+  ["ฝากเรซูเม่ล่วงหน้า", "Pre-register Resume"],
+  ["พัฒนาโครงสร้างพื้นฐานระบบการเงินและเชื่อมต่อ AI Workflow ร่วมกับทีมวิศวกรรมระดับสากล", "Develop financial infrastructure and connect AI workflows with international engineering teams."],
+  ["ดูแล Pipeline ข้อมูลธุรกรรมขนาดใหญ่และจัดการ High Availability Cloud Architecture", "Manage large-scale transaction data pipelines and high-availability cloud architecture."],
+  ["สร้างระบบ Matching งานอัจฉริยะด้วย LLM และ Vector Database สำหรับตลาดงานยุคใหม่", "Build intelligent job matching with LLMs and vector databases for modern job markets."],
+  ["CyberPay Technology Co., Ltd. • สาทร, กรุงเทพฯ", "CyberPay Technology Co., Ltd. • Sathorn, Bangkok"],
+  ["Financial Cloud Services • กรุงเทพฯ", "Financial Cloud Services • Bangkok"],
+  ["AI Innovation Lab • อารีย์, กรุงเทพฯ", "AI Innovation Lab • Ari, Bangkok"],
+  ["บทความและเคล็ดลับการทำงาน", "Articles & Career Advice"],
+  ["อัปเดตเทรนด์ตลาดงาน การเตรียมตัวสัมภาษณ์ และการพัฒนาทักษะวิชาชีพ", "Stay updated on job market trends, interview tips, and skill development."],
+  ["อ่านบทความทั้งหมด →", "View All Articles →"],
+  ["อ่านต่อ →", "Read More →"],
+  ["อัปเดตบทความใหม่เร็วๆ นี้", "New articles coming soon"],
+  ["เกี่ยวกับ CyberJob", "About CyberJob"],
+  ["แพลตฟอร์มหางานยุคใหม่ที่เข้าใจคนทำงาน", "A modern job platform built for talent"],
+  ["ค้นหางานง่าย ตรงใจ", "Find Jobs Easily & Accurately"],
+  ["ระบบค้นหาอัจฉริยะที่ช่วยคัดกรองงานที่ตรงกับทักษะ ประสบการณ์ และความต้องการของคุณมากที่สุด", "Smart search system helping filter jobs that best match your skills, experience, and aspirations."],
+  ["ปลอดภัย ข้อมูลเป็นส่วนตัว", "Secure & Private Data"],
+  ["ข้อมูลส่วนบุคคลและประวัติการทำงานของคุณจะได้รับการปกป้องด้วยมาตรฐานความปลอดภัยระดับสูง", "Your personal details and work history are protected with enterprise-level security."],
+  ["สร้างโอกาสที่ไร้ขีดจำกัด", "Limitless Opportunities"],
+  ["เชื่อมต่อกับบริษัทชั้นนำและองค์กรเทคโนโลยีชั้นแนวหน้า พร้อมก้าวสู่ความก้าวหน้าในอาชีพ", "Connect with leading companies and tech innovators, ready to accelerate your career."],
+  ["เรียนรู้เพิ่มเติมเกี่ยวกับเรา →", "Learn more about us →"],
+  ["สำหรับผู้ประกอบการและฝ่ายบุคคล", "For Employers & HR Teams"],
+  ["ลงประกาศงานและค้นหาผู้สมัครที่มีศักยภาพได้ตรงใจ พร้อมเครื่องมือคัดกรองที่มีประสิทธิภาพ", "Post jobs and find qualified talent with our powerful screening tools."],
+  ["ลงประกาศงานฟรี", "Post a Job Free"],
+  ["ดูแพ็กเกจราคา", "View Pricing Packages"],
+  ["มีคำถามหรือต้องการความช่วยเหลือ?", "Have questions or need assistance?"],
+  ["ทีมงาน CyberJob พร้อมดูแลคุณทุกขั้นตอนการใช้งาน", "The CyberJob team is here to support you every step of the way."],
+  ["ติดต่อเรา", "Contact Us"],
+  ["โทรหาเรา", "Call Us"],
+  ["แชทผ่าน LINE", "Chat via LINE"],
+  ["ฝ่ายบริการและช่วยเหลือ", "Support & Help Center"],
+  ["พันธมิตรของเรา", "Our Strategic Partners"],
+  ["ความร่วมมือกับองค์กรชั้นนำ", "Trusted by Leading Organizations"],
+  ["เครือข่ายความร่วมมือกับสถาบันการเงิน กองทุนนวัตกรรม และองค์กรเทคโนโลยีชั้นนำ", "Working closely with premier financial institutions, innovation funds, and digital pioneers."],
+  ["พันธมิตรหลัก", "Official Partner"],
+  ["เชื่อมโยงโครงสร้างพื้นฐานทางการเงินและเทคโนโลยีร่วมกับ CyberPay.asia", "Integrated with CyberPay financial and payment infrastructure platform."],
+  ["เข้าสู่เว็บไซต์ CyberPay", "Visit CyberPay Website"],
+  ["ธนาคารออมสิน", "Government Savings Bank (GSB)"],
+  ["SCB ไทยพาณิชย์", "Siam Commercial Bank (SCB)"],
+  ["KBank กสิกรไทย", "Kasikornbank (KBank)"],
+  ["krungsri กรุงศรี", "Bank of Ayudhya (Krungsri)"],
+  ["Krungthai กรุงไทย", "Krungthai Bank"],
+  ["Bangkok Bank ธนาคารกรุงเทพ", "Bangkok Bank"],
+  ["NIA สำนักงานนวัตกรรมแห่งชาติ", "National Innovation Agency (NIA)"],
+  ["TED FUND", "TED FUND"],
+  ["Pay Solutions", "Pay Solutions"],
+  ["CYBERNETICS+", "CYBERNETICS+"],
+
+  // --- หน้า Gate Owner (ยืนยันองค์กร) ---
+  ["ยืนยันองค์กร", "Corporate Verification"],
+  ["กรอกข้อมูลบริษัท", "Company Information"],
+  ["กรุณากรอกข้อมูลบริษัทและอัปโหลดเอกสารเพื่อยืนยันตัวตน", "Please fill in company details and upload verification documents."],
+  ["ข้อมูลบริษัทไม่ผ่านการตรวจสอบ กรุณาตรวจสอบข้อมูลและแนบเอกสารใหม่อีกครั้ง", "Company verification rejected. Please check details and re-upload documents."],
+  ["ข้อมูลพื้นฐานและประเภทธุรกิจของบริษัท", "Basic details and industry type"],
+  ["ชื่อบริษัท", "Company Name"],
+  ["ชื่อบริษัทตามทะเบียน", "Registered Company Name"],
+  ["เลขทะเบียนนิติบุคคล", "Business Registration Number"],
+  ["ตัวเลข 13 หลัก", "13-digit number"],
+  ["ประเภทธุรกิจ", "Business Category"],
+  ["เลือกประเภทธุรกิจ", "Select business category"],
+  ["จำนวนพนักงาน", "Employee Count"],
+  ["เลือกช่วงจำนวนพนักงาน", "Select employee range"],
+  ["1–10 คน", "1–10 employees"],
+  ["11–50 คน", "11–50 employees"],
+  ["51–200 คน", "51–200 employees"],
+  ["มากกว่า 200 คน", "200+ employees"],
+  ["ข้อมูลติดต่อ", "Contact Details"],
+  ["ช่องทางติดต่อของบริษัทและผู้ประสานงาน", "Company and coordinator contact channels"],
+  ["อีเมลบริษัท", "Company Email"],
+  ["แนะนำอีเมลโดเมนบริษัท", "Company domain email recommended"],
+  ["เบอร์โทรศัพท์", "Phone Number"],
+  ["เว็บไซต์", "Website"],
+  ["ชื่อผู้ติดต่อ", "Contact Person Name"],
+  ["ตำแหน่งผู้ติดต่อ", "Contact Person Position"],
+  ["เช่น HR Manager", "e.g. HR Manager"],
+  ["เบอร์โทรศัพท์ผู้ติดต่อ", "Contact Person Phone"],
+  ["ที่ตั้งบริษัท", "Company Address"],
+  ["ที่อยู่และตำแหน่งสำนักงานใหญ่", "Headquarters address and location"],
+  ["ที่อยู่", "Address"],
+  ["เลขที่ ถนน ตำบล/แขวง อำเภอ/เขต", "No., Street, Subdistrict, District"],
+  ["จังหวัด", "Province"],
+  ["เลือกจังหวัด", "Select province"],
+  ["ตำแหน่งที่ตั้งบริษัท", "Company Location Pin"],
+  ["เพิ่มลิงก์ Google Maps ได้ที่หน้าแก้ไขโปรไฟล์บริษัทหลังส่งข้อมูล", "Add Google Maps link from company profile edit page after submission."],
+  ["เอกสารยืนยันบริษัท", "Corporate Documents"],
+  ["อัปโหลดเอกสารเพื่อยืนยันตัวตนของบริษัท", "Upload documents to verify company identity."],
+  ["หนังสือรับรองบริษัท", "Company Certificate"],
+  ["บัตรประชาชนกรรมการ", "Director ID Card"],
+  ["รูปสำนักงาน", "Office Photos"],
+  ["ภ.พ.20 (VAT)", "VAT Registration (P.P.20)"],
+  ["ภ.พ.20", "P.P.20 (VAT)"],
+  ["ข้อมูลของคุณปลอดภัย", "Your Data is Secure"],
+  ["เอกสารทั้งหมดถูกใช้สำหรับการตรวจสอบและยืนยันตัวตนขององค์กรเท่านั้น", "All documents are used strictly for corporate verification purposes."],
+  ["บันทึกฉบับร่าง", "Save Draft"],
+  ["บันทึกและส่งตรวจสอบ", "Save & Submit for Review"],
+  ["กำลังส่งข้อมูล...", "Submitting..."],
+  ["ส่งข้อมูลสำเร็จ", "Submitted Successfully"],
+  ["ข้อมูลบริษัทของคุณถูกส่งให้ทีมงานตรวจสอบแล้ว สถานะปัจจุบันของคุณคือ", "Your company details have been submitted for review. Your current status is"],
+  ["สถานะ: รอตรวจสอบ", "Status: Pending Review"],
+  ["รอตรวจสอบ", "Pending Review"],
+  ["ไปหน้า Dashboard", "Go to Dashboard"],
+  ["ดูข้อมูลบริษัท", "View Company Profile"],
+  ["ความครบถ้วนของข้อมูล", "Profile Completeness"],
+  ["เกี่ยวกับการยืนยันตัวตน", "About Verification"],
+  ["ทีมงานใช้เวลาตรวจสอบประมาณ 1–3 วันทำการ", "Our verification team typically takes 1–3 business days."],
+  ["ยืนยันการส่งข้อมูล", "Confirm Submission"],
+  ["กรุณาตรวจสอบข้อมูลให้แน่ใจก่อนส่ง เนื่องจากจะไม่สามารถแก้ไขได้หลังจากส่งแล้ว", "Please verify all information before submitting; modifications cannot be made while under review."],
+  ["ข้อมูลบริษัทครบถ้วน", "Company info complete"],
+  ["เลขทะเบียนนิติบุคคล 13 หลัก", "13-digit corporate ID"],
+  ["อีเมลบริษัทถูกต้อง", "Valid company email"],
+  ["อัปโหลดเอกสารครบทุกฉบับ", "All documents uploaded"],
+  ["ยืนยันและส่งตรวจสอบ", "Confirm & Submit for Review"],
+  ["เทคโนโลยีสารสนเทศ", "Information Technology"],
+  ["การเงินและประกันภัย", "Finance & Insurance"],
+  ["การผลิต", "Manufacturing"],
+  ["การตลาดและสื่อ", "Marketing & Media"],
+  ["บริการวิชาชีพ", "Professional Services"],
+
+  // --- หน้า About (เพิ่มเติม) ---
+  ["ค่านิยมของเรา", "Our Core Values"],
+  ["สิ่งที่ขับเคลื่อนให้เราพัฒนาบริการที่ดีที่สุดเพื่อคุณ", "What drives us to create the best service for you."],
+  ["ความจริงใจและโปร่งใส", "Integrity & Transparency"],
+  ["นวัตกรรมเพื่อผู้ใช้", "User-Centric Innovation"],
+  ["ความปลอดภัยของข้อมูล", "Data Security"],
+  ["เติบโตไปด้วยกัน", "Growing Together"],
+  ["พร้อมเริ่มต้นค้นหาโอกาสใหม่แล้วหรือยัง?", "Ready to discover your next opportunity?"],
+  ["สร้างโปรไฟล์ของคุณวันนี้ ฟรีไม่มีค่าใช้จ่าย", "Create your profile today — 100% free."],
+  ["เริ่มต้นใช้งานฟรี", "Get Started Free"],
+
+  // --- หน้า Contact (เพิ่มเติม) ---
+  ["อีเมลสอบถามทั่วไป", "General Inquiries Email"],
+  ["ส่งข้อความได้ตลอด 24 ชั่วโมง ทีมงานจะตอบกลับภายใน 1 วันทำการ", "Send messages 24/7; our team responds within 1 business day."],
+  ["ฝ่ายสนับสนุนผู้ประกอบการ", "Employer Support Desk"],
+  ["สำหรับบริษัทที่ต้องการลงประกาศงานหรือสอบถามแพ็กเกจ", "For employers looking to post jobs or inquire about subscription packages."],
+  ["ศูนย์บริการลูกค้า", "Customer Support Center"],
+  ["โทรศัพท์ติดต่อสอบถามในเวลาทำการ", "Call us during business hours."],
+  ["จันทร์ - ศุกร์", "Monday - Friday"],
+  ["จันทร์–ศุกร์", "Monday–Friday"],
+  ["คำถามที่พบบ่อย", "Frequently Asked Questions"],
+  ["คำตอบสำหรับข้อสงสัยทั่วไปเกี่ยวกับการใช้งาน CyberJob", "Answers to common questions regarding CyberJob."],
+
+  // --- หน้า Support Dialog ---
+  ["ฝ่ายบริการและช่วยเหลือ", "Support & Help Desk"],
+  ["ติดต่อฝ่ายสนับสนุน", "Contact Support"],
+  ["ชื่อของคุณ", "Your Name"],
+  ["อีเมลติดต่อ", "Contact Email"],
+  ["หัวข้อที่ต้องการติดต่อ", "Topic"],
+  ["ข้อความของคุณ", "Your Message"],
+  ["ส่งข้อความ", "Send Message"],
+  ["กำลังส่งข้อความ...", "Sending message..."],
+  ["ได้รับข้อความแล้ว ทีมงานจะติดต่อกลับภายใน 1 วันทำการ", "Message received. Our team will get back to you within 1 business day."],
+  ["ไม่สามารถส่งข้อความได้ กรุณาลองใหม่อีกครั้ง", "Could not send message. Please try again."],
 ];
 
+function escapeRegex(str: string) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+type CompiledTranslation = {
+  hasWhitespace: boolean;
+  plainThai: string;
+  regex: RegExp;
+  replacement: string;
+};
+
 const orderedTranslations = [...translations].sort((a, b) => b[0].length - a[0].length);
+
+const compiledTranslations: CompiledTranslation[] = orderedTranslations.map(([thai, english]) => {
+  const trimmed = thai.trim();
+  const hasWhitespace = /\s/.test(trimmed);
+  const words = trimmed.split(/\s+/).map(escapeRegex);
+  const pattern = words.join("\\s+");
+  return {
+    hasWhitespace,
+    plainThai: thai,
+    regex: new RegExp(pattern, "g"),
+    replacement: english,
+  };
+});
+
 const textOriginal = new WeakMap<Text, string>();
 const attributeOriginal = new WeakMap<Element, Record<string, string>>();
 
 function translateText(value: string) {
-  return orderedTranslations.reduce((result, [thai, english]) => result.split(thai).join(english), value);
+  if (!value || !value.trim()) return value;
+  let result = value;
+  for (let i = 0; i < compiledTranslations.length; i++) {
+    const item = compiledTranslations[i];
+    if (item.hasWhitespace) {
+      item.regex.lastIndex = 0;
+      if (item.regex.test(result)) {
+        item.regex.lastIndex = 0;
+        result = result.replace(item.regex, item.replacement);
+      }
+    } else {
+      if (result.includes(item.plainThai)) {
+        result = result.split(item.plainThai).join(item.replacement);
+      }
+    }
+  }
+  return result;
 }
 
 type LanguageContextValue = { locale: Locale; setLocale: (locale: Locale) => void; toggleLocale: () => void };
@@ -348,9 +558,7 @@ export function useLanguage() { return useContext(LanguageContext); }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [locale, setLocale] = useState<Locale>("th");
-  // ปุ่มสลับภาษาบน Nav bar เป็นแหล่งความจริงเดียว ตัวนี้จึงเดินตามค่านั้น
-  // มิฉะนั้นหน้าที่แปลด้วยการแทนที่ข้อความ (เช่น gate/login) จะไม่เปลี่ยนตามปุ่ม
-  const { lang } = useI18n();
+  const { lang, setLang } = useI18n();
 
   useEffect(() => {
     setLocale(lang);
@@ -416,6 +624,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return () => observer.disconnect();
   }, [locale]);
 
-  const value = useMemo(() => ({ locale, setLocale, toggleLocale: () => setLocale((current) => current === "th" ? "en" : "th") }), [locale]);
+  const value = useMemo(() => ({
+    locale,
+    setLocale: (next: Locale) => setLang(next),
+    toggleLocale: () => setLang(locale === "th" ? "en" : "th")
+  }), [locale, setLang]);
+
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
 }

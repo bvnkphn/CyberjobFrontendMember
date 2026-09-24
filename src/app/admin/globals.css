@@ -1,0 +1,60 @@
+:root {
+  --navy-950: #0b1a33;
+  --navy-900: #0f2242;
+  --navy-800: #16305a;
+  --navy-700: #1f3d6e;
+  --gold: #f5b700;
+  --gold-soft: #ffe08a;
+  --gold-text: #6b4e00;
+  --green: #1faa59;
+  --green-soft: #e3f6ec;
+  --red: #e5484d;
+  --red-soft: #fdecec;
+  --blue: #3478f6;
+  --gray-50: #f6f7f9;
+  --gray-100: #eef0f3;
+  --gray-200: #e3e6eb;
+  --gray-300: #cfd4dc;
+  --gray-400: #9aa2af;
+  --gray-500: #6b7280;
+  --gray-700: #374151;
+  --ink: #111827;
+  --page: #f3f4f6;
+  --radius: 12px;
+  --sidebar-width: 256px;
+  font-family: "Noto Sans Thai", "Leelawadee UI", Tahoma, "Segoe UI", system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--page);
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--page);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid rgb(52 120 246 / 35%);
+  outline-offset: 2px;
+}

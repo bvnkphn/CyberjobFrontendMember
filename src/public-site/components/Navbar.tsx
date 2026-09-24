@@ -13,12 +13,12 @@ import { useAuth } from '@/public-site/auth/AuthProvider';
 
 /** เมนูหลักตาม Feature 3.4 – มีอยู่ทุกหน้า */
 const NAV_ITEMS: { key: DictKey; href: string; activePrefixes?: string[]; requiresAuth?: boolean }[] = [
-  { key: 'nav.home', href: '/' },
-  { key: 'nav.jobs', href: '/jobs', activePrefixes: ['/jobs'] },
-  { key: 'nav.resume', href: '/profile/edit', activePrefixes: ['/profile'], requiresAuth: true },
-  { key: 'nav.articles', href: '/articles', activePrefixes: ['/articles'], requiresAuth: true },
-  { key: 'nav.about', href: '/about', activePrefixes: ['/about'], requiresAuth: true },
-  { key: 'nav.contact', href: '/contact', activePrefixes: ['/contact'], requiresAuth: true },
+  { key: 'nav.home',     href: '/' },
+  { key: 'nav.jobs',     href: '/jobs',         activePrefixes: ['/jobs', '/company', '/companies'] },
+  { key: 'nav.resume',   href: '/profile/edit', activePrefixes: ['/profile', '/dashboard'] },
+  { key: 'nav.articles', href: '/articles',     activePrefixes: ['/articles'] },
+  { key: 'nav.about',    href: '/about',        activePrefixes: ['/about'] },
+  { key: 'nav.contact',  href: '/contact',      activePrefixes: ['/contact'] },
 ];
 
 export function Navbar() {
@@ -67,7 +67,7 @@ export function Navbar() {
         </ul>
 
         <div className="ml-auto flex items-center gap-1 lg:ml-2">
-          <div className="hidden sm:block">
+          <div className="flex items-center">
             <LanguageSwitcher />
           </div>
           <button

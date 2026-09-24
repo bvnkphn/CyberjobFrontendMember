@@ -1,5 +1,4 @@
-import type { NextConfig } from "next";
-
+/** @type {import('next').NextConfig} */
 const securityHeaders = [
   {
     key: "X-Content-Type-Options",
@@ -20,12 +19,12 @@ const securityHeaders = [
   {
     key: "Content-Security-Policy",
     value: [
-      "default-src 'self' http://localhost:* http://127.0.0.1:*",
+      "default-src 'self' https: http://localhost:* http://127.0.0.1:*",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://apis.google.com",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com data:",
       "img-src 'self' data: blob: https: http://localhost:* http://127.0.0.1:*",
-      "connect-src 'self' http://localhost:* http://127.0.0.1:* ws://localhost:* ws://127.0.0.1:* https://accounts.google.com",
+      "connect-src 'self' https: http://localhost:* http://127.0.0.1:* ws://localhost:* ws://127.0.0.1:* https://accounts.google.com",
       "frame-src 'self' https://accounts.google.com",
       "object-src 'none'",
       "base-uri 'self'",
@@ -33,7 +32,7 @@ const securityHeaders = [
   },
 ];
 
-const nextConfig: NextConfig = {
+const nextConfig = {
   output: "standalone",
   reactStrictMode: true,
   poweredByHeader: false,

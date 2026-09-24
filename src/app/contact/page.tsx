@@ -33,9 +33,21 @@ export default function ContactPage() {
   return (
     <div className="contact-shell">
       <main className="contact-page member-page-container">
-        <PageHeading title="ติดต่อเรา" description="มีคำถามหรือต้องการความช่วยเหลือ? ทีมงาน CyberJob พร้อมดูแลคุณ" eyebrow="CONTACT CYBERJOB" fallbackHref="/" className="contact-heading" />
+        <PageHeading
+          title="ติดต่อเรา"
+          description="มีคำถามหรือต้องการความช่วยเหลือ? ทีมงาน CyberJob พร้อมดูแลคุณ"
+          fallbackHref="/"
+          className="contact-heading"
+        />
 
-        <section className="line-banner" aria-label="ติดต่อผ่าน LINE">
+        <a
+          href="https://lin.ee/qYT9XuK"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="line-banner"
+          aria-label="ติดต่อผ่าน LINE @cyberjob (คลิกเพื่อเพิ่มเพื่อน)"
+          title="คลิกเพื่อแชทกับทีมงานทาง LINE"
+        >
           <div className="line-mark">
             <img src="/contact/line-icon.png" alt="" onError={(event) => { event.currentTarget.style.display = "none"; event.currentTarget.parentElement?.classList.add("line-icon-fallback"); }} />
             <span className="line-icon-text">LINE</span>
@@ -46,34 +58,26 @@ export default function ContactPage() {
             <p>แชทกับทีมงานเพื่อสอบถามเรื่องบัญชี การสมัครงาน หรือการใช้งานเว็บไซต์</p>
             <small>@cyberjob</small>
           </div>
-          <a
-            href="https://lin.ee/qYT9XuK"
-            target="_blank"
-            rel="noopener noreferrer"
+          <div
             className="qr-code"
             aria-label="QR Code สำหรับติดต่อ CyberJob"
             title="สแกนหรือคลิกเพื่อเพิ่มเพื่อนทาง LINE"
           >
             <img src="/contact/line-qr.png" alt="QR Code สำหรับติดต่อ CyberJob" onError={(event) => { event.currentTarget.style.display = "none"; }} />
-          </a>
-          <a
-            href="https://lin.ee/qYT9XuK"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="line-action"
-          >
+          </div>
+          <span className="line-action">
             แชทกับเรา <span aria-hidden="true">→</span>
-          </a>
-        </section>
+          </span>
+        </a>
 
         <section className="contact-methods" aria-label="ช่องทางติดต่ออื่น">
-          <a href="mailto:support@cyberjob.th">
+          <a href="mailto:cyberpay.tech@gmail.com">
             <span className="contact-icon mail-icon"><MailIcon /></span>
-            <span><small>อีเมล</small><strong>support@cyberjob.th</strong><em>ตอบกลับภายใน 1 วันทำการ</em></span>
+            <span><small>อีเมล</small><strong>cyberpay.tech@gmail.com</strong><em>ตอบกลับภายใน 1 วันทำการ</em></span>
           </a>
-          <a href="tel:021234567">
+          <a href="tel:02-6861-209">
             <span className="contact-icon phone-icon"><PhoneIcon /></span>
-            <span><small>โทรศัพท์</small><strong>02-123-4567</strong><em>จันทร์–ศุกร์ เวลา 09:00–18:00 น.</em></span>
+            <span><small>โทรศัพท์</small><strong>02-6861-209</strong><em>จันทร์–ศุกร์ เวลา 09:00–18:00 น.</em></span>
           </a>
         </section>
 

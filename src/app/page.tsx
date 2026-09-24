@@ -7,6 +7,7 @@ import {
   RecommendedJobs,
   ResumeAccountSection,
 } from "@/public-site/components/home/HomeSections";
+import { PartnersSection } from "@/public-site/components/home/PartnersSection";
 import { jobsService } from "@/public-site/services/jobs.service";
 
 export const dynamic = "force-dynamic";
@@ -15,16 +16,17 @@ export default async function HomePage() {
   const recommended = await jobsService.recommended(3);
 
   return (
-      <>
-        <main data-no-translate>
-          <HeroSection />
-          <ResumeAccountSection />
-          <AboutSection />
-          <EmployerCta />
-          <RecommendedJobs jobs={recommended} />
-          <ArticlesSection />
-        </main>
-        <ContactSupportBand />
-      </>
+    <>
+      <main>
+        <HeroSection />
+        <ResumeAccountSection />
+        <AboutSection />
+        <PartnersSection />
+        <EmployerCta />
+        <RecommendedJobs jobs={recommended} />
+        <ArticlesSection />
+      </main>
+      <ContactSupportBand />
+    </>
   );
 }

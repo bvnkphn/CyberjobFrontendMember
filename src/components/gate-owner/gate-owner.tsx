@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
 import { AUTH_API_URL } from "@/lib/config";
 import { errorMessage, useOwner } from "@/lib/owner";
+import { LanguageSwitcher } from "@/public-site/components/LanguageSwitcher";
 import "./gate-owner.css";
 
 type FormState = {
@@ -243,7 +244,16 @@ export function GateOwner() {
 }
 
 function OwnerHeader() {
-  return <header className="gate-topbar"><Link href="/" className="gate-logo"><span>CYBER</span>JOB</Link><nav aria-label="เมนูผู้ประกอบการ"><button type="button">ไทย⌄</button><button type="button" aria-label="การแจ้งเตือน"><Icon name="bell" /></button><button className="gate-avatar" type="button" aria-label="บัญชีบริษัท"><Icon name="building" /></button></nav></header>;
+  return (
+    <header className="gate-topbar">
+      <Link href="/" className="gate-logo"><span>CYBER</span>JOB</Link>
+      <nav aria-label="เมนูผู้ประกอบการ" className="flex items-center gap-2">
+        <LanguageSwitcher />
+        <button type="button" aria-label="การแจ้งเตือน"><Icon name="bell" /></button>
+        <button className="gate-avatar" type="button" aria-label="บัญชีบริษัท"><Icon name="building" /></button>
+      </nav>
+    </header>
+  );
 }
 
 function Steps() {

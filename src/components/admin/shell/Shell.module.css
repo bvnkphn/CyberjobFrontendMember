@@ -1,0 +1,295 @@
+.shell {
+  min-height: 100vh;
+  display: flex;
+}
+
+/* ---------- sidebar ---------- */
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 40;
+  width: var(--sidebar-width);
+  display: flex;
+  flex-direction: column;
+  background: var(--navy-950);
+  color: #fff;
+  transition: transform 0.2s ease;
+}
+
+.sidebarHead {
+  height: 78px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px 0 22px;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.logo span {
+  color: var(--gold);
+}
+
+.iconButton {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+.iconButton:hover {
+  background: rgb(255 255 255 / 10%);
+}
+
+.nav {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 12px;
+  overflow-y: auto;
+}
+
+.navItem {
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  color: rgb(255 255 255 / 88%);
+  font-size: 15px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.navItem:hover:not(.navItemActive):not([aria-disabled="true"]) {
+  background: rgb(255 255 255 / 8%);
+}
+
+.navItem[aria-disabled="true"] {
+  cursor: default;
+  color: rgb(255 255 255 / 55%);
+}
+
+.navItemActive {
+  background: var(--gold-soft);
+  color: var(--navy-950);
+  font-weight: 700;
+}
+
+.navLabel {
+  flex: 1 1 auto;
+}
+
+.submenu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 2px 0 2px 26px;
+}
+
+.submenu .navItem {
+  min-height: 40px;
+  font-size: 14px;
+}
+
+.soon {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 10%);
+  font-size: 10px;
+  font-weight: 600;
+  color: rgb(255 255 255 / 65%);
+}
+
+.version {
+  margin: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  background: rgb(255 255 255 / 6%);
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgb(255 255 255 / 70%);
+}
+
+.backdrop {
+  display: none;
+}
+
+/* ---------- workspace ---------- */
+.workspace {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-left: var(--sidebar-width);
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  height: 78px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 18px;
+  padding: 0 32px;
+  background: #fff;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.mobileMenu {
+  display: none;
+  margin-right: auto;
+  color: var(--navy-900);
+}
+
+.bell {
+  position: relative;
+  color: var(--navy-900);
+}
+
+.bell::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  right: 9px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+.account {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--navy-900);
+  color: #fff;
+  font-size: 18px;
+}
+
+.main {
+  flex: 1 1 auto;
+  padding: 32px;
+}
+
+@media (max-width: 960px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebarOpen {
+    transform: none;
+  }
+
+  .backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    border: 0;
+    background: rgb(11 26 51 / 45%);
+  }
+
+  .workspace {
+    margin-left: 0;
+  }
+
+  .mobileMenu {
+    display: grid;
+  }
+
+  .topbar,
+  .main {
+    padding-inline: 16px;
+  }
+}
+
+/* ---------- หน้าล็อกอินชั่วคราว ---------- */
+.signin {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: var(--navy-950);
+}
+
+.signinCard {
+  width: min(400px, 100%);
+  padding: 32px;
+  border-radius: 16px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.signinCard h1 {
+  margin: 0;
+  font-size: 22px;
+  color: var(--navy-950);
+}
+
+.signinCard p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--gray-500);
+}
+
+.signinCard input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--gray-300);
+  border-radius: 10px;
+}
+
+.signinCard button {
+  padding: 12px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--navy-900);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.signinCard button:disabled {
+  opacity: 0.6;
+}
+
+.signinError {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--red-soft);
+  color: var(--red);
+  font-size: 13px;
+}
+
+.checking {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  color: var(--gray-500);
+}

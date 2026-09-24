@@ -43,7 +43,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     try {
-      const saved = window.localStorage.getItem("cyberjob.lang") || window.localStorage.getItem(STORAGE_KEY);
+      const match = document.cookie.match(/(?:^|;\s*)cyberjob\.lang=([^;]+)/);
+      const cookieLang = match ? decodeURIComponent(match[1]) : null;
+      const saved = (cookieLang === 'en' || cookieLang === 'th')
+        ? cookieLang
+        : window.localStorage.getItem("cyberjob.lang") || window.localStorage.getItem(STORAGE_KEY) || window.localStorage.getItem("cyberjobLocale");
       if (saved === "en" || saved === "th") setLanguageState(saved);
     } catch {
       // โหมดส่วนตัวของเบราว์เซอร์อาจปิด storage ไว้
@@ -72,6 +76,9 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       window.localStorage.setItem(STORAGE_KEY, lang);
       window.localStorage.setItem("cyberjob.lang", lang);
       window.localStorage.setItem("cyberjobLocale", lang);
+      document.cookie = `cyberjob.lang=${lang}; path=/; max-age=31536000; SameSite=Lax`;
+      document.cookie = `cyberjob_owner_language=${lang}; path=/; max-age=31536000; SameSite=Lax`;
+      document.cookie = `cyberjobLocale=${lang}; path=/; max-age=31536000; SameSite=Lax`;
       window.dispatchEvent(new CustomEvent('cyberjob:lang', { detail: lang }));
     } catch {
       // เปลี่ยนภาษาได้ตามปกติ แค่จำไว้ข้ามหน้าไม่ได้

@@ -10,8 +10,8 @@ import styles from "./Support.module.css";
 
 const LINE_ID = "@cyberjob";
 const LINE_URL = "https://lin.ee/qYT9XuK";
-const SUPPORT_EMAIL = "support@cyberjob.th";
-const SUPPORT_PHONE = "02-123-4567";
+const SUPPORT_EMAIL = "cyberpay.tech@gmail.com";
+const SUPPORT_PHONE = "02-6861-209";
 
 const FAQ: { question: LanguageKey; answer: LanguageKey }[] = [
   { question: "support.faq1Q", answer: "support.faq1A" },

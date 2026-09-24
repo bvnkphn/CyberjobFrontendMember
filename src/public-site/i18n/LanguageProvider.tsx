@@ -29,8 +29,19 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>('th');
 
   useEffect(() => {
-    const saved = window.localStorage.getItem(STORAGE_KEY) || window.localStorage.getItem('cyberjob_owner_language');
-    if (saved === 'en' || saved === 'th') setLangState(saved);
+    try {
+      const match = document.cookie.match(/(?:^|;\s*)cyberjob\.lang=([^;]+)/);
+      const cookieLang = match ? decodeURIComponent(match[1]) : null;
+      const saved = (cookieLang === 'en' || cookieLang === 'th')
+        ? cookieLang
+        : window.localStorage.getItem(STORAGE_KEY) || window.localStorage.getItem('cyberjob_owner_language') || window.localStorage.getItem('cyberjobLocale');
+      if (saved === 'en' || saved === 'th') {
+        setLangState(saved);
+        document.documentElement.lang = saved;
+      }
+    } catch {
+      /* ignore */
+    }
 
     const handleSync = (e: Event) => {
       const customEvent = e as CustomEvent<Lang>;
@@ -59,6 +70,9 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       window.localStorage.setItem(STORAGE_KEY, next);
       window.localStorage.setItem('cyberjob_owner_language', next);
       window.localStorage.setItem('cyberjobLocale', next);
+      document.cookie = `cyberjob.lang=${next}; path=/; max-age=31536000; SameSite=Lax`;
+      document.cookie = `cyberjob_owner_language=${next}; path=/; max-age=31536000; SameSite=Lax`;
+      document.cookie = `cyberjobLocale=${next}; path=/; max-age=31536000; SameSite=Lax`;
       window.dispatchEvent(new CustomEvent('cyberjob:lang', { detail: next }));
     } catch {
       /* โหมดส่วนตัวของเบราว์เซอร์อาจปิด storage ไว้ */

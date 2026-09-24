@@ -7,8 +7,17 @@ import { isOwnerRoute } from "@/lib/owner";
 
 const PUBLIC_PREFIXES = [
   "/jobs",
+  "/articles",
+  "/about",
+  "/contact",
+  "/companies",
+  "/company",
+  "/support",
   "/gate/login",
   "/gate/register",
+  "/gate/forgot-password",
+  "/gate/reset-password",
+  "/gate/verify-otp",
   "/terms",
   "/privacy",
   "/security",

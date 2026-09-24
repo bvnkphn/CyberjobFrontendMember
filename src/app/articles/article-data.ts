@@ -1,6 +1,56 @@
-export const articles = [
-  { slug: "resume-writing", category: "เรซูเม่", title: "5 เคล็ดลับเขียนเรซูเม่ให้โดดเด่นและได้งาน", excerpt: "รวมเคล็ดลับเขียนเรซูเม่ให้โดดเด่น อ่านง่าย และช่วยเพิ่มโอกาสได้งานที่ใช่", image: "https://images.unsplash.com/photo-1456324504439-367cee3b3c32?auto=format&fit=crop&w=900&q=85", date: "26 ส.ค. 2026" },
-  { slug: "future-of-work", category: "การทำงาน", title: "เทรนด์การทำงานแห่งอนาคต 2026", excerpt: "ทักษะและรูปแบบการทำงานที่กำลังเปลี่ยนโลกการทำงานของคนรุ่นใหม่", image: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=900&q=85", date: "22 ส.ค. 2026" },
-  { slug: "interview-preparation", category: "สมัครงาน", title: "เตรียมตัวสัมภาษณ์งานอย่างไรให้มั่นใจ", excerpt: "แนวทางเตรียมตัวก่อนสัมภาษณ์ ตั้งแต่การค้นคว้าบริษัทจนถึงการตอบคำถาม", image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=900&q=85", date: "18 ส.ค. 2026" },
-  { slug: "career-change", category: "การทำงาน", title: "การหางานสำหรับนักศึกษาจบใหม่", excerpt: "เริ่มต้นเส้นทางอาชีพอย่างมั่นใจ พร้อมเทคนิคค้นหางานแรกที่เหมาะกับคุณ", image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=900&q=85", date: "15 ส.ค. 2026" },
+export interface ArticleSection {
+  heading: string;
+  headingEn?: string;
+  paragraphs: string[];
+  bullets?: string[];
+  callout?: string;
+}
+
+export interface ArticleItem {
+  slug: string;
+  category: string;
+  categoryEn: string;
+  title: string;
+  titleEn: string;
+  excerpt: string;
+  excerptEn: string;
+  image: string;
+  date: string;
+  dateEn: string;
+  readMinutes: number;
+  views: number;
+  featured?: boolean;
+  author: {
+    name: string;
+    nameEn: string;
+    role: string;
+    roleEn: string;
+    avatar: string;
+  };
+  tags: string[];
+  content: {
+    intro: string;
+    introEn?: string;
+    sections: ArticleSection[];
+    conclusion: string;
+    conclusionEn?: string;
+  };
+}
+
+export const articleCategories: string[] = [
+  'ทั้งหมด',
+  'เรซูเม่',
+  'เทรนด์การทำงาน',
+  'สมัครงาน',
+  'การทำงาน',
+  'สายงานไอที',
+  'พัฒนาตนเอง',
 ];
+
+/**
+ * รายการบทความในระบบ
+ * หมายเหตุ: บทความจริงจะถูกสร้างสรรค์โดยผู้ประกอบการ (Owner)
+ * และผ่านการตรวจสอบอนุมัติโดยผู้ดูแลระบบ (Admin) ก่อนเผยแพร่สู่สาธารณะ
+ * ในระบบปัจจุบันยังไม่มีบทความจริงที่ผ่านการอนุมัติ จึงเป็นรายการว่าง []
+ */
+export const articles: ArticleItem[] = [];

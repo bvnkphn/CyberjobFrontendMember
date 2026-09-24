@@ -1,0 +1,384 @@
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+}
+
+.statIcon {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: #fff;
+}
+
+.statLabel {
+  display: block;
+  font-size: 14px;
+  color: var(--gray-500);
+}
+
+.statValue {
+  display: block;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--navy-950);
+}
+
+/* ---------- แถบคะแนน ---------- */
+.score {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 140px;
+}
+
+.scoreTrack {
+  width: 76px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--gray-100);
+  overflow: hidden;
+}
+
+.scoreFill {
+  height: 100%;
+  border-radius: inherit;
+}
+
+.scoreValue {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.pending {
+  color: var(--gray-500);
+}
+
+/* ---------- เมนูจัดการ ---------- */
+.menuCell {
+  position: relative;
+  text-align: right;
+}
+
+.menuButton {
+  width: 34px;
+  height: 34px;
+  display: inline-grid;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--navy-900);
+  cursor: pointer;
+}
+
+.menuButton:hover,
+.menuButton[aria-expanded="true"] {
+  background: var(--gray-100);
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% - 6px);
+  right: 16px;
+  z-index: 20;
+  min-width: 200px;
+  padding: 6px;
+  border: 1px solid var(--gray-200);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 12px 32px rgb(17 24 39 / 12%);
+  text-align: left;
+}
+
+.menu button {
+  width: 100%;
+  display: block;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.menu button:hover {
+  background: var(--gray-50);
+}
+
+.menu .menuDanger {
+  color: var(--red);
+}
+
+.menu .menuDanger:hover {
+  background: var(--red-soft);
+}
+
+/* ---------- Resume ---------- */
+.resumeName {
+  margin: 0 0 12px;
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--navy-950);
+}
+
+.contactLine {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--navy-950);
+  font-size: 14px;
+  color: var(--gray-700);
+}
+
+.contactLine span + span::before {
+  content: "|";
+  margin-right: 16px;
+  color: var(--gray-300);
+}
+
+.resumeGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+  gap: 32px;
+}
+
+@media (max-width: 720px) {
+  .resumeGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.resumeSection + .resumeSection {
+  margin-top: 28px;
+}
+
+.resumeSection h3 {
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--gray-200);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--navy-950);
+}
+
+.muted {
+  font-size: 12px;
+  color: var(--gray-500);
+}
+
+.chips {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.chip {
+  padding: 5px 12px;
+  border-radius: 4px;
+  background: var(--gray-200);
+  color: #fff;
+  font-size: 14px;
+  background: #c3cad6;
+}
+
+.eduTitle {
+  margin: 0;
+  font-weight: 700;
+  color: var(--navy-950);
+}
+
+.eduMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--gray-500);
+}
+
+.gpa {
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--gray-100);
+  font-weight: 700;
+  color: var(--navy-950);
+}
+
+.list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 14px;
+  color: var(--gray-700);
+}
+
+.languageRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.timeline {
+  padding-left: 20px;
+  border-left: 2px solid var(--gray-200);
+}
+
+.jobTitle {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--navy-950);
+}
+
+.jobMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 4px 0 8px;
+  font-size: 13px;
+}
+
+.jobCompany {
+  font-weight: 700;
+  color: var(--navy-800);
+}
+
+.paragraph {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--gray-700);
+  white-space: pre-line;
+}
+
+/* ---------- ใบประกาศนียบัตร ---------- */
+.certGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.cert {
+  overflow: hidden;
+  border: 1px solid var(--gray-200);
+  border-radius: 12px;
+}
+
+.certPreview {
+  height: 160px;
+  display: grid;
+  place-items: center;
+  background: var(--gray-100);
+  color: var(--navy-900);
+}
+
+.certBody {
+  padding: 14px 16px;
+}
+
+.certTitle {
+  margin: 0;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.certIssuer {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--gray-500);
+}
+
+.certFile {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--gray-400);
+  word-break: break-all;
+}
+
+.countLink {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 14px;
+  text-decoration: underline;
+  color: var(--gray-700);
+}
+
+/* ---------- ฟอร์มแก้ไข ---------- */
+.notice {
+  margin: 0 0 20px;
+  padding: 14px 16px;
+  border: 1px solid #cfe0ff;
+  border-radius: 10px;
+  background: #eef4ff;
+  color: #1d4ed8;
+  font-size: 14px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 560px) {
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fieldFull {
+  grid-column: 1 / -1;
+  margin-top: 8px;
+}
+
+.field label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy-950);
+}
+
+.required {
+  color: var(--red);
+}
+
+.readonly {
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--gray-200);
+  border-radius: 10px;
+  background: var(--gray-50);
+  color: var(--gray-700);
+}
+
+.sourceSelect {
+  height: 44px;
+  padding: 0 14px;
+  border: 1.5px solid var(--navy-900);
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+}

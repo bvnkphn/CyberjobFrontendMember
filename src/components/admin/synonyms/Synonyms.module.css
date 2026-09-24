@@ -1,0 +1,628 @@
+.container {
+  padding: 28px 36px 64px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ── Page Header ── */
+.header {
+  margin-bottom: 22px;
+}
+
+.title {
+  margin: 0 0 6px;
+  font-size: 24px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 13.5px;
+  color: #64748b;
+}
+
+/* ── Stat Card ── */
+.statCard {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px 20px;
+  width: fit-content;
+  min-width: 220px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.statIconBox {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #fef08a; /* Soft gold/yellow */
+  color: #854d0e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.statInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.statLabel {
+  font-size: 12.5px;
+  color: #64748b;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.statValue {
+  font-size: 26px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1;
+}
+
+/* ── Search & Add Button Bar ── */
+.actionBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.searchWrap {
+  flex: 1;
+  max-width: 600px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 14px;
+  color: #94a3b8;
+  pointer-events: none;
+  display: flex;
+}
+
+.searchInput {
+  width: 100%;
+  height: 42px;
+  padding: 0 14px 0 40px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  font-size: 13.5px;
+  color: #0f172a;
+  outline: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s;
+}
+
+.searchInput:focus {
+  border-color: #0b1a33;
+  box-shadow: 0 0 0 3px rgba(11, 26, 51, 0.08);
+}
+
+.addBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 42px;
+  padding: 0 18px;
+  border-radius: 8px;
+  border: none;
+  background: #081225;
+  color: #fff;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(8, 18, 37, 0.15);
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.addBtn:hover {
+  background: #112240;
+}
+
+/* ── Table Card ── */
+.tableCard {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.tableWrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  text-align: left;
+}
+
+.table th {
+  background: #fff;
+  padding: 14px 20px;
+  font-weight: 700;
+  color: #64748b;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 14px 20px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tr:hover td {
+  background: #fafafa;
+}
+
+.mainKeywordText {
+  font-weight: 700;
+  color: #0f172a;
+  font-size: 14px;
+}
+
+/* ── Synonyms Pills in Table ── */
+.tagsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.tagPill {
+  display: inline-flex;
+  align-items: center;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.dateText {
+  color: #475569;
+  font-size: 13px;
+}
+
+.userText {
+  color: #334155;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* ── Action Buttons ── */
+.actionBtns {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.iconBtn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.iconBtn:hover {
+  color: #0f172a;
+}
+
+.iconBtnDanger {
+  color: #f87171;
+}
+
+.iconBtnDanger:hover {
+  color: #dc2626;
+}
+
+/* ── Table Footer ── */
+.tableFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-top: 1px solid #f1f5f9;
+  font-size: 13px;
+  color: #64748b;
+  background: #fff;
+}
+
+.footerLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pageSelect {
+  height: 32px;
+  padding: 0 24px 0 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #334155;
+  background: #fff;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  background-size: 12px;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pagerBtn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background: #fff;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.pagerBtn:hover:not(:disabled) {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.pagerBtn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* ── Modals Backdrop & Box ── */
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modalBox {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 480px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  animation: modalEnter 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modalHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 24px 16px;
+}
+
+.modalTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.modalCloseBtn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.modalCloseBtn:hover {
+  color: #0f172a;
+  background: #f1f5f9;
+}
+
+.modalBody {
+  padding: 0 24px 24px;
+}
+
+.fieldGroup {
+  margin-bottom: 18px;
+}
+
+.fieldLabel {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.inputField {
+  width: 100%;
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #0f172a;
+  background: #fff;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.inputField:focus {
+  border-color: #0b1a33;
+}
+
+/* Tag input box inside modal */
+.tagContainer {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: #fff;
+  min-height: 52px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.tagContainer:focus-within {
+  border-color: #0b1a33;
+}
+
+.modalDarkTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #081225;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+.tagDeleteIcon {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.tagDeleteIcon:hover {
+  color: #fff;
+}
+
+.tagInput {
+  border: none;
+  outline: none;
+  flex: 1;
+  min-width: 140px;
+  font-size: 13.5px;
+  color: #0f172a;
+  padding: 4px 6px;
+}
+
+.helperText {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 6px;
+}
+
+/* Validation Alert Box */
+.errorAlert {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ef4444;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Modal Actions */
+.modalFoot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.btnCancel {
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #334155;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btnCancel:hover {
+  background: #f8fafc;
+}
+
+.btnGold {
+  height: 40px;
+  padding: 0 24px;
+  border-radius: 8px;
+  border: none;
+  background: #f59e0b; /* Yellow/Gold button matching screenshot */
+  color: #111827;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(245, 158, 11, 0.2);
+  transition: background 0.2s;
+}
+
+.btnGold:hover {
+  background: #d97706;
+}
+
+/* ── Delete Confirm Dialog (media_1790170323411.png) ── */
+.deleteDialog {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 420px;
+  padding: 28px 24px 22px;
+  text-align: center;
+  border: 1px solid #e2e8f0;
+  animation: modalEnter 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.deleteIconBox {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: #fee2e2;
+  color: #dc2626;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+.deleteTitle {
+  margin: 0 0 10px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.deleteDesc {
+  margin: 0 0 6px;
+  font-size: 13.5px;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.deleteSubdesc {
+  margin: 0 0 20px;
+  font-size: 12.5px;
+  color: #94a3b8;
+}
+
+.deleteActions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.btnRed {
+  height: 40px;
+  padding: 0 22px;
+  border-radius: 8px;
+  border: none;
+  background: #dc2626;
+  color: #fff;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btnRed:hover {
+  background: #b91c1c;
+}
+
+/* ── Save Confirm Dialog (media_1790170329104.png) ── */
+.saveIconBox {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #fef9c3;
+  color: #ca8a04;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 20px 16px 40px;
+  }
+  .actionBar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

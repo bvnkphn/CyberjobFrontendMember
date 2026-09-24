@@ -7,12 +7,11 @@ import { ARTICLES } from '@/public-site/lib/articles';
 import { JobCard } from '@/public-site/components/JobCard';
 import { SearchBar } from '@/public-site/components/SearchBar';
 import {
-  ArticleThumb,
   HeroPattern,
   ResumeIllustration,
   TeamIllustration,
 } from '@/public-site/components/Illustrations';
-import { ChevronRightIcon } from '@/public-site/components/Icons';
+import { BriefcaseIcon, ChevronRightIcon } from '@/public-site/components/Icons';
 
 /* ---------------------------------------------------------------- */
 /* 1. Hero + ช่องค้นหางาน (Feature 3.1)                              */
@@ -81,7 +80,7 @@ export function ResumeAccountSection() {
 /* ---------------------------------------------------------------- */
 
 export function AboutSection() {
-  const { t, lang } = useI18n();
+  const { t } = useI18n();
 
   return (
     <section className="bg-white">
@@ -96,26 +95,6 @@ export function AboutSection() {
             {t('about.body2')}
           </p>
         </div>
-      </div>
-
-      <div className="container-page pb-16">
-        <h3 className="text-center text-lg font-bold sm:text-xl">
-          {t('about.trusted')}
-        </h3>
-        <a
-          href="https://cyberpay.asia/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mx-auto mt-6 flex max-w-md items-center justify-between gap-5 rounded-2xl border border-brand-100 bg-brand-50 px-6 py-5 transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-pop"
-          aria-label="CyberPay official website"
-        >
-          <span className="text-xl font-extrabold tracking-tight text-brand-900">
-            CYBER<span className="text-accent-500">PAY</span>
-          </span>
-          <span className="text-right text-xs font-semibold text-slate-500 sm:text-sm">
-            {lang === 'en' ? 'Official technology partner' : 'พันธมิตรด้านเทคโนโลยีอย่างเป็นทางการ'}
-          </span>
-        </a>
       </div>
     </section>
   );
@@ -146,13 +125,13 @@ export function EmployerCta() {
 /* ---------------------------------------------------------------- */
 
 export function RecommendedJobs({ jobs }: { jobs: Job[] }) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
 
   return (
     <section className="bg-white">
       <div className="container-page py-16">
         <div className="flex items-end justify-between gap-4">
-          <h2 className="text-2xl font-bold sm:text-3xl">
+          <h2 className="text-2xl font-bold sm:text-3xl text-brand-900">
             {t('recommended.title')}
           </h2>
           <Link
@@ -164,11 +143,36 @@ export function RecommendedJobs({ jobs }: { jobs: Job[] }) {
           </Link>
         </div>
 
-        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {jobs.map((job) => (
-            <JobCard key={job.id} job={job} />
-          ))}
-        </div>
+        {jobs.length > 0 ? (
+          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {jobs.map((job) => (
+              <JobCard key={job.id} job={job} />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-8 rounded-2xl border border-blue-100 bg-gradient-to-b from-blue-50/60 to-white p-8 text-center shadow-sm sm:p-12">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-100 text-brand-600 shadow-sm">
+              <BriefcaseIcon width={28} height={28} />
+            </div>
+            <h3 className="mt-4 text-lg font-bold text-brand-900 sm:text-xl">
+              {lang === 'en' ? 'Upcoming Featured Job Openings' : 'กำลังรวบรวมตำแหน่งงานแนะนำเร็วๆ นี้'}
+            </h3>
+            <p className="mx-auto mt-2 max-w-md text-sm text-slate-500 leading-relaxed">
+              {lang === 'en'
+                ? 'We are currently connecting and curating job openings from leading organizations. Stay tuned!'
+                : 'ระบบกำลังเชื่อมโยงและคัดสรรตำแหน่งงานคุณภาพจากองค์กรชั้นนำ เพื่อให้คุณได้พบกับโอกาสที่ดีที่สุด'}
+            </p>
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+              <Link href="/jobs" className="btn-brand">
+                {lang === 'en' ? 'Explore all jobs' : 'ค้นหาตำแหน่งงานทั้งหมด'}
+                <ChevronRightIcon width={16} height={16} />
+              </Link>
+              <Link href="/profile/edit" className="btn-outline">
+                {lang === 'en' ? 'Upload resume' : 'ฝากประวัติไว้ล่วงหน้า'}
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
@@ -178,46 +182,143 @@ export function RecommendedJobs({ jobs }: { jobs: Job[] }) {
 /* 6. บทความและเคล็ดลับการทำงาน                                       */
 /* ---------------------------------------------------------------- */
 
+import { useEffect, useState } from 'react';
+import { articlesService } from '@/public-site/services/articles.service';
+import type { ArticleItem } from '@/app/articles/article-data';
+import { ClockIcon, FileTextIcon } from '@/public-site/components/Icons';
+
 export function ArticlesSection() {
   const { t, lang } = useI18n();
+  const [articlesList, setArticlesList] = useState<ArticleItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    articlesService
+      .latest(3)
+      .then((items) => {
+        setArticlesList(items);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  }, []);
 
   return (
-    <section className="bg-slate-50">
-      <div className="container-page py-16">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold sm:text-3xl">
-            {t('articles.title')}
-          </h2>
-          <p className="mt-2 text-sm text-slate-600">{t('articles.subtitle')}</p>
+    <section className="border-t border-slate-200/60 bg-slate-50/70 py-16">
+      <div className="container-page">
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold sm:text-3xl text-brand-900">
+              {t('articles.title')}
+            </h2>
+            <p className="mt-2 text-sm text-slate-600">{t('articles.subtitle')}</p>
+          </div>
+          <Link
+            href="/articles"
+            className="inline-flex items-center gap-1 text-sm font-semibold text-brand-600 hover:text-brand-700"
+          >
+            {lang === 'en' ? 'View all articles' : 'ดูบทความทั้งหมด'}
+            <ChevronRightIcon width={16} height={16} />
+          </Link>
         </div>
 
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
-          {ARTICLES.map((article, i) => (
-            <Link
-              key={article.id}
-              href={`/articles/${article.slug}`}
-              className="card group overflow-hidden transition-all hover:-translate-y-0.5 hover:shadow-pop"
-            >
-              <ArticleThumb index={i} className="h-40 w-full object-cover" />
-              <div className="p-5">
-                <span className="chip bg-brand-50 text-brand-600">
-                  {lang === 'en' ? article.tagEn : article.tagTh}
-                </span>
-                <h3 className="mt-3 text-base font-bold leading-snug text-brand-900 group-hover:text-brand-600">
-                  {lang === 'en' ? article.titleEn : article.titleTh}
-                </h3>
-                <p className="mt-2 line-clamp-2 text-sm text-slate-500">
-                  {lang === 'en' ? article.excerptEn : article.excerptTh}
-                </p>
-                <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-brand-600">
-                  {t('articles.readMore')}
-                  <ChevronRightIcon width={15} height={15} />
-                </span>
+        {loading ? (
+          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="animate-pulse rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div className="aspect-[16/10] w-full rounded-xl bg-slate-200" />
+                <div className="mt-4 h-4 w-20 rounded bg-slate-200" />
+                <div className="mt-3 h-5 w-3/4 rounded bg-slate-200" />
+                <div className="mt-2 h-4 w-full rounded bg-slate-100" />
               </div>
-            </Link>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : articlesList.length > 0 ? (
+          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {articlesList.map((article) => (
+              <article
+                key={article.slug}
+                className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-md"
+              >
+                <Link href={`/articles/${article.slug}`} className="relative block aspect-[16/10] overflow-hidden bg-slate-100">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={article.image}
+                    alt={article.title}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute left-3 top-3">
+                    <span className="rounded-lg bg-white/95 px-2.5 py-1 text-xs font-bold text-brand-700 shadow-sm backdrop-blur-sm border border-slate-100">
+                      {lang === 'en' ? article.categoryEn : article.category}
+                    </span>
+                  </div>
+                </Link>
+
+                <div className="flex flex-1 flex-col justify-between p-5">
+                  <div>
+                    <div className="flex items-center gap-2 text-xs text-slate-500">
+                      <span>{lang === 'en' ? article.dateEn : article.date}</span>
+                      <span>•</span>
+                      <span className="inline-flex items-center gap-1">
+                        <ClockIcon width={12} height={12} />
+                        {article.readMinutes} {lang === 'en' ? 'min' : 'นาที'}
+                      </span>
+                    </div>
+
+                    <Link href={`/articles/${article.slug}`}>
+                      <h3 className="mt-2.5 text-base sm:text-lg font-bold text-brand-900 group-hover:text-brand-600 transition-colors line-clamp-2 leading-snug">
+                        {lang === 'en' ? article.titleEn : article.title}
+                      </h3>
+                    </Link>
+
+                    <p className="mt-2 text-xs sm:text-sm text-slate-500 line-clamp-2 leading-relaxed">
+                      {lang === 'en' ? article.excerptEn : article.excerpt}
+                    </p>
+                  </div>
+
+                  <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-4 text-xs">
+                    <span className="font-semibold text-slate-600">
+                      {lang === 'en' ? article.author.nameEn : article.author.name}
+                    </span>
+                    <Link
+                      href={`/articles/${article.slug}`}
+                      className="inline-flex items-center gap-1 font-bold text-brand-600 group-hover:text-brand-700"
+                    >
+                      {lang === 'en' ? 'Read' : 'อ่านต่อ'}
+                      <ChevronRightIcon width={14} height={14} />
+                    </Link>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div className="mt-8 rounded-2xl border border-blue-100 bg-gradient-to-b from-blue-50/60 to-white p-8 text-center shadow-sm sm:p-12">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-100 text-brand-600 shadow-sm">
+              <FileTextIcon width={28} height={28} />
+            </div>
+            <h3 className="mt-4 text-lg font-bold text-brand-900 sm:text-xl">
+              {lang === 'en' ? 'Upcoming Career Articles & Advice' : 'กำลังรวบรวมบทความและสาระน่ารู้เร็วๆ นี้'}
+            </h3>
+            <p className="mx-auto mt-2 max-w-md text-sm text-slate-500 leading-relaxed">
+              {lang === 'en'
+                ? 'We are preparing high-quality career advice, resume guides, and workplace trends. Stay tuned!'
+                : 'ระบบกำลังเชื่อมโยงและคัดสรรเนื้อหาคุณภาพ เคล็ดลับการทำงาน และการพัฒนาตนเอง เพื่อให้คุณก้าวหน้าในอาชีพ'}
+            </p>
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+              <Link href="/articles" className="btn-brand">
+                {lang === 'en' ? 'Explore all articles' : 'ดูบทความทั้งหมด'}
+                <ChevronRightIcon width={16} height={16} />
+              </Link>
+              <Link href="/jobs" className="btn-outline">
+                {lang === 'en' ? 'Explore jobs' : 'ค้นหาตำแหน่งงาน'}
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
 }
+
