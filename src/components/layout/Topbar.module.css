@@ -319,6 +319,29 @@
   color: var(--color-danger);
 }
 
+.menuDivider {
+  height: 1px;
+  background: var(--color-gray-100, #e2e8f0);
+  margin: 6px 0;
+}
+
+.memberViewLink {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-blue, #2563eb) !important;
+  font-weight: 600;
+  background: rgba(37, 99, 235, 0.06);
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+}
+
+.memberViewLink:hover {
+  background: rgba(37, 99, 235, 0.14) !important;
+  color: #1d4ed8 !important;
+}
+
+
 @media (max-width: 1024px) {
   .topbar {
     padding: 0 var(--space-4);

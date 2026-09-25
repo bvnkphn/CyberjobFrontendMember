@@ -13,6 +13,11 @@ import { OwnerProvider } from "@/lib/owner";
 export const metadata: Metadata = {
   title: "CyberJob – ค้นหาอนาคตของคุณ",
   description: "แพลตฟอร์มหางานที่เชื่อมต่อคนทำงานกับองค์กรชั้นนำ ค้นหางาน ฝากประวัติ และสมัครงานได้ในที่เดียว",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
 };
 
 // Hostinger hCDN otherwise keeps prerendered HTML for up to one year.

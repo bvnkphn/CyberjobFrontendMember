@@ -447,3 +447,80 @@ a.saveButton {
   }
 }
 
+/* Markdown Editor Tabs & Toolbar */
+.markdownHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.markdownTabs {
+  display: flex;
+  gap: 4px;
+  background: #f1f5f9;
+  padding: 3px;
+  border-radius: 8px;
+}
+
+.markdownTab {
+  padding: 5px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.markdownTabActive {
+  background: #fff;
+  color: #0f172a;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.markdownToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.toolbarBtn {
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.toolbarBtn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.markdownPreview {
+  min-height: 180px;
+  max-height: 480px;
+  overflow-y: auto;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
+  box-sizing: border-box;
+}
+
+.emptyPreview {
+  color: #94a3b8;
+  font-style: italic;
+  font-size: 13.5px;
+}
+
+

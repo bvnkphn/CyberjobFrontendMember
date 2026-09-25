@@ -1,24 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import styles from "./Tutorials.module.css";
 
-/**
- * ลิงก์วิดีโอ YouTube ของแต่ละหัวข้อ ตามลำดับในรายการ คั่นด้วยจุลภาค
- * เช่น NEXT_PUBLIC_TUTORIAL_VIDEOS=https://youtu.be/aaa,,https://youtu.be/ccc (ว่าง = ยังไม่มีวิดีโอ)
- */
-const VIDEO_URLS = (process.env.NEXT_PUBLIC_TUTORIAL_VIDEOS ?? "").split(",").map((url) => url.trim());
-
-function embedUrl(url: string | undefined): string | null {
+function embedUrl(url: string | undefined | null): string | null {
   if (!url) return null;
-  const match = url.match(/(?:youtu\.be\/|v=|embed\/)([A-Za-z0-9_-]{11})/);
+  const match = url.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
   return match ? `https://www.youtube-nocookie.com/embed/${match[1]}` : null;
 }
 
-const TUTORIALS = [
+const DEFAULT_TUTORIALS = [
   {
+    id: "tutorial_01",
     title: ["เริ่มต้นใช้งานและยืนยันบริษัท", "Getting started & company verification"],
     duration: "3:20",
     steps: [
@@ -29,6 +24,7 @@ const TUTORIALS = [
     link: "/company",
   },
   {
+    id: "tutorial_02",
     title: ["สร้างประกาศงานและตั้งคำถามคัดกรอง", "Posting a job with screening questions"],
     duration: "4:45",
     steps: [
@@ -39,6 +35,7 @@ const TUTORIALS = [
     link: "/job-postings/create",
   },
   {
+    id: "tutorial_03",
     title: ["ค้นหาผู้สมัครและอ่าน Matching Score", "Finding candidates & reading the Matching Score"],
     duration: "3:05",
     steps: [
@@ -49,6 +46,7 @@ const TUTORIALS = [
     link: "/candidates",
   },
   {
+    id: "tutorial_04",
     title: ["ติดตามคำตอบและคำเชิญ", "Tracking responses & invitations"],
     duration: "2:30",
     steps: [
@@ -58,6 +56,7 @@ const TUTORIALS = [
     link: "/candidates/responses",
   },
   {
+    id: "tutorial_05",
     title: ["อัปเกรดแพ็กเกจและชำระเงิน", "Upgrading your package"],
     duration: "2:10",
     steps: [
@@ -73,8 +72,38 @@ export function TutorialsView() {
   const { isEn } = useLanguage();
   const L = (th: string, en: string) => (isEn ? en : th);
   const [active, setActive] = useState(0);
-  const current = TUTORIALS[active];
-  const video = embedUrl(VIDEO_URLS[active]);
+  const [videoMap, setVideoMap] = useState<Record<string, { videoUrl: string; duration?: string }>>({});
+
+  useEffect(() => {
+    let mounted = true;
+    const adminApi = process.env.NEXT_PUBLIC_ADMIN_API_URL || "https://api-admin.cyberjob.asia/api/v1";
+    fetch(`${adminApi}/admin/settings/tutorials`)
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data: any[]) => {
+        if (!mounted || !Array.isArray(data)) return;
+        const map: Record<string, { videoUrl: string; duration?: string }> = {};
+        for (const item of data) {
+          if (item.id) {
+            map[item.id] = {
+              videoUrl: item.videoUrl || "",
+              duration: item.duration || "",
+            };
+          }
+        }
+        setVideoMap(map);
+      })
+      .catch((err) => {
+        console.warn("Could not fetch tutorial videos from API:", err);
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const current = DEFAULT_TUTORIALS[active];
+  const currentVideoUrl = videoMap[current.id]?.videoUrl || "";
+  const video = embedUrl(currentVideoUrl);
 
   return (
     <div className={styles.page}>
@@ -89,7 +118,7 @@ export function TutorialsView() {
             <iframe
               src={video}
               title={L(...(current.title as [string, string]))}
-              allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
               loading="lazy"
             />
@@ -114,24 +143,29 @@ export function TutorialsView() {
         </section>
 
         <ul className={styles.list}>
-          {TUTORIALS.map((tutorial, index) => (
-            <li key={tutorial.title[0]}>
-              <button
-                type="button"
-                className={index === active ? styles.itemActive : ""}
-                aria-current={index === active}
-                onClick={() => setActive(index)}
-              >
-                <span className={styles.thumb} aria-hidden>
-                  ▶
-                </span>
-                <span>
-                  <b>{L(tutorial.title[0], tutorial.title[1])}</b>
-                  <small>{embedUrl(VIDEO_URLS[index]) ? tutorial.duration : L("เร็ว ๆ นี้", "Coming soon")}</small>
-                </span>
-              </button>
-            </li>
-          ))}
+          {DEFAULT_TUTORIALS.map((tutorial, index) => {
+            const itemVideo = videoMap[tutorial.id]?.videoUrl || "";
+            const itemDuration = videoMap[tutorial.id]?.duration || tutorial.duration;
+            const hasVideo = !!embedUrl(itemVideo);
+            return (
+              <li key={tutorial.id}>
+                <button
+                  type="button"
+                  className={index === active ? styles.itemActive : ""}
+                  aria-current={index === active}
+                  onClick={() => setActive(index)}
+                >
+                  <span className={styles.thumb} aria-hidden>
+                    ▶
+                  </span>
+                  <span>
+                    <b>{L(tutorial.title[0], tutorial.title[1])}</b>
+                    <small>{hasVideo ? itemDuration : L("เร็ว ๆ นี้", "Coming soon")}</small>
+                  </span>
+                </button>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </div>

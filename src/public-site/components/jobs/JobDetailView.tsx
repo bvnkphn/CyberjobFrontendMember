@@ -16,6 +16,7 @@ import { ApiError } from '@/public-site/lib/api';
 import { formatSalary, postedLabel } from '@/public-site/lib/format';
 import { CompanyLogo } from '@/public-site/components/CompanyLogo';
 import { CoverBanner } from '@/public-site/components/media/Media';
+import { MarkdownContent } from '@/components/ui/MarkdownContent';
 import {
   BookmarkIcon,
   BriefcaseIcon,
@@ -212,9 +213,9 @@ export function JobDetailView({
 
         {/* เนื้อหาประกาศ */}
         <Section title={t('job.description')}>
-          <p className="text-[13px] leading-relaxed text-slate-600">
-            {job.description}
-          </p>
+          <div className="text-[13px] leading-relaxed text-slate-600">
+            <MarkdownContent content={job.description} />
+          </div>
         </Section>
 
         {job.requirements.length > 0 && (

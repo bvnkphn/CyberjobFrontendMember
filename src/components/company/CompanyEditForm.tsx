@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { CompanyLogo, Notice } from "@/components/ui/ui";
+import { CompanyLogo, Notice, resolveUploadUrl } from "@/components/ui/ui";
 import { AUTH_API_URL } from "@/lib/config";
 import { COMPANY_TYPE_LABEL } from "@/lib/format";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
@@ -48,11 +48,18 @@ export function CompanyEditForm() {
     address: company.address,
     province: company.province,
     mapUrl: company.mapUrl ?? "",
+    registrationNumber: company.registrationNumber ?? "",
+    contactName: company.contactName ?? "",
+    contactPosition: company.contactPosition ?? "",
+    contactPhone: company.contactPhone ?? "",
+    requestVerification: false,
   });
   const [provinces, setProvinces] = useState<string[]>([company.province]);
   const [saving, setSaving] = useState(false);
+  const [verifying, setVerifying] = useState(false);
   const [uploading, setUploading] = useState<string | null>(null);
   const [notice, setNotice] = useState<NoticeState>(null);
+  const [verifyNotice, setVerifyNotice] = useState<NoticeState>(null);
   const [imageNotice, setImageNotice] = useState<NoticeState>(null);
   const [profile, setProfile] = useState<CompanyProfile>(company);
   const galleryInput = useRef<HTMLInputElement>(null);
@@ -72,7 +79,20 @@ export function CompanyEditForm() {
     setSaving(true);
     setNotice(null);
     try {
-      await api("/owner/company", { method: "PATCH", body: form });
+      const generalData = {
+        name: form.name,
+        companyType: form.companyType,
+        businessType: form.businessType,
+        employeeCount: form.employeeCount,
+        about: form.about,
+        email: form.email,
+        phone: form.phone,
+        website: form.website,
+        address: form.address,
+        province: form.province,
+        mapUrl: form.mapUrl,
+      };
+      await api("/owner/company", { method: "PATCH", body: generalData });
       await reloadMe();
       router.push("/company");
     } catch (error) {
@@ -80,6 +100,43 @@ export function CompanyEditForm() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     } finally {
       setSaving(false);
+    }
+  };
+
+  const submitVerificationRequest = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!form.registrationNumber.trim()) {
+      setVerifyNotice({
+        tone: "error",
+        text: L("กรุณากรอกเลขทะเบียนนิติบุคคล 13 หลัก", "Please enter 13-digit registration number"),
+      });
+      return;
+    }
+    setVerifying(true);
+    setVerifyNotice(null);
+    try {
+      const updated = await api<CompanyProfile>("/owner/company/request-verification", {
+        method: "POST",
+        body: {
+          registrationNumber: form.registrationNumber.trim(),
+          contactName: form.contactName.trim() || undefined,
+          contactPosition: form.contactPosition.trim() || undefined,
+          contactPhone: form.contactPhone.trim() || undefined,
+        },
+      });
+      setProfile(updated);
+      await reloadMe();
+      setVerifyNotice({
+        tone: "success",
+        text: L(
+          "ส่งข้อมูลให้ผู้ดูแลระบบ (Admin) ตรวจสอบและอนุมัติเรียบร้อยแล้ว สถานะบริษัทเปลี่ยนเป็น 'รอดำเนินการ (PENDING)'",
+          "Verification details submitted to Admin for approval. Status changed to PENDING."
+        ),
+      });
+    } catch (error) {
+      setVerifyNotice({ tone: "error", text: errorMessage(error) });
+    } finally {
+      setVerifying(false);
     }
   };
 
@@ -131,7 +188,9 @@ export function CompanyEditForm() {
         <div className={styles.imageGrid}>
           <div className={styles.imageSlot}>
             <span className={styles.label}>{L("โลโก้ / รูปโปรไฟล์", "Logo / profile image")}</span>
-            <CompanyLogo company={profile} size={96} />
+            <div className={styles.logoPreviewWrap}>
+              <CompanyLogo company={profile} size={96} />
+            </div>
             <div className={styles.imageActions}>
               <label className={styles.secondary}>
                 {uploading === "logo" ? L("กำลังอัปโหลด...", "Uploading...") : L("อัปโหลดโลโก้", "Upload logo")}
@@ -148,9 +207,16 @@ export function CompanyEditForm() {
           <div className={styles.imageSlot}>
             <span className={styles.label}>{L("ภาพหน้าปก", "Cover image")}</span>
             <div
-              className={styles.coverPreview}
-              style={profile.coverImage ? { backgroundImage: `url("${profile.coverImage}")` } : undefined}
-            />
+              className={`${styles.coverPreview} ${profile.coverImage ? styles.coverPreviewHasImage : ""}`}
+              style={profile.coverImage ? { backgroundImage: `url("${resolveUploadUrl(profile.coverImage)}")` } : undefined}
+            >
+              {!profile.coverImage && (
+                <div className={styles.coverEmptyNotice}>
+                  <span style={{ fontSize: "24px" }}>🖼️</span>
+                  <span>{L("ยังไม่มีภาพหน้าปก แนะนำขนาด 1200 × 300 px", "No cover image yet (Recommended 1200 × 300 px)")}</span>
+                </div>
+              )}
+            </div>
             <div className={styles.imageActions}>
               <label className={styles.secondary}>
                 {uploading === "cover" ? L("กำลังอัปโหลด...", "Uploading...") : L("อัปโหลดภาพหน้าปก", "Upload cover")}
@@ -172,7 +238,7 @@ export function CompanyEditForm() {
           {profile.gallery.map((url, index) => (
             <figure key={url} className={styles.galleryItem}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={url} alt="" />
+              <img src={resolveUploadUrl(url) ?? undefined} alt="" />
               <button type="button" aria-label={L("ลบรูป", "Remove image")} onClick={() => removeImage(`gallery/${index}`)}>
                 ×
               </button>
@@ -287,7 +353,138 @@ export function CompanyEditForm() {
             {L("ยกเลิก", "Cancel")}
           </Link>
           <button type="submit" className={styles.primary} disabled={saving}>
-            {saving ? L("กำลังบันทึก...", "Saving...") : L("บันทึก", "Save")}
+            {saving ? L("กำลังบันทึก...", "Saving...") : L("บันทึกข้อมูลทั่วไป", "Save company info")}
+          </button>
+        </div>
+      </form>
+
+      {/* ข้อมูลการยืนยันบริษัท (Company Verification Details) – ต้องส่งให้ Admin Approve ก่อน */}
+      <form id="verification" className={`${styles.card} ${styles.spaced}`} onSubmit={submitVerificationRequest} noValidate>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "10px", marginBottom: "8px" }}>
+          <h2 style={{ margin: 0, fontSize: "16.5px", fontWeight: "800", color: "var(--color-navy-900, #0f172a)" }}>
+            {L("ข้อมูลการยืนยันบริษัท (Verification details)", "Company verification details")}
+          </h2>
+          <div>
+            {profile.verificationStatus === "pending" && (
+              <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "#fef3c7", color: "#92400e", border: "1px solid #fde68a", padding: "6px 14px", borderRadius: "20px", fontSize: "13px", fontWeight: "700" }}>
+                ⏳ {L("รอดำเนินการ (รอ Admin ตรวจสอบ)", "Pending Admin Approval")}
+              </span>
+            )}
+            {profile.verificationStatus === "approved" && (
+              <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "#ecfdf5", color: "#065f46", border: "1px solid #a7f3d0", padding: "6px 14px", borderRadius: "20px", fontSize: "13px", fontWeight: "700" }}>
+                ✓ {L("ยืนยันตัวตนแล้ว (Verified)", "Verified")}
+              </span>
+            )}
+            {profile.verificationStatus === "rejected" && (
+              <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "#fef2f2", color: "#991b1b", border: "1px solid #fecaca", padding: "6px 14px", borderRadius: "20px", fontSize: "13px", fontWeight: "700" }}>
+                ✕ {L("ไม่ผ่านการอนุมัติ (Rejected)", "Rejected")}
+              </span>
+            )}
+            {profile.verificationStatus === "not_submitted" && (
+              <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "#f1f5f9", color: "#475569", border: "1px solid #cbd5e1", padding: "6px 14px", borderRadius: "20px", fontSize: "13px", fontWeight: "700" }}>
+                ℹ️ {L("ยังไม่ส่งยืนยัน (Unverified)", "Unverified")}
+              </span>
+            )}
+          </div>
+        </div>
+
+        <p style={{ fontSize: "13px", color: "var(--color-gray-600, #64748b)", margin: "0 0 16px", lineHeight: 1.6 }}>
+          {L(
+            "ข้อมูลในส่วนนี้เป็นข้อมูลนิติบุคคลสำหรับการตรวจสอบความถูกต้องและความน่าเชื่อถือ โดยข้อมูลนี้จะไม่ถูกบันทึกมีผลทันที แต่ต้องส่งให้ผู้ดูแลระบบ (Admin) ตรวจสอบและอนุมัติก่อน",
+            "This corporate information is used for business verification and must be reviewed and approved by Admin before taking effect."
+          )}
+        </p>
+
+        {verifyNotice && <Notice tone={verifyNotice.tone}>{verifyNotice.text}</Notice>}
+
+        {profile.verificationStatus === "pending" && (
+          <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: "10px", padding: "14px 18px", marginBottom: "18px", color: "#92400e", fontSize: "13.5px", lineHeight: 1.6 }}>
+            <strong>⏳ {L("คำขออยู่ระหว่างรอการตรวจสอบและอนุมัติจาก Admin", "Your verification request is pending review by Admin")}</strong>
+            <p style={{ margin: "4px 0 0", fontSize: "12.5px" }}>
+              {L(
+                "ข้อมูลการยืนยันของคุณถูกส่งไปยังหลังบ้าน Admin เรียบร้อยแล้ว เมื่อทีมงานตรวจสอบข้อมูลถูกต้อง สถานะจะเปลี่ยนเป็น 'ยืนยันตัวตนแล้ว' โดยอัตโนมัติ",
+                "Your details have been submitted to Admin. Once verified, your status will change to Verified."
+              )}
+            </p>
+          </div>
+        )}
+
+        {profile.verificationStatus === "approved" && (
+          <div style={{ background: "#ecfdf5", border: "1px solid #a7f3d0", borderRadius: "10px", padding: "14px 18px", marginBottom: "18px", color: "#065f46", fontSize: "13.5px", lineHeight: 1.6 }}>
+            <strong>✓ {L("บริษัทได้รับการตรวจสอบและอนุมัติเรียบร้อยแล้ว", "Company is approved and verified")}</strong>
+            <p style={{ margin: "4px 0 0", fontSize: "12.5px" }}>
+              {L(
+                "หากท่านต้องการเปลี่ยนแปลงเลขทะเบียนนิติบุคคลหรือข้อมูลผู้ติดต่อ การส่งข้อมูลใหม่จะเปลี่ยนสถานะเป็น 'รอดำเนินการ' เพื่อรอให้ Admin ตรวจสอบอนุมัติใหม่อีกครั้ง",
+                "If you need to update registration or contact details, submitting will change your status to PENDING for Admin re-approval."
+              )}
+            </p>
+          </div>
+        )}
+
+        <div className={styles.formGrid}>
+          <label className={styles.field}>
+            <span className={styles.label}>{L("เลขทะเบียนนิติบุคคล (13 หลัก)", "Registration no. (13 digits)")} *</span>
+            <input
+              value={form.registrationNumber}
+              onChange={update("registrationNumber")}
+              maxLength={20}
+              placeholder={L("เช่น 0105560000000", "e.g. 0105560000000")}
+              disabled={verifying || profile.verificationStatus === "pending"}
+              required
+            />
+          </label>
+
+          <label className={styles.field}>
+            <span className={styles.label}>{L("ชื่อ-นามสกุล ผู้ติดต่อ", "Contact person name")}</span>
+            <input
+              value={form.contactName}
+              onChange={update("contactName")}
+              maxLength={120}
+              placeholder={L("เช่น สมชาย ใจดี", "e.g. Somchai Jaidee")}
+              disabled={verifying || profile.verificationStatus === "pending"}
+            />
+          </label>
+
+          <label className={styles.field}>
+            <span className={styles.label}>{L("ตำแหน่งผู้ติดต่อ", "Contact position")}</span>
+            <input
+              value={form.contactPosition}
+              onChange={update("contactPosition")}
+              maxLength={100}
+              placeholder={L("เช่น HR Manager / กรรมการผู้จัดการ", "e.g. HR Manager")}
+              disabled={verifying || profile.verificationStatus === "pending"}
+            />
+          </label>
+
+          <label className={styles.field}>
+            <span className={styles.label}>{L("เบอร์โทรผู้ติดต่อ", "Contact phone")}</span>
+            <input
+              value={form.contactPhone}
+              onChange={update("contactPhone")}
+              inputMode="tel"
+              placeholder={L("เช่น 081-234-5678", "e.g. 081-234-5678")}
+              disabled={verifying || profile.verificationStatus === "pending"}
+            />
+          </label>
+        </div>
+
+        <div className={styles.formActions} style={{ marginTop: "22px", justifyContent: "flex-end" }}>
+          <button
+            type="submit"
+            className={styles.primary}
+            disabled={verifying || profile.verificationStatus === "pending"}
+            style={{
+              background: profile.verificationStatus === "pending" ? "#94a3b8" : "var(--color-navy-900, #0f172a)",
+              cursor: profile.verificationStatus === "pending" ? "not-allowed" : "pointer"
+            }}
+          >
+            {verifying
+              ? L("กำลังส่งข้อมูล...", "Submitting...")
+              : profile.verificationStatus === "pending"
+              ? L("⏳ อยู่ระหว่างรอ Admin ตรวจสอบ", "Pending Admin Approval")
+              : profile.verificationStatus === "approved"
+              ? L("📤 ส่งขอตรวจสอบและอนุมัติใหม่", "Submit for Re-approval")
+              : L("📤 ส่งข้อมูลให้ Admin ตรวจสอบและอนุมัติ", "Submit for Admin Approval")}
           </button>
         </div>
       </form>

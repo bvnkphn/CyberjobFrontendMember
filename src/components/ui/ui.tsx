@@ -1,10 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { initialsOf } from "@/lib/format";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import styles from "./ui.module.css";
+
+export function resolveUploadUrl(url: string | null | undefined): string | null {
+  if (!url) return null;
+  let resolved = url.trim();
+  if (resolved.includes("localhost:3002") || resolved.includes("localhost:4000")) {
+    resolved = resolved.replace(/http:\/\/localhost:(3002|4000)/g, "https://api.cyberjob.asia");
+  }
+  if (resolved.startsWith("/uploads/")) {
+    resolved = `https://api.cyberjob.asia${resolved}`;
+  }
+  return resolved;
+}
+
 
 export function Loading({ label }: { label?: string }) {
   const { isEn } = useLanguage();
@@ -77,16 +90,42 @@ export function CompanyLogo({
   company: { name: string; logoUrl: string | null; logoText: string; logoColor: string };
   size?: number;
 }) {
-  return company.logoUrl ? (
+  const [imgError, setImgError] = useState(false);
+  const src = resolveUploadUrl(company.logoUrl);
+
+  useEffect(() => {
+    setImgError(false);
+  }, [company.logoUrl]);
+
+  return src && !imgError ? (
     // eslint-disable-next-line @next/next/no-img-element
-    <img className={styles.logo} src={company.logoUrl} alt={company.name} width={size} height={size} />
+    <img
+      className={styles.logo}
+      src={src}
+      alt={company.name}
+      width={size}
+      height={size}
+      onError={() => setImgError(true)}
+      style={{ objectFit: "contain", borderRadius: size >= 80 ? "16px" : "8px", background: "#fff", border: "1px solid #e2e8f0" }}
+    />
   ) : (
     <span
       className={styles.logo}
-      style={{ width: size, height: size, background: company.logoColor, fontSize: size * 0.36 }}
+      style={{
+        width: size,
+        height: size,
+        background: company.logoColor || "#1e3a8a",
+        fontSize: size * 0.36,
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "#fff",
+        fontWeight: "bold",
+        borderRadius: size >= 80 ? "16px" : "8px",
+      }}
       aria-hidden
     >
-      {company.logoText}
+      {company.logoText || (company.name ? company.name.slice(0, 2).toUpperCase() : "CJ")}
     </span>
   );
 }

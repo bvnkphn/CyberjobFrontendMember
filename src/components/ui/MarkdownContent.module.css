@@ -1,0 +1,143 @@
+.markdownBody {
+  color: var(--color-navy-900, #0f172a);
+  font-size: 14.5px;
+  line-height: 1.7;
+  word-break: break-word;
+}
+
+.markdownBody h1,
+.markdownBody h2,
+.markdownBody h3,
+.markdownBody h4,
+.markdownBody h5,
+.markdownBody h6 {
+  margin-top: 1.4em;
+  margin-bottom: 0.6em;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.35;
+}
+
+.markdownBody h1 {
+  font-size: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.3em;
+}
+
+.markdownBody h2 {
+  font-size: 1.3rem;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 0.25em;
+}
+
+.markdownBody h3 {
+  font-size: 1.15rem;
+}
+
+.markdownBody h4 {
+  font-size: 1.05rem;
+}
+
+.markdownBody p {
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+
+.markdownBody strong {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.markdownBody em {
+  font-style: italic;
+}
+
+.markdownBody ul,
+.markdownBody ol {
+  margin-top: 0;
+  margin-bottom: 1em;
+  padding-left: 1.6em;
+}
+
+.markdownBody li {
+  margin-bottom: 0.4em;
+}
+
+.markdownBody ul {
+  list-style-type: disc;
+}
+
+.markdownBody ol {
+  list-style-type: decimal;
+}
+
+.markdownBody blockquote {
+  margin: 1em 0;
+  padding: 0.6em 1.2em;
+  color: #475569;
+  background: #f8fafc;
+  border-left: 4px solid var(--color-blue, #2563eb);
+  border-radius: 0 8px 8px 0;
+}
+
+.markdownBody pre {
+  margin: 1em 0;
+  padding: 14px 16px;
+  background: #0f172a;
+  color: #f8fafc;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.5;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.markdownBody code {
+  padding: 2px 6px;
+  background: #f1f5f9;
+  color: #0f172a;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.markdownBody pre code {
+  padding: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.markdownBody a {
+  color: var(--color-blue, #2563eb);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.markdownBody a:hover {
+  color: #1d4ed8;
+}
+
+.markdownBody hr {
+  margin: 1.8em 0;
+  border: 0;
+  border-top: 1px solid #e2e8f0;
+}
+
+.markdownBody table {
+  width: 100%;
+  margin: 1em 0;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.markdownBody th,
+.markdownBody td {
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  text-align: left;
+}
+
+.markdownBody th {
+  background: #f8fafc;
+  font-weight: 700;
+}

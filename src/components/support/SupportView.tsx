@@ -43,7 +43,14 @@ export function SupportView() {
 
       <span className={styles.sectionLabel}>{t("support.fastestChannel")}</span>
 
-      <section className={styles.lineCard}>
+      <a
+        href={LINE_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.lineCard}
+        aria-label="ติดต่อผ่าน LINE @cyberjob (คลิกเพื่อเพิ่มเพื่อน)"
+        title="คลิกเพื่อแชทกับทีมงานทาง LINE"
+      >
         <span className={styles.lineLogo} aria-hidden>
           LINE
         </span>
@@ -57,18 +64,25 @@ export function SupportView() {
           <span className={styles.lineId}>{LINE_ID}</span>
         </div>
 
-        <a className={styles.qrBox} href={LINE_URL} target="_blank" rel="noopener noreferrer" title="สแกนหรือคลิกเพื่อเพิ่มเพื่อนทาง LINE">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/contact/line-qr.png" alt={t("support.qrAlt")} width={84} height={84} />
-        </a>
+        <div className={styles.qrWrapper}>
+          <div className={styles.qrBox} aria-label="QR Code สำหรับติดต่อ CyberJob">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/contact/line-qr.png" alt={t("support.qrAlt")} width={84} height={84} />
+          </div>
+          <div className={styles.qrPopup}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/contact/line-qr.png" alt={t("support.qrAlt")} width={150} height={150} />
+            <span className={styles.qrPopupText}>📱 สแกน QR เพื่อเพิ่มเพื่อน LINE</span>
+          </div>
+        </div>
 
-        <a className={styles.lineCta} href={LINE_URL} target="_blank" rel="noreferrer">
+        <span className={styles.lineCta}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
             <path d="M12 3C6.9 3 2.8 6.4 2.8 10.5c0 3.7 3.3 6.8 7.7 7.4.3.1.7.2.8.5.1.3.1.6 0 .9l-.1.8c0 .2-.2.9.8.5s5.3-3.1 7.2-5.3c1.3-1.4 2-2.9 2-4.8C21.2 6.4 17.1 3 12 3z" />
           </svg>
           {t("support.lineCta")}
-        </a>
-      </section>
+        </span>
+      </a>
 
       <section className={styles.contactGrid}>
         <div className={styles.contactCard}>

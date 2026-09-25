@@ -146,7 +146,7 @@ export interface SaveJobPayload {
   subcategory?: string;
   department?: string;
   workStyle: WorkStyle;
-  employmentType: "fulltime" | "contract" | "temporary";
+  employmentType: EmploymentType;
   experienceYears: number;
   openings: number;
   salaryMin: number;

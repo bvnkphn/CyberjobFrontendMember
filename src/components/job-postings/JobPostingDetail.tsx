@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CandidateDetailModal } from "@/components/candidates/CandidateDetailModal";
 import { ErrorState, Loading, Notice, PersonAvatar, ScoreBadge, UpgradeNotice } from "@/components/ui/ui";
+import { MarkdownContent } from "@/components/ui/MarkdownContent";
 import { EMPLOYMENT_LABEL, WORK_STYLE_LABEL, formatDate, salaryRange } from "@/lib/format";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { ApiError, errorMessage, useApi, useOwner } from "@/lib/owner";
@@ -137,8 +138,18 @@ export default function JobPostingDetail({ jobId, onChanged }: { jobId: string; 
         <div className={styles.metaItem}>
           <span className={styles.metaLabel}>{t("jobPostings.salary")}</span>
           <span className={styles.metaValue}>
-            {salaryRange(posting.salaryMin, posting.salaryMax, isEn)}
-            {posting.salaryNegotiable ? L(" (ต่อรองได้)", " (negotiable)") : ""}
+            {posting.salaryMin === 0 && posting.salaryMax === 0 ? (
+              posting.employmentType === "internship"
+                ? L("ไม่มีเงินเดือน / มีเบี้ยเลี้ยง (ฝึกงาน)", "Unpaid / Allowance (Internship)")
+                : posting.salaryNegotiable
+                ? L("ตามตกลง", "Negotiable")
+                : L("ไม่ระบุเงินเดือน", "Not specified")
+            ) : (
+              <>
+                {salaryRange(posting.salaryMin, posting.salaryMax, isEn)}
+                {posting.salaryNegotiable ? L(" (ต่อรองได้)", " (negotiable)") : ""}
+              </>
+            )}
           </span>
         </div>
         <div className={styles.metaItem}>
@@ -185,7 +196,9 @@ export default function JobPostingDetail({ jobId, onChanged }: { jobId: string; 
 
       <div className={styles.section}>
         <h3 className={styles.sectionTitle}>{t("jobPostings.jobDescription")}</h3>
-        <p className={styles.description}>{posting.description || "-"}</p>
+        <div className={styles.description}>
+          <MarkdownContent content={posting.description} />
+        </div>
       </div>
 
       <div className={styles.section}>

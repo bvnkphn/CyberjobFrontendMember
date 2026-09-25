@@ -50,8 +50,13 @@ export default function JobPostingCard({ posting, selected, onSelect }: JobPosti
 
       <div className={styles.meta}>
         <span>{posting.company.businessType}</span>
-        <span className={styles.dot}>·</span>
-        <span>{salaryRange(posting.salaryMin, posting.salaryMax, isEn)}</span>
+        <span>
+          {posting.salaryMin === 0 && posting.salaryMax === 0
+            ? posting.employmentType === "internship"
+              ? (isEn ? "ไม่มีเงินเดือน (ฝึกงาน)" : "ไม่มีเงินเดือน (ฝึกงาน)")
+              : (isEn ? "Negotiable" : "ตามตกลง")
+            : salaryRange(posting.salaryMin, posting.salaryMax, isEn)}
+        </span>
       </div>
 
       <div className={styles.footer}>

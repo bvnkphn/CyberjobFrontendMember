@@ -325,22 +325,71 @@
 
 .imageGrid {
   display: grid;
-  grid-template-columns: 180px 1fr;
-  gap: 20px;
-  margin-bottom: 18px;
+  grid-template-columns: 220px 1fr;
+  gap: 22px;
+  margin-bottom: 22px;
+  align-items: stretch;
 }
 
 .imageSlot {
-  display: grid;
-  gap: 10px;
-  align-content: start;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-lg);
+  align-items: flex-start;
+}
+
+.logoPreviewWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 104px;
+  height: 104px;
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+  padding: 4px;
+  overflow: hidden;
 }
 
 .coverPreview {
-  height: 120px;
+  width: 100%;
+  height: 140px;
   border-radius: var(--radius-md);
-  background: linear-gradient(120deg, #233fc2, #122990) center / cover no-repeat;
+  background-color: #f1f5f9;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #cbd5e1;
+  position: relative;
+  overflow: hidden;
 }
+
+.coverPreviewHasImage {
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.coverEmptyNotice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 16px;
+  text-align: center;
+}
+
 
 .formGrid {
   display: grid;

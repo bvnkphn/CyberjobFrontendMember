@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
 import { CompanyLogo, Notice, UpgradeNotice } from "@/components/ui/ui";
+import { MarkdownContent } from "@/components/ui/MarkdownContent";
 import { AUTH_API_URL } from "@/lib/config";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { ApiError, errorMessage, useOwner } from "@/lib/owner";
@@ -29,11 +30,13 @@ const DEPARTMENT_OPTIONS = [
   { value: "ฝ่ายบุคคล", en: "Human Resources" },
 ];
 
-/** ตามชีตสเปก: งานเต็มเวลา สัญญาจ้าง งานชั่วคราว (เอาฝึกงานออก) */
+/** ประเภทการจ้างงาน: เต็มเวลา พาร์ทไทม์ สัญญาจ้าง ชั่วคราว และฝึกงาน */
 const EMPLOYMENT_TYPES = [
   { value: "fulltime", th: "งานเต็มเวลา", en: "Full-time" },
+  { value: "parttime", th: "พาร์ทไทม์", en: "Part-time" },
   { value: "contract", th: "สัญญาจ้าง", en: "Contract" },
   { value: "temporary", th: "งานชั่วคราว", en: "Temporary" },
+  { value: "internship", th: "ฝึกงาน (Internship)", en: "Internship" },
 ] as const;
 
 const WORK_TYPE_OPTIONS: Array<{ value: WorkStyle; th: string; en: string }> = [
@@ -113,20 +116,23 @@ export default function CreateJobPostingForm({ initialData }: CreateJobPostingFo
   const [category, setCategory] = useState(initialData?.category ?? "");
   const [department, setDepartment] = useState(initialData?.department ?? "");
   const [employmentType, setEmploymentType] = useState<SaveJobPayload["employmentType"]>(
-    initialData && ["fulltime", "contract", "temporary"].includes(initialData.employmentType)
-      ? (initialData.employmentType as SaveJobPayload["employmentType"])
-      : "fulltime",
+    initialData?.employmentType ?? "fulltime",
   );
   const [workStyle, setWorkStyle] = useState<WorkStyle>(initialData?.workStyle ?? "onsite");
   const [experienceYears, setExperienceYears] = useState(String(initialData?.experienceYears ?? 0));
   const [openings, setOpenings] = useState(String(initialData?.openings ?? 1));
-  const [salaryMin, setSalaryMin] = useState(initialData ? String(initialData.salaryMin) : "");
-  const [salaryMax, setSalaryMax] = useState(initialData ? String(initialData.salaryMax) : "");
+  const [noSalary, setNoSalary] = useState(
+    initialData ? (initialData.salaryMin === 0 && initialData.salaryMax === 0) : false,
+  );
+  const [salaryMin, setSalaryMin] = useState(initialData && initialData.salaryMin > 0 ? String(initialData.salaryMin) : "");
+  const [salaryMax, setSalaryMax] = useState(initialData && initialData.salaryMax > 0 ? String(initialData.salaryMax) : "");
   const [salaryNegotiable, setSalaryNegotiable] = useState(initialData?.salaryNegotiable ?? false);
   const [isUrgent, setIsUrgent] = useState(initialData?.isUrgent ?? false);
+  const [descTab, setDescTab] = useState<"write" | "preview">("write");
   const [description, setDescription] = useState(initialData?.description ?? "");
-  const [skills, setSkills] = useState<string[]>(initialData?.skills ?? []);
-  const [benefits, setBenefits] = useState<string[]>(initialData?.benefits ?? []);
+  // skills และ benefits รวมเข้าไปใน Markdown description แล้ว
+  const skills: string[] = [];
+  const benefits: string[] = [];
   const [questions, setQuestions] = useState<ScreeningQuestion[]>(
     (initialData?.questions ?? []).map((question, index) => ({ ...question, uid: index + 1 })),
   );
@@ -149,13 +155,89 @@ export default function CreateJobPostingForm({ initialData }: CreateJobPostingFo
     setNextUid((value) => value + 1);
   };
 
+  const insertMarkdown = (prefix: string, suffix: string = "") => {
+    const textarea = document.getElementById("job-description") as HTMLTextAreaElement | null;
+    if (!textarea) return;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const sel = description.substring(start, end);
+    const replacement = `${prefix}${sel}${suffix}`;
+    const next = description.substring(0, start) + replacement + description.substring(end);
+    setDescription(next);
+    setTimeout(() => {
+      textarea.focus();
+      if (sel) {
+        textarea.setSelectionRange(start + prefix.length, start + prefix.length + sel.length);
+      } else {
+        const cursor = start + prefix.length;
+        textarea.setSelectionRange(cursor, cursor);
+      }
+    }, 0);
+  };
+
+  const insertInternshipTemplate = () => {
+    const template = `## หน้าที่และความรับผิดชอบ (Responsibilities)
+- ร่วมศึกษา ออกแบบ และพัฒนาฟีเจอร์ของระบบเว็บแอปพลิเคชัน
+- เขียนโค้ดและทดสอบการทำงาน (Coding & Testing)
+- ร่วมประชุมและเสนอไอเดียใหม่ ๆ กับทีมงาน
+
+## ทักษะที่ต้องการ (Required Skills)
+- ความรู้พื้นฐานด้านการเขียนโปรแกรม เช่น Python, Java, JavaScript
+- ความเข้าใจพื้นฐาน HTML/CSS, SQL หรือภาษาที่เกี่ยวข้องกับสาขา
+- ความสามารถในการทำงานเป็นทีม และเรียนรู้ได้เร็ว
+
+## คุณสมบัติผู้สมัคร (Qualifications)
+- กำลังศึกษาในระดับ ปวส. หรือ ปริญญาตรี สาขาคอมพิวเตอร์ หรือสาขาที่เกี่ยวข้อง
+- มีความรู้พื้นฐานด้านการเขียนโปรแกรม และกระตือรือร้นในการเรียนรู้
+- สามารถฝึกงานได้ตั้งแต่ 2-4 เดือนขึ้นไป
+
+## สวัสดิการและสิ่งที่จะได้รับ (Benefits)
+- เบี้ยเลี้ยงการฝึกงาน (ตามตกลง / มีผลงาน)
+- หนังสือรับรองการฝึกงาน (Certificate of Internship)
+- ชั่วโมงการทำงานยืดหยุ่น (Flexible hours)
+- โอกาสพิจารณาบรรจุเป็นพนักงานประจำหลังจบการศึกษา`;
+    setDescription(template);
+    setDescTab("preview");
+  };
+
+  const insertJobTemplate = () => {
+    const template = `## หน้าที่และความรับผิดชอบ (Responsibilities)
+- (ระบุหน้าที่หลักของตำแหน่งนี้)
+- (ระบุงานที่ต้องทำประจำวัน)
+- (ระบุผลลัพธ์ที่คาดหวัง)
+
+## ทักษะที่ต้องการ (Required Skills)
+- (ระบุทักษะและความสามารถที่จำเป็น)
+- (ระบุเครื่องมือ / ซอฟต์แวร์ที่ใช้)
+
+## คุณสมบัติผู้สมัคร (Qualifications)
+- วุฒิการศึกษา ปริญญาตรี สาขาที่เกี่ยวข้อง
+- ประสบการณ์ทำงาน (ระบุปี) ขึ้นไป
+- (ระบุคุณสมบัติอื่น ๆ)
+
+## สวัสดิการ (Benefits)
+- ประกันสังคม / ประกันสุขภาพ
+- วันหยุดพักร้อนประจำปี
+- (ระบุสวัสดิการอื่น ๆ)`;
+    setDescription(template);
+    setDescTab("preview");
+  };
+
   const submit = async (status: "draft" | "published") => {
     setError(null);
     if (title.trim().length < 2) return setError(new Error(L("กรุณาระบุตำแหน่งงาน", "Please enter a job title")));
     if (!category) return setError(new Error(L("กรุณาเลือกหมวดหมู่", "Please choose a category")));
-    const min = Number(salaryMin || 0);
-    const max = Number(salaryMax || 0);
-    if (max < min) return setError(new Error(L("เงินเดือนสูงสุดต้องไม่น้อยกว่าต่ำสุด", "Maximum salary must be at least the minimum")));
+    const min = noSalary ? 0 : Number(salaryMin || 0);
+    const max = noSalary ? 0 : Number(salaryMax || 0);
+    if (!noSalary && max < min) return setError(new Error(L("เงินเดือนสูงสุดต้องไม่น้อยกว่าต่ำสุด", "Maximum salary must be at least the minimum")));
+    if (status === "published") {
+      if (!noSalary && max <= 0 && employmentType !== "internship" && !salaryNegotiable) {
+        return setError(new Error(L("กรุณาระบุช่วงเงินเดือน หรือเลือกแบบไม่มีเงินเดือน/ตามตกลง", "Please enter salary or choose no salary / negotiable")));
+      }
+      if (description.trim().length < 20) {
+        return setError(new Error(L("กรุณาระบุรายละเอียดงานอย่างน้อย 20 ตัวอักษร", "Please enter job description at least 20 characters")));
+      }
+    }
     const emptyQuestion = questions.find((question) => !question.text.trim());
     if (emptyQuestion) return setError(new Error(L("กรุณาระบุข้อความของทุกคำถาม หรือลบคำถามที่ว่างออก", "Fill in or remove empty questions")));
 
@@ -169,7 +251,7 @@ export default function CreateJobPostingForm({ initialData }: CreateJobPostingFo
       openings: Math.max(1, Number(openings || 1)),
       salaryMin: min,
       salaryMax: max,
-      salaryNegotiable,
+      salaryNegotiable: noSalary ? true : salaryNegotiable,
       isUrgent,
       description,
       skills,
@@ -365,9 +447,16 @@ export default function CreateJobPostingForm({ initialData }: CreateJobPostingFo
 
         <div className={styles.fieldRow}>
           <div className={styles.fieldGroup}>
-            <label className={styles.label} htmlFor="salary-min">
-              {t("create.salaryRange")} *
-            </label>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
+              <label className={styles.label} htmlFor="salary-min">
+                {t("create.salaryRange")} *
+              </label>
+              {employmentType === "internship" && (
+                <span style={{ fontSize: "12px", color: "var(--color-blue)", fontWeight: 600 }}>
+                  {L("ตำแหน่งฝึกงาน สามารถเลือกไม่มีเงินเดือน/มีเบี้ยเลี้ยงได้", "Internships can be unpaid or allowance-based")}
+                </span>
+              )}
+            </div>
             <div className={styles.salaryRow}>
               <input
                 id="salary-min"
@@ -375,9 +464,10 @@ export default function CreateJobPostingForm({ initialData }: CreateJobPostingFo
                 type="number"
                 min="0"
                 step="1000"
-                value={salaryMin}
+                value={noSalary ? "" : salaryMin}
                 onChange={(e) => setSalaryMin(e.target.value)}
-                placeholder={t("create.salaryMin")}
+                placeholder={noSalary ? L("ไม่มีเงินเดือน", "Unpaid") : t("create.salaryMin")}
+                disabled={noSalary}
                 aria-label={L("เงินเดือนต่ำสุด", "Minimum salary")}
               />
               <input
@@ -386,17 +476,31 @@ export default function CreateJobPostingForm({ initialData }: CreateJobPostingFo
                 type="number"
                 min="0"
                 step="1000"
-                value={salaryMax}
+                value={noSalary ? "" : salaryMax}
                 onChange={(e) => setSalaryMax(e.target.value)}
-                placeholder={t("create.salaryMax")}
+                placeholder={noSalary ? L("ตามตกลง / มีเบี้ยเลี้ยง", "Negotiable / Allowance") : t("create.salaryMax")}
+                disabled={noSalary}
                 aria-label={L("เงินเดือนสูงสุด", "Maximum salary")}
               />
             </div>
             <div className={styles.checkRow}>
-              <label>
-                <input type="checkbox" checked={salaryNegotiable} onChange={(e) => setSalaryNegotiable(e.target.checked)} />
-                {L("เงินเดือนต่อรองได้", "Salary negotiable")}
+              <label style={{ fontWeight: 600, color: "var(--color-navy-900)" }}>
+                <input
+                  type="checkbox"
+                  checked={noSalary}
+                  onChange={(e) => {
+                    setNoSalary(e.target.checked);
+                    if (e.target.checked) setSalaryNegotiable(true);
+                  }}
+                />
+                {L("ไม่มีเงินเดือน (แบบฝึกงาน หรือตามตกลง/มีเบี้ยเลี้ยง)", "No fixed salary (Unpaid / Internship / Allowance)")}
               </label>
+              {!noSalary && (
+                <label>
+                  <input type="checkbox" checked={salaryNegotiable} onChange={(e) => setSalaryNegotiable(e.target.checked)} />
+                  {L("เงินเดือนต่อรองได้", "Salary negotiable")}
+                </label>
+              )}
               <label>
                 <input type="checkbox" checked={isUrgent} onChange={(e) => setIsUrgent(e.target.checked)} />
                 {L("รับสมัครด่วน", "Urgent hiring")}
@@ -407,41 +511,123 @@ export default function CreateJobPostingForm({ initialData }: CreateJobPostingFo
 
         <div className={styles.fieldRow}>
           <div className={styles.fieldGroup}>
-            <label className={styles.label} htmlFor="job-description">
-              {t("create.jobDescription")} *
-            </label>
-            <textarea
-              id="job-description"
-              className={styles.textarea}
-              value={description}
-              maxLength={10000}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder={t("create.jobDescriptionPlaceholder")}
-              required
-            />
+            <div className={styles.markdownHeader}>
+              <label className={styles.label} htmlFor="job-description">
+                {t("create.jobDescription")} (รองรับ Markdown) *
+              </label>
+              <div className={styles.markdownTabs}>
+                <button
+                  type="button"
+                  className={`${styles.markdownTab} ${descTab === "write" ? styles.markdownTabActive : ""}`}
+                  onClick={() => setDescTab("write")}
+                >
+                  {L("แก้ไข (Write)", "Write")}
+                </button>
+                <button
+                  type="button"
+                  className={`${styles.markdownTab} ${descTab === "preview" ? styles.markdownTabActive : ""}`}
+                  onClick={() => setDescTab("preview")}
+                >
+                  {L("แสดงตัวอย่าง (Preview)", "Preview")}
+                </button>
+              </div>
+            </div>
+
+            {descTab === "write" && (
+              <>
+                <div className={styles.markdownToolbar}>
+                  <button type="button" className={styles.toolbarBtn} onClick={() => insertMarkdown("**", "**")} title={L("ตัวหนา (**)", "Bold (**)")}>
+                    <strong>B</strong>
+                  </button>
+                  <button type="button" className={styles.toolbarBtn} onClick={() => insertMarkdown("*", "*")} title={L("ตัวเอียง (*)", "Italic (*)")}>
+                    <em>I</em>
+                  </button>
+                  <button type="button" className={styles.toolbarBtn} onClick={() => insertMarkdown("## ")} title={L("หัวข้อหลัก (##)", "Heading 2 (##)")}>
+                    ##
+                  </button>
+                  <button type="button" className={styles.toolbarBtn} onClick={() => insertMarkdown("### ")} title={L("หัวข้อย่อย (###)", "Heading 3 (###)")}>
+                    ###
+                  </button>
+                  <button type="button" className={styles.toolbarBtn} onClick={() => insertMarkdown("- ")} title={L("รายการหัวข้อย่อย (-)", "Bullet List (-)")}>
+                    - {L("รายการ", "List")}
+                  </button>
+                  <button type="button" className={styles.toolbarBtn} onClick={() => insertMarkdown("1. ")} title={L("รายการตัวเลข (1.)", "Numbered List (1.)")}>
+                    1. {L("ลำดับ", "Number")}
+                  </button>
+                  <button type="button" className={styles.toolbarBtn} onClick={() => insertMarkdown("> ")} title={L("ข้อความอ้างอิง (>)", "Quote (>)")}>
+                    &gt; {L("อ้างอิง", "Quote")}
+                  </button>
+                  <button type="button" className={styles.toolbarBtn} onClick={() => insertMarkdown("```\n", "\n```")} title={L("บล็อกโค้ด (```)", "Code Block (```)")}>
+                    &lt;/&gt;
+                  </button>
+                  {employmentType !== "internship" && (
+                    <button
+                      type="button"
+                      className={styles.toolbarBtn}
+                      style={{ background: "#f0fdf4", borderColor: "#bbf7d0", color: "#15803d" }}
+                      onClick={insertJobTemplate}
+                      title={L("ใส่เทมเพลตประกาศงานทั่วไป", "Insert Job Template")}
+                    >
+                      {L("เทมเพลตงาน", "Job Template")}
+                    </button>
+                  )}
+                  {employmentType === "internship" && (
+                    <button
+                      type="button"
+                      className={styles.toolbarBtn}
+                      style={{ background: "#eff6ff", borderColor: "#bfdbfe", color: "#1d4ed8" }}
+                      onClick={insertInternshipTemplate}
+                      title={L("ใส่เทมเพลตฝึกงานอัตโนมัติ", "Insert Internship Template")}
+                    >
+                      {L("เทมเพลตฝึกงาน", "Internship Template")}
+                    </button>
+                  )}
+                </div>
+
+                <textarea
+                  id="job-description"
+                  className={styles.textarea}
+                  value={description}
+                  maxLength={10000}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder={
+                    employmentType === "internship"
+                      ? L(
+                          "ระบุหน้าที่การฝึกงาน ทักษะที่ต้องการ คุณสมบัติ สวัสดิการและเบี้ยเลี้ยง\nกดปุ่ม เทมเพลตฝึกงาน เพื่อใส่โครงสร้างอัตโนมัติ (รองรับ Markdown)",
+                          "Describe internship duties, required skills, qualifications, and allowance. Click template. (Markdown supported)"
+                        )
+                      : L(
+                          "ระบุหน้าที่ความรับผิดชอบ ทักษะที่ต้องการ คุณสมบัติผู้สมัคร และสวัสดิการ\nกดปุ่ม เทมเพลตงาน เพื่อใส่โครงสร้างอัตโนมัติ (รองรับ Markdown)",
+                          "Describe job duties, required skills, qualifications, and benefits. Click template. (Markdown supported)"
+                        )
+                  }
+                  required
+                />
+              </>
+            )}
+
+            {descTab === "preview" && (
+              <div className={styles.markdownPreview}>
+                {description.trim() ? (
+                  <MarkdownContent content={description} />
+                ) : (
+                  <div className={styles.emptyPreview}>
+                    {L("ยังไม่มีข้อความ กรุณาพิมพ์รายละเอียดในแท็บ 'แก้ไข (Write)' ก่อนแสดงตัวอย่าง", "No content yet. Type your description in 'Write' tab first.")}
+                  </div>
+                )}
+              </div>
+            )}
+
             <small className={styles.hint}>
-              {L("อย่างน้อย 20 ตัวอักษรเมื่อเผยแพร่", "At least 20 characters to publish")} · {description.length}/10000
+              {L(
+                "รองรับ Markdown · ใส่ทักษะ คุณสมบัติ สวัสดิการ และรายละเอียดทั้งหมดในช่องนี้ · อย่างน้อย 20 ตัวอักษรเมื่อเผยแพร่",
+                "Markdown supported · Include skills, qualifications, benefits & all details here · At least 20 chars to publish"
+              )} · {description.length}/10000
             </small>
           </div>
         </div>
 
-        <div className={styles.fieldRow}>
-          <div className={styles.fieldGroup}>
-            <label className={styles.label} htmlFor="skills">
-              {t("create.requiredSkills")}
-            </label>
-            <TagInput id="skills" values={skills} onChange={setSkills} placeholder={t("create.skillsPlaceholder")} />
-          </div>
-        </div>
-
-        <div className={styles.fieldRow}>
-          <div className={styles.fieldGroup}>
-            <label className={styles.label} htmlFor="benefits">
-              {L("สวัสดิการ", "Benefits")}
-            </label>
-            <TagInput id="benefits" values={benefits} onChange={setBenefits} placeholder={L("พิมพ์สวัสดิการแล้วกด Enter", "Type a benefit and press Enter")} />
-          </div>
-        </div>
+        {/* ทักษะและสวัสดิการรวมอยู่ใน Markdown description แล้ว */}
 
         <div className={styles.fieldRow}>
           <div className={styles.fieldGroup}>

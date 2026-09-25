@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { CompanyLogo, Notice } from "@/components/ui/ui";
+import { CompanyLogo, Notice, resolveUploadUrl } from "@/components/ui/ui";
 import { COMPANY_TYPE_LABEL, formatDate } from "@/lib/format";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { useOwner } from "@/lib/owner";
@@ -32,7 +32,7 @@ export function CompanyProfileView() {
       <section className={styles.hero}>
         <div
           className={styles.cover}
-          style={company.coverImage ? { backgroundImage: `url("${company.coverImage}")` } : undefined}
+          style={company.coverImage ? { backgroundImage: `url("${resolveUploadUrl(company.coverImage)}")` } : undefined}
           aria-hidden
         />
         <div className={styles.heroBody}>
@@ -79,7 +79,7 @@ export function CompanyProfileView() {
             <div className={styles.gallery}>
               {company.gallery.map((url) => (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img key={url} src={url} alt="" loading="lazy" />
+                <img key={url} src={resolveUploadUrl(url) || url} alt="" loading="lazy" />
               ))}
             </div>
           ) : (
@@ -128,7 +128,28 @@ export function CompanyProfileView() {
           </section>
 
           <section className={styles.card}>
-            <h2>{L("ข้อมูลการยืนยันบริษัท", "Verification details")}</h2>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "12px", flexWrap: "wrap", gap: "8px" }}>
+              <h2 style={{ margin: 0 }}>{L("ข้อมูลการยืนยันบริษัท", "Verification details")}</h2>
+              <div>
+                {company.verificationStatus === "approved" ? (
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", padding: "2px 10px", borderRadius: "20px", background: "#ecfdf5", color: "#059669", fontSize: "11.5px", fontWeight: "600", border: "1px solid #a7f3d0" }}>
+                    ✓ {L("ยืนยันแล้ว", "Approved")}
+                  </span>
+                ) : company.verificationStatus === "pending" ? (
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", padding: "2px 10px", borderRadius: "20px", background: "#fffbeb", color: "#d97706", fontSize: "11.5px", fontWeight: "600", border: "1px solid #fde68a" }}>
+                    ⏳ {L("รอการตรวจสอบ", "Pending")}
+                  </span>
+                ) : company.verificationStatus === "rejected" ? (
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", padding: "2px 10px", borderRadius: "20px", background: "#fef2f2", color: "#dc2626", fontSize: "11.5px", fontWeight: "600", border: "1px solid #fecaca" }}>
+                    ✕ {L("ไม่ผ่านการอนุมัติ", "Rejected")}
+                  </span>
+                ) : (
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", padding: "2px 10px", borderRadius: "20px", background: "#f1f5f9", color: "#64748b", fontSize: "11.5px", fontWeight: "600", border: "1px solid #cbd5e1" }}>
+                    {L("ยังไม่ยืนยัน", "Unverified")}
+                  </span>
+                )}
+              </div>
+            </div>
             <dl className={styles.definitions}>
               <dt>{L("เลขทะเบียน", "Registration no.")}</dt>
               <dd>{company.registrationNumber ?? "-"}</dd>
@@ -137,9 +158,31 @@ export function CompanyProfileView() {
                 {company.contactName ?? "-"}
                 {company.contactPosition ? ` (${company.contactPosition})` : ""}
               </dd>
+              {company.contactPhone && (
+                <>
+                  <dt>{L("เบอร์ผู้ติดต่อ", "Contact phone")}</dt>
+                  <dd>{company.contactPhone}</dd>
+                </>
+              )}
               <dt>{L("ส่งข้อมูลเมื่อ", "Submitted")}</dt>
               <dd>{company.verificationSubmittedAt ? formatDate(company.verificationSubmittedAt) : "-"}</dd>
             </dl>
+            <div style={{ marginTop: "14px", paddingTop: "12px", borderTop: "1px solid var(--color-gray-100)" }}>
+              <Link
+                href="/company/edit#verification"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  fontSize: "12.5px",
+                  color: "#0284c7",
+                  fontWeight: "600",
+                  textDecoration: "none"
+                }}
+              >
+                <span>✏️ {L("แก้ไข / ส่งข้อมูลยืนยันบริษัท", "Edit / Submit verification details")} →</span>
+              </Link>
+            </div>
           </section>
         </aside>
       </div>

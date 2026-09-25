@@ -179,11 +179,23 @@ export default function Topbar({ title, titleKey, onToggleMobile }: TopbarProps)
               <Link role="menuitem" href="/settings" onClick={() => setPanel(null)}>
                 {t("sidebar.settings")}
               </Link>
+              <div className={styles.menuDivider} />
+              <Link
+                role="menuitem"
+                href="/"
+                className={styles.memberViewLink}
+                onClick={() => setPanel(null)}
+              >
+                <span aria-hidden>🌐</span>
+                <span>{isEn ? "View as Member / Jobseeker" : "กลับไปหน้าคนทั่วไป (มุมมองผู้หางาน)"}</span>
+              </Link>
+              <div className={styles.menuDivider} />
               <button role="menuitem" type="button" className={styles.logout} onClick={() => void logout()}>
                 {isEn ? "Log out" : "ออกจากระบบ"}
               </button>
             </div>
           )}
+
         </div>
       </div>
     </header>
