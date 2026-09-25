@@ -7,6 +7,11 @@ $ErrorActionPreference = "Stop"
 $repoDir = "d:\CyberJob_\frontend"
 $stageDir = Join-Path $env:TEMP ("hostinger-frontend-" + [System.Guid]::NewGuid().ToString())
 
+Write-Host "Compiling fresh Next.js production build locally..."
+Push-Location $repoDir
+npm run build
+Pop-Location
+
 Write-Host "Creating staging directory: $stageDir"
 New-Item -ItemType Directory -Path $stageDir | Out-Null
 
@@ -14,8 +19,9 @@ Copy-Item -Recurse (Join-Path $repoDir "src") (Join-Path $stageDir "src")
 if (Test-Path (Join-Path $repoDir "public")) {
   Copy-Item -Recurse (Join-Path $repoDir "public") (Join-Path $stageDir "public")
 }
+
 if (Test-Path (Join-Path $repoDir ".next")) {
-  Write-Host "Copying .next build directory (excluding cache)..."
+  Write-Host "Copying production .next build directory..."
   $destNext = Join-Path $stageDir ".next"
   New-Item -ItemType Directory -Path $destNext | Out-Null
   robocopy (Join-Path $repoDir ".next") $destNext /E /XD "cache" /NFL /NDL /NJH /NJS /nc /ns /np
