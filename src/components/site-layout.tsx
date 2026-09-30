@@ -12,7 +12,8 @@ import { isOwnerRoute } from '@/lib/owner';
 export function SiteLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
-  if (isOwnerRoute(pathname)) {
+  const isAdmin = pathname === "/admin" || pathname.startsWith("/admin/");
+  if (isOwnerRoute(pathname) || isAdmin) {
     return <>{children}</>;
   }
 

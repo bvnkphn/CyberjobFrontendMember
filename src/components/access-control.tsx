@@ -31,7 +31,10 @@ export function AccessControl({ children }: { children: React.ReactNode }) {
   const isPublic = pathname === "/" || PUBLIC_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
   const isAuthPage = pathname === "/gate/login" || pathname === "/gate/register";
 
+  const isAdmin = pathname === "/admin" || pathname.startsWith("/admin/");
+
   useEffect(() => {
+    if (isAdmin) return;
     if (isOwner) return;
     if (loading) return;
     if (user?.role === "EMPLOYER") return;
@@ -50,6 +53,7 @@ export function AccessControl({ children }: { children: React.ReactNode }) {
     }
   }, [isAuthPage, isOwner, isPublic, loading, pathname, router, user]);
 
+  if (isAdmin) return <>{children}</>;
   if (isOwner) return <>{children}</>;
   if (user?.role === "EMPLOYER") return <>{children}</>;
 
