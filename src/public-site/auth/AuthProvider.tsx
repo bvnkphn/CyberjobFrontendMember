@@ -11,7 +11,7 @@ import {
 import type { ReactNode } from 'react';
 import type { AuthResult, AuthUser } from '@cyberjob/shared';
 import { setAccessToken } from '@/public-site/lib/api';
-import { authService, meService } from '@/public-site/services/auth.service';
+import { authService, meService, type LoginStepResult } from '@/public-site/services/auth.service';
 
 const LOCAL_BOOKMARKS_KEY = 'cyberjob.bookmarks';
 
@@ -19,7 +19,10 @@ interface AuthContextValue {
   user: AuthUser | null;
   /** true ระหว่างกำลังตรวจ session ตอนเปิดเว็บครั้งแรก */
   loading: boolean;
-  login: (email: string, password: string) => Promise<AuthUser>;
+  login: (email: string, password: string) => Promise<LoginStepResult>;
+  verifyOtp: (email: string, code: string) => Promise<AuthUser>;
+  resendOtp: (email: string) => Promise<{ ok: boolean; message: string }>;
+  loginWithGoogle: (credential: string, role?: 'JOBSEEKER' | 'EMPLOYER') => Promise<AuthUser>;
   register: (email: string, password: string, name: string, role?: 'JOBSEEKER' | 'EMPLOYER') => Promise<AuthUser>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
@@ -81,8 +84,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = useCallback(
-    async (email: string, password: string): Promise<AuthUser> => {
+    async (email: string, password: string): Promise<LoginStepResult> => {
       const result = await authService.login({ email, password });
+      if ('accessToken' in result) {
+        await applyResult(result);
+      }
+      return result;
+    },
+    [applyResult],
+  );
+
+  const verifyOtp = useCallback(
+    async (email: string, code: string): Promise<AuthUser> => {
+      const result = await authService.verifyLoginOtp({ email, code });
+      return applyResult(result);
+    },
+    [applyResult],
+  );
+
+  const resendOtp = useCallback(
+    async (email: string): Promise<{ ok: boolean; message: string }> => {
+      return authService.resendLoginOtp({ email });
+    },
+    [],
+  );
+
+  const loginWithGoogle = useCallback(
+    async (credential: string, role?: 'JOBSEEKER' | 'EMPLOYER'): Promise<AuthUser> => {
+      const result = await authService.googleVerify({ credential, role });
       return applyResult(result);
     },
     [applyResult],
@@ -117,8 +146,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const value = useMemo(
-    () => ({ user, loading, login, register, logout, refreshUser, adoptSession }),
-    [user, loading, login, register, logout, refreshUser, adoptSession],
+    () => ({
+      user,
+      loading,
+      login,
+      verifyOtp,
+      resendOtp,
+      loginWithGoogle,
+      register,
+      logout,
+      refreshUser,
+      adoptSession,
+    }),
+    [
+      user,
+      loading,
+      login,
+      verifyOtp,
+      resendOtp,
+      loginWithGoogle,
+      register,
+      logout,
+      refreshUser,
+      adoptSession,
+    ],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

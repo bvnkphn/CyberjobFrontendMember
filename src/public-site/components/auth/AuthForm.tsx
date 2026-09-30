@@ -35,7 +35,11 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
     setError(null);
     try {
       if (mode === 'login') {
-        await login(form.email, form.password);
+        const res = await login(form.email, form.password);
+        if ('requireOtp' in res) {
+          router.replace(`/gate/login?email=${encodeURIComponent(form.email)}`);
+          return;
+        }
       } else {
         await register(form.email, form.password, form.name);
       }

@@ -1,6 +1,27 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/public-site/auth/AuthProvider";
+import type { AccountType } from "./account-tabs";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
+const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "";
+
+declare global {
+  interface Window {
+    google?: {
+      accounts: {
+        id: {
+          initialize: (config: any) => void;
+          renderButton: (parent: HTMLElement, options: any) => void;
+          prompt: (momentListener?: (notification: any) => void) => void;
+          cancel: () => void;
+        };
+      };
+    };
+  }
+}
 
 function GoogleIcon() {
   return (
@@ -25,23 +46,112 @@ function GoogleIcon() {
   );
 }
 
-/**
- * ปุ่มเข้าสู่ระบบด้วย Google – ส่งต่อไปยัง /auth/google ของ API
- * ซ่อนอัตโนมัติเมื่อยังไม่ได้ตั้ง NEXT_PUBLIC_GOOGLE_CLIENT_ID เพราะฝั่ง API
- * จะตอบ 501 กลับมา ไม่มีประโยชน์ที่จะแสดงปุ่มที่กดแล้วใช้งานไม่ได้
- */
-export function GoogleButton() {
-  if (!process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID) return null;
+interface GoogleButtonProps {
+  accountType?: AccountType;
+  onError?: (msg: string) => void;
+}
+
+export function GoogleButton({ accountType = "JOBSEEKER", onError }: GoogleButtonProps) {
+  const router = useRouter();
+  const { loginWithGoogle } = useAuth();
+  const googleBtnRef = useRef<HTMLDivElement>(null);
+  const [gisLoaded, setGisLoaded] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!GOOGLE_CLIENT_ID) return;
+
+    // โหลด Google Identity Services script ถ้ายังไม่มี
+    const existingScript = document.getElementById("google-gsi-script");
+    if (!existingScript) {
+      const script = document.createElement("script");
+      script.id = "google-gsi-script";
+      script.src = "https://accounts.google.com/gsi/client";
+      script.async = true;
+      script.defer = true;
+      script.onload = () => setGisLoaded(true);
+      document.body.appendChild(script);
+    } else {
+      setGisLoaded(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!gisLoaded || !GOOGLE_CLIENT_ID || !window.google?.accounts?.id) return;
+
+    try {
+      window.google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: async (response: { credential?: string }) => {
+          if (!response.credential) return;
+          try {
+            setLoading(true);
+            const user = await loginWithGoogle(response.credential, accountType);
+            const next = new URLSearchParams(window.location.search).get("next");
+            if (user.role === "EMPLOYER") {
+              window.location.assign(next || "/dashboard");
+            } else {
+              router.replace(next || "/");
+              router.refresh();
+            }
+          } catch (err: any) {
+            const msg = err instanceof Error ? err.message : "เข้าสู่ระบบด้วย Google ไม่สำเร็จ";
+            if (onError) onError(msg);
+          } finally {
+            setLoading(false);
+          }
+        },
+      });
+
+      if (googleBtnRef.current) {
+        googleBtnRef.current.innerHTML = "";
+        window.google.accounts.id.renderButton(googleBtnRef.current, {
+          theme: "outline",
+          size: "large",
+          width: googleBtnRef.current.offsetWidth || 380,
+          text: "signin_with",
+          shape: "rectangular",
+          logo_alignment: "left",
+        });
+      }
+    } catch (e) {
+      console.error("GIS initialization error:", e);
+    }
+  }, [gisLoaded, accountType, loginWithGoogle, router, onError]);
+
+  const handleFallbackClick = () => {
+    if (GOOGLE_CLIENT_ID && window.google?.accounts?.id) {
+      try {
+        window.google.accounts.id.prompt();
+        return;
+      } catch {
+        // Fall back to server redirect
+      }
+    }
+    window.location.href = `${API_URL}/auth/google`;
+  };
 
   return (
     <>
       <div className="divider">
         <span>หรือ</span>
       </div>
-      <a className="google-btn" href={`${API_URL}/auth/google`}>
-        <GoogleIcon />
-        เข้าสู่ระบบด้วยบัญชี Google
-      </a>
+
+      {GOOGLE_CLIENT_ID && gisLoaded ? (
+        <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+          <div ref={googleBtnRef} style={{ width: "100%" }} />
+        </div>
+      ) : (
+        <button
+          type="button"
+          className="google-btn"
+          onClick={handleFallbackClick}
+          disabled={loading}
+        >
+          <GoogleIcon />
+          {loading ? "กำลังเชื่อมต่อ Google..." : "เข้าสู่ระบบด้วยบัญชี Google"}
+        </button>
+      )}
     </>
   );
 }
