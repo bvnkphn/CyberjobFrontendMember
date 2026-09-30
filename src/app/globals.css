@@ -303,8 +303,17 @@ a { color: inherit; text-decoration: none; }
   gap: 12px;
 }
 
-.google-btn:hover {
+.google-btn:hover:not(:disabled) {
   background-color: #f1f5f9;
+}
+
+.google-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(30%);
+  background-color: #f8fafc;
+  color: #94a3b8;
+  border-color: #e2e8f0;
 }
 
 .gap-4 {
