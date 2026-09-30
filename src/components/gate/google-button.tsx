@@ -122,7 +122,18 @@ export function GoogleButton({ accountType = "JOBSEEKER", onError }: GoogleButto
   }, [gisLoaded, accountType, loginWithGoogle, router, onError]);
 
   const handleFallbackClick = () => {
-    if (GOOGLE_CLIENT_ID && window.google?.accounts?.id) {
+    if (!GOOGLE_CLIENT_ID) {
+      const msg =
+        "ระบบเข้าสู่ระบบด้วย Google อยู่ระหว่างการตั้งค่า Google Client ID ในระบบ (กรุณาเข้าสู่ระบบด้วยอีเมลและรหัสผ่านก่อนในขณะนี้)";
+      if (onError) {
+        onError(msg);
+      } else {
+        alert(msg);
+      }
+      return;
+    }
+
+    if (window.google?.accounts?.id) {
       try {
         window.google.accounts.id.prompt();
         return;
@@ -144,15 +155,26 @@ export function GoogleButton({ accountType = "JOBSEEKER", onError }: GoogleButto
           <div ref={googleBtnRef} style={{ width: "100%" }} />
         </div>
       ) : (
-        <button
-          type="button"
-          className="google-btn"
-          onClick={handleFallbackClick}
-          disabled={loading}
-        >
-          <GoogleIcon />
-          {loading ? "กำลังเชื่อมต่อ Google..." : "เข้าสู่ระบบด้วยบัญชี Google"}
-        </button>
+        <div style={{ width: "100%", textAlign: "center" }}>
+          <button
+            type="button"
+            className="google-btn"
+            onClick={handleFallbackClick}
+            disabled={loading}
+            style={{
+              opacity: !GOOGLE_CLIENT_ID ? 0.9 : 1,
+            }}
+            title={!GOOGLE_CLIENT_ID ? "ต้องตั้งค่า Google Client ID ก่อนเปิดใช้งาน" : undefined}
+          >
+            <GoogleIcon />
+            {loading ? "กำลังเชื่อมต่อ Google..." : "เข้าสู่ระบบด้วยบัญชี Google"}
+          </button>
+          {!GOOGLE_CLIENT_ID && (
+            <p style={{ fontSize: "11px", color: "#8a94a6", marginTop: "6px", marginBottom: "0" }}>
+              * ฟังก์ชัน Google Sign-In จะเปิดใช้งานอัตโนมัติเมื่อตั้งค่า Google Client Key
+            </p>
+          )}
+        </div>
       )}
     </>
   );
