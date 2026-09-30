@@ -88,7 +88,9 @@ export function GoogleButton({ accountType = "JOBSEEKER", onError }: GoogleButto
             setLoading(true);
             const user = await loginWithGoogle(response.credential, accountType);
             const next = new URLSearchParams(window.location.search).get("next");
-            if (user.role === "EMPLOYER") {
+            if (user.role === "ADMIN") {
+              window.location.assign(next || "/admin");
+            } else if (user.role === "EMPLOYER") {
               window.location.assign(next || "/dashboard");
             } else {
               router.replace(next || "/");

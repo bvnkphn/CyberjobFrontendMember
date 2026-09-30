@@ -54,7 +54,9 @@ export default function LoginForm() {
 
   function redirectAfterLogin(role: string) {
     const next = new URLSearchParams(window.location.search).get("next");
-    if (role === "EMPLOYER") {
+    if (role === "ADMIN") {
+      window.location.assign(next || "/admin");
+    } else if (role === "EMPLOYER") {
       window.location.assign(next || "/dashboard");
     } else {
       router.replace(next || "/");

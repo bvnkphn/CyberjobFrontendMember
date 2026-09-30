@@ -1,65 +1,104 @@
-# CyberJob Frontend Member
+# CyberJob — Frontend (Next.js Application)
 
-## Profile edit UX/UI
+> **เทคโนโลยีหลัก:** Next.js 14+ (App Router), React 18+, TypeScript, Lucide Icons, Google Identity Services (GIS)  
+> **ที่อยู่โปรเจกต์:** [frontend/](file:///d:/CyberJob_/frontend)  
+> **Production Domain:** [https://cyberjob.asia](https://cyberjob.asia)  
+> **GitLab Repository:** `cyberjobfrontendmember/cyberjobfrontendmember.git` (Branch: `main`)
 
-เปิดหน้า `http://localhost:3000/profile/edit` เพื่อดูต้นแบบหน้าแก้ไขประวัติผู้สมัคร
-หน้า `/` จะ redirect มายังหน้านี้โดยอัตโนมัติ
+---
 
-- ขอบเขตปัจจุบันเป็น UX/UI และ local interaction เท่านั้น ยังไม่เรียก Backend API
-- Sidebar สลับใช้งานข้อมูลประวัติครบทุกส่วนได้โดยไม่เปลี่ยน route
-- Desktop ใช้ sidebar คู่กับฟอร์ม 2 คอลัมน์
-- Tablet ย้ายการ์ดขึ้นด้านบนและเปลี่ยนเมนูหัวข้อเป็นแนวนอน
-- Mobile เปลี่ยนฟอร์มเป็นคอลัมน์เดียวและทำปุ่มบันทึกเต็มความกว้าง
-- จุดเชื่อม Backend ในอนาคตอยู่ในฟังก์ชัน `submit` ของ `ProfileEditor`
+## 1. ภาพรวมโปรเจกต์
 
-โครงสร้างหลัก:
+โปรเจกต์นี้เป็น Frontend หลักที่รวมทั้ง 3 ส่วนของแพลตฟอร์ม CyberJob ไว้ด้วยกันแบบ Single Next.js Application:
+1. **Public Site & Member Portal (ผู้หางาน):** หน้าแรก, การค้นหางาน, สมัครงาน 3 ขั้นตอน, จัดการเรซูเม่, และระบบมุดงาน (Hide Job)
+2. **Business Owner Portal (ผู้ประกอบการ):** แดชบอร์ดสถิติ, สร้างประกาศงานด้วย Markdown Editor & Preview, ค้นหาผู้สมัครด้วย Matching Score, จัดการแพ็กเกจ
+3. **Admin Shell (ผู้ดูแลระบบ):** ศูนย์ควบคุมหลังบ้านสำหรับอนุมัติบริษัท ตรวจสอบงาน และจัดการผู้ใช้
+
+---
+
+## 2. โครงสร้างเส้นทาง (Routing Structure)
 
 ```text
-src/app/profile/edit/page.tsx              route และ page composition
-src/components/profile/profile-editor.tsx  form state และ semantic markup
-src/components/profile/desired-job-form.tsx ฟอร์มลักษณะงานที่ต้องการ
-src/components/profile/education-form.tsx   ฟอร์มประวัติการศึกษาแบบเพิ่มได้สูงสุด 3 รายการ
-src/components/profile/work-experience-form.tsx ฟอร์มประวัติฝึกงาน/ทำงานแบบเพิ่มได้สูงสุด 3 รายการ
-src/components/profile/certificate-form.tsx ฟอร์มอัปโหลดและจัดการประกาศนียบัตร
-src/components/profile/language-form.tsx    ฟอร์มภาษาและระดับทักษะ เพิ่มได้สูงสุด 5 ภาษา
-src/components/profile/other-skills-form.tsx ฟอร์มทักษะ การขับขี่ ความเร็วพิมพ์ และผลงาน
-src/components/profile/profile-editor.css  responsive layout และ visual tokens
-src/components/header.tsx                  navigation และ account menu
-src/components/footer.tsx                  site footer
-src/components/icons.tsx                   local SVG icon set
+src/app/
+├── page.tsx                           # หน้าแรก (Hero, Search, Featured Jobs, Articles)
+├── jobs/
+│   ├── page.tsx                       # หน้ารวมตำแหน่งงานพร้อมตัวกรอง (Experience, Category, Salary)
+│   └── [id]/page.tsx                  # หน้ารายละเอียดงานแบบเจาะลึก
+├── apply-step1/page.tsx               # ขั้นตอนสมัครงานที่ 1: ตรวจสอบข้อมูลและเรซูเม่
+├── apply-step2/page.tsx               # ขั้นตอนสมัครงานที่ 2: ทักษะและคำถามคัดกรอง
+├── apply-step3/page.tsx               # ขั้นตอนสมัครงานที่ 3: ตรวจสอบและส่งใบสมัคร
+├── profile/
+│   ├── page.tsx                       # ข้อมูลส่วนตัว เรซูเม่ และการตั้งค่าความเป็นส่วนตัว (มุดงาน)
+│   ├── edit/page.tsx                  # แก้ไขประวัติการทำงาน การศึกษา และใบ Certificate
+│   └── preview/page.tsx               # หน้าพรีวิวเรซูเม่ดิจิทัลสำหรับพิมพ์/ดาวน์โหลด PDF
+├── my-jobs/page.tsx                   # รายการงานที่ยื่นสมัครแล้ว และสถานะการพิจารณา
+├── articles/                          # บทความสาระน่ารู้ด้านความมั่นคงไซเบอร์
+├── contact/page.tsx                   # หน้าติดต่อเราและช่องทาง LINE OA
+├── gate/
+│   ├── login/page.tsx                 # หน้าเข้าสู่ระบบ (อีเมล/รหัสผ่าน + OTP 2FA + Google GIS)
+│   └── register/page.tsx              # หน้าสมัครสมาชิกใหม่ (แยกประเภท Jobseeker / Employer)
+├── dashboard/page.tsx                 # แดชบอร์ดภาพรวมของผู้ประกอบการ (Active Jobs, Candidates)
+├── job-postings/
+│   ├── page.tsx                       # รายการประกาศงานของบริษัท
+│   └── create/page.tsx                # สร้างประกาศงานใหม่ (Markdown Editor + Real-time Preview)
+├── candidates/
+│   ├── page.tsx                       # ระบบค้นหาผู้สมัครพร้อมคะแนน Matching Score
+│   └── responses/page.tsx             # ตรวจสอบคำตอบจากคำถามคัดกรอง
+├── packages/page.tsx                  # หน้าเลือกแพ็กเกจ Starter / Gold / Platinum และแจ้งชำระเงิน
+├── company/page.tsx                   # หน้าข้อมูลบริษัทและการแนบเอกสารเพื่อขอยืนยันตัวตน
+├── support/
+│   ├── page.tsx                       # ศูนย์ช่วยเหลือและคำถามที่พบบ่อย (FAQs)
+│   └── tutorials/page.tsx             # วิดีโอแนะนำการใช้งาน (YouTube Embed)
+└── admin/
+    ├── page.tsx                       # หน้าแรกแดชบอร์ดผู้ดูแลระบบ
+    ├── companies/page.tsx             # ตรวจสอบและอนุมัติเอกสารบริษัท
+    ├── jobs/page.tsx                  # ตรวจสอบและกำกับดูแลประกาศงาน
+    ├── users/page.tsx                 # จัดการผู้ใช้งานและเปลี่ยนบทบาท (Role)
+    ├── packages/page.tsx              # ตรวจสอบสลิปการโอนเงินและอนุมัติแพ็กเกจ
+    ├── synonyms/page.tsx              # จัดการพจนานุกรมคำศัพท์และทักษะไซเบอร์
+    └── settings/page.tsx              # ตั้งค่าระบบและลิงก์วิดีโอ YouTube
 ```
 
-รันโปรเจกต์ด้วย `npm install` แล้วใช้ `npm run dev` จากนั้นตรวจ production build ด้วย `npm run build`
+---
 
-หน้า Gate สำหรับ onboarding หลังสมัครสมาชิกอยู่ที่ `http://localhost:3000/gate` และเป็น UX/UI mock ที่พร้อมเชื่อม API ภายหลัง
+## 3. คอมโพเนนต์สำคัญ (Key Components)
 
-หน้า Profile dashboard และการตั้งค่าบัญชีอยู่ที่ `http://localhost:3000/profile`
+- **`src/components/gate/login-form.tsx`:** ฟอร์มล็อกอิน 2 ขั้นตอน (Step 1: รหัสผ่าน, Step 2: กรอกรหัส OTP 6 ช่องแบบ Auto-focus และนับถอยหลัง 60 วินาที) พร้อม Role-based Redirection
+- **`src/components/gate/google-button.tsx`:** คอมโพเนนต์โหลด Google Identity Services SDK พร้อมรองรับ One-Tap และ Button Render
+- **`src/components/job-postings/JobPostingForm.tsx`:** ฟอร์มสร้างประกาศงานพร้อมกล่องเขียน Markdown, ตัวช่วยสัญลักษณ์ `##`, และหน้าจอพรีวิวแบบเรียลไทม์
+- **`src/components/admin/shell/AdminShell.tsx`:** โครงสร้างหน้าเว็บและ Sidebar ของผู้ดูแลระบบ
+- **`src/public-site/auth/AuthProvider.tsx`:** Context บริหารจัดการ State การล็อกอิน, Token, และฟังก์ชัน verifyOtp / resendOtp
 
-หน้าตัวอย่าง Resume และการพิมพ์/บันทึก PDF อยู่ที่ `http://localhost:3000/profile/preview`
+---
 
-Next.js frontend สำหรับสมาชิก ใช้ `NEXT_PUBLIC_API_URL` เชื่อมต่อ REST API
+## 4. การรันและทดสอบในเครื่อง (Local Setup)
 
-```bash
-cp .env.example .env.local
-npm install
-npm run dev
-```
+1. ติดตั้ง Dependencies:
+   ```bash
+   npm install
+   ```
 
-Production: `docker build -t cyberjob-frontend-member .`
-# CyberJob Frontend Member
+2. กำหนดค่า Environment Variables ในไฟล์ `.env.local`:
+   ```env
+   NEXT_PUBLIC_API_URL=http://localhost:4000/api
+   NEXT_PUBLIC_GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
+   ```
 
-## เริ่ม Development ครั้งแรก
+3. รัน Development Server:
+   ```bash
+   npm run dev
+   ```
+   เข้าใช้งานได้ที่: `http://localhost:3000`
 
-วาง `CyberJobFrontendMember` และ `CyberJobBackendMember` ไว้ในโฟลเดอร์แม่เดียวกัน เปิด Docker Desktop แล้วรันจากโฟลเดอร์ Frontend:
+4. ตรวจสอบการ Build ก่อน Deploy:
+   ```bash
+   npm run build
+   ```
 
-```powershell
-npm run dev:setup
-```
+---
 
-คำสั่งนี้จะสร้างไฟล์ environment สำหรับ Development, ติดตั้ง dependencies, เปิด PostgreSQL และ Backend, รัน migrations และเปิด Frontend ที่ `http://localhost:3000` โดยใช้บัญชี Demo อัตโนมัติจนกว่าจะกด Logout
+## 5. การรันบน Production (Hostinger Passenger)
 
-ครั้งถัดไปที่ติดตั้ง dependencies แล้ว สามารถข้ามการติดตั้งซ้ำได้:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\setup-dev.ps1 -SkipInstall
-```
+บนเซิร์ฟเวอร์ Hostinger โปรเจกต์นี้ทำงานผ่าน custom entry point:
+- **`server.cjs`:** ไฟล์ Node.js wrapper ที่ส่งค่า `dir: __dirname` ให้กับ Next.js เพื่อป้องกันปัญหา Passenger รันจาก root directory แล้วหาโฟลเดอร์ `.next` ไม่พบ
+- จัดการกระบวนการ Restart อัตโนมัติด้วยคำสั่ง `mkdir -p tmp && touch tmp/restart.txt`
