@@ -155,35 +155,28 @@ export function GoogleButton({ accountType = "JOBSEEKER", onError }: GoogleButto
           <div ref={googleBtnRef} style={{ width: "100%" }} />
         </div>
       ) : (
-        <div style={{ width: "100%", textAlign: "center" }}>
-          <button
-            type="button"
-            className="google-btn"
-            onClick={handleFallbackClick}
-            disabled={!GOOGLE_CLIENT_ID || loading}
-            style={
-              !GOOGLE_CLIENT_ID
-                ? {
-                    opacity: 0.5,
-                    cursor: "not-allowed",
-                    backgroundColor: "#f8fafc",
-                    color: "#94a3b8",
-                    borderColor: "#e2e8f0",
-                    filter: "grayscale(30%)",
-                  }
-                : undefined
-            }
-            title={!GOOGLE_CLIENT_ID ? "ฟังก์ชันนี้ยังไม่เปิดใช้งาน (รอการตั้งค่า Google Client Key)" : undefined}
-          >
-            <GoogleIcon />
-            {loading ? "กำลังเชื่อมต่อ Google..." : "เข้าสู่ระบบด้วยบัญชี Google"}
-          </button>
-          {!GOOGLE_CLIENT_ID && (
-            <p style={{ fontSize: "12px", color: "#94a3b8", marginTop: "6px", marginBottom: "0" }}>
-              (เร็วๆ นี้ — รอเปิดใช้งาน Google Client Key)
-            </p>
-          )}
-        </div>
+        <button
+          type="button"
+          className="google-btn"
+          onClick={handleFallbackClick}
+          disabled={!GOOGLE_CLIENT_ID || loading}
+          style={
+            !GOOGLE_CLIENT_ID
+              ? {
+                  opacity: 0.5,
+                  cursor: "not-allowed",
+                  backgroundColor: "#f8fafc",
+                  color: "#94a3b8",
+                  borderColor: "#e2e8f0",
+                  filter: "grayscale(30%)",
+                }
+              : undefined
+          }
+          title={!GOOGLE_CLIENT_ID ? "ฟังก์ชันนี้ยังไม่เปิดใช้งาน" : undefined}
+        >
+          <GoogleIcon />
+          {loading ? "กำลังเชื่อมต่อ Google..." : "เข้าสู่ระบบด้วยบัญชี Google"}
+        </button>
       )}
     </>
   );
