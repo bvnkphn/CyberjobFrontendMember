@@ -67,55 +67,109 @@
 
 /* ---------- เมนูจัดการ ---------- */
 .menuCell {
-  position: relative;
   text-align: right;
+  position: relative;
 }
 
 .menuButton {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   display: inline-grid;
   place-items: center;
-  border: 0;
+  border: 1px solid transparent;
   border-radius: 8px;
   background: none;
   color: var(--navy-900);
   cursor: pointer;
+  transition: all 0.15s ease;
 }
 
 .menuButton:hover,
 .menuButton[aria-expanded="true"] {
   background: var(--gray-100);
+  border-color: var(--gray-200);
 }
 
 .menu {
-  position: absolute;
-  top: calc(100% - 6px);
-  right: 16px;
-  z-index: 20;
-  min-width: 200px;
+  min-width: 220px;
   padding: 6px;
   border: 1px solid var(--gray-200);
   border-radius: 12px;
   background: #fff;
-  box-shadow: 0 12px 32px rgb(17 24 39 / 12%);
+  box-shadow: 0 16px 36px -4px rgba(17, 24, 39, 0.18), 0 6px 12px -2px rgba(17, 24, 39, 0.08);
   text-align: left;
+  animation: menuFadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes menuFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.menuHeader {
+  padding: 8px 12px 6px;
+  border-bottom: 1px solid var(--gray-100);
+  margin-bottom: 4px;
+}
+
+.menuUserCode {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #92400e;
+  background: #fef3c7;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-bottom: 2px;
+}
+
+.menuUserName {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--navy-950);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .menu button {
   width: 100%;
-  display: block;
-  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
   border: 0;
   border-radius: 8px;
   background: none;
-  font-size: 14px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--gray-700);
   text-align: left;
   cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.menuItemIcon {
+  font-size: 15px;
+  line-height: 1;
 }
 
 .menu button:hover {
-  background: var(--gray-50);
+  background: var(--gray-100);
+  color: var(--navy-950);
+}
+
+.menuDivider {
+  height: 1px;
+  background: var(--gray-100);
+  margin: 4px 6px;
 }
 
 .menu .menuDanger {
@@ -124,6 +178,7 @@
 
 .menu .menuDanger:hover {
   background: var(--red-soft);
+  color: var(--red);
 }
 
 /* ---------- Resume ---------- */

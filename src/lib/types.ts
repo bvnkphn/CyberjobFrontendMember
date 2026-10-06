@@ -335,3 +335,6 @@ export interface Packages {
   payments: Payment[];
   paymentInfo: { promptPayId: string; bankName: string; accountName: string; accountNo: string };
 }
+
+export * from "./admin/types";
+

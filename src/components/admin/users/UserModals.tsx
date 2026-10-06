@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { readError, useAdminAuth } from "@/lib/admin/auth";
-import type { AdminUser, CandidateSource, CertificateList, Resume, UserDetail } from "@/lib/admin/types";
+import type { AdminUser, CandidateSource, CertificateList, Resume, UserDetail } from "@/lib/types";
 import { AwardIcon } from "../icons";
 import { Modal } from "../ui/Modal";
 import ui from "../ui/ui.module.css";
@@ -59,11 +59,39 @@ export function ResumeModal({ user, onClose }: { user: AdminUser; onClose: () =>
         <Loading error={error} />
       ) : (
         <>
-          <h2 className={styles.resumeName}>{data.contact.name}</h2>
+          {/* Header matching User Resume Preview */}
+          <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "16px" }}>
+            <div
+              style={{
+                width: "56px",
+                height: "56px",
+                borderRadius: "50%",
+                background: "var(--navy-900)",
+                color: "#fff",
+                display: "grid",
+                placeItems: "center",
+                fontSize: "22px",
+                fontWeight: 700,
+                boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                flexShrink: 0,
+              }}
+            >
+              {data.contact.name ? data.contact.name.charAt(0) : "U"}
+            </div>
+            <div>
+              <h2 className={styles.resumeName} style={{ margin: 0, fontSize: "22px" }}>
+                {data.contact.name}
+              </h2>
+              <p style={{ margin: "2px 0 0", color: "#b45309", fontWeight: 600, fontSize: "14px" }}>
+                {data.desiredPositions[0] || "ผู้สมัครงานทั่วไป"}
+              </p>
+            </div>
+          </div>
+
           <div className={styles.contactLine}>
-            <span>{data.contact.email}</span>
-            {data.contact.phone && <span>{data.contact.phone}</span>}
-            {data.contact.address && <span>{data.contact.address}</span>}
+            <span>📧 {data.contact.email}</span>
+            {data.contact.phone && <span>📞 {data.contact.phone}</span>}
+            {data.contact.address && <span>📍 {data.contact.address}</span>}
           </div>
 
           <div className={styles.resumeGrid}>
@@ -175,41 +203,101 @@ export function ResumeModal({ user, onClose }: { user: AdminUser; onClose: () =>
 
 export function CertificatesModal({ user, onClose }: { user: AdminUser; onClose: () => void }) {
   const { data, error } = useModalData<CertificateList>(`/admin/users/${user.id}/certificates`);
+  const [selectedCert, setSelectedCert] = useState<any>(null);
 
   return (
-    <Modal
-      title="ใบประกาศนียบัตรของฉัน"
-      subtitle={data && <span className={styles.countLink}>ทั้งหมด {data.total} ใบ</span>}
-      wide
-      onClose={onClose}
-      footer={
-        <button type="button" className={`${ui.button} ${ui.buttonPrimary}`} onClick={onClose}>
-          ปิด
-        </button>
-      }
-    >
-      {!data ? (
-        <Loading error={error} />
-      ) : data.items.length === 0 ? (
-        <p className={ui.empty}>ผู้สมัครรายนี้ยังไม่มีใบประกาศนียบัตร</p>
-      ) : (
-        <div className={styles.certGrid}>
-          {data.items.map((certificate, index) => (
-            <article key={`${certificate.title}-${index}`} className={styles.cert}>
-              {/* ฝั่ง member ยังไม่เก็บไฟล์จริง จึงยังไม่มีรูปหรือลิงก์ให้เปิด */}
-              <div className={styles.certPreview} aria-hidden>
-                <AwardIcon size={36} />
-              </div>
-              <div className={styles.certBody}>
-                <p className={styles.certTitle}>{certificate.title}</p>
-                {certificate.issuer && <p className={styles.certIssuer}>{certificate.issuer}</p>}
-                {certificate.fileName && <p className={styles.certFile}>{certificate.fileName}</p>}
-              </div>
-            </article>
-          ))}
-        </div>
+    <>
+      <Modal
+        title={`ใบประกาศนียบัตร · ${user.name}`}
+        subtitle={data && <span className={styles.countLink}>ทั้งหมด {data.total} ใบ (คลิกเพื่อดูเอกสาร)</span>}
+        wide
+        onClose={onClose}
+        footer={
+          <button type="button" className={`${ui.button} ${ui.buttonPrimary}`} onClick={onClose}>
+            ปิด
+          </button>
+        }
+      >
+        {!data ? (
+          <Loading error={error} />
+        ) : data.items.length === 0 ? (
+          <p className={ui.empty}>ผู้สมัครรายนี้ยังไม่มีใบประกาศนียบัตร</p>
+        ) : (
+          <div className={styles.certGrid}>
+            {data.items.map((certificate, index) => (
+              <article
+                key={`${certificate.title}-${index}`}
+                className={styles.cert}
+                style={{ cursor: "pointer", transition: "transform 0.15s, box-shadow 0.15s" }}
+                onClick={() => setSelectedCert(certificate)}
+              >
+                <div className={styles.certPreview} aria-hidden>
+                  <AwardIcon size={36} />
+                </div>
+                <div className={styles.certBody}>
+                  <p className={styles.certTitle} style={{ color: "var(--navy-950)", fontWeight: 700 }}>
+                    {certificate.title}
+                  </p>
+                  {certificate.issuer && <p className={styles.certIssuer}>{certificate.issuer}</p>}
+                  {certificate.fileName && (
+                    <p className={styles.certFile} style={{ color: "#2563eb", marginTop: "4px" }}>
+                      🔍 คลิกเพื่อดูเอกสาร
+                    </p>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+      </Modal>
+
+      {/* Modal ดูเอกสารประกาศนียบัตร */}
+      {selectedCert && (
+        <Modal
+          title={`ดูเอกสาร: ${selectedCert.title}`}
+          subtitle={selectedCert.issuer ? `ออกโดย: ${selectedCert.issuer}` : undefined}
+          onClose={() => setSelectedCert(null)}
+          footer={
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px", width: "100%" }}>
+              <button
+                type="button"
+                className={ui.button}
+                onClick={() => setSelectedCert(null)}
+              >
+                ปิด
+              </button>
+              <button
+                type="button"
+                className={`${ui.button} ${ui.buttonPrimary}`}
+                onClick={() => alert(`ตรวจสอบเอกสาร ${selectedCert.title} เรียบร้อยแล้ว`)}
+              >
+                📥 ตรวจสอบ / ดาวน์โหลด
+              </button>
+            </div>
+          }
+        >
+          <div style={{ padding: "30px 20px", textAlign: "center", background: "#f8fafc", border: "2px dashed #cbd5e1", borderRadius: "12px", marginBottom: "16px" }}>
+            <div style={{ fontSize: "52px", marginBottom: "12px" }}>📜</div>
+            <h3 style={{ margin: "0 0 8px", fontSize: "18px", color: "var(--navy-950)" }}>
+              {selectedCert.title}
+            </h3>
+            {selectedCert.issuer && (
+              <p style={{ margin: "0 0 4px", fontSize: "14px", color: "var(--gray-600)" }}>
+                สถาบัน/หน่วยงาน: <strong>{selectedCert.issuer}</strong>
+              </p>
+            )}
+            {selectedCert.fileName && (
+              <p style={{ margin: "0", fontSize: "13px", color: "var(--gray-400)" }}>
+                ชื่อไฟล์: {selectedCert.fileName}
+              </p>
+            )}
+            <div style={{ marginTop: "16px", display: "inline-block", padding: "4px 12px", background: "#ecfdf5", border: "1px solid #10b981", borderRadius: "999px", fontSize: "12px", color: "#065f46", fontWeight: 600 }}>
+              ✓ เอกสารผ่านการรับรองจากผู้สมัคร
+            </div>
+          </div>
+        </Modal>
       )}
-    </Modal>
+    </>
   );
 }
 

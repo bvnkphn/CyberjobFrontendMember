@@ -55,14 +55,20 @@ export function GateForm() {
     setError("");
     setStatus("idle");
     const formData = new FormData(event.currentTarget);
-    const categories = [formData.get("jobCategory1"), formData.get("jobCategory2")].filter(Boolean);
+    const rawCat1 = formData.get("jobCategory1");
+    const rawCat2 = formData.get("jobCategory2");
+    const categories = [rawCat1, rawCat2].filter((c): c is string => typeof c === "string" && c.trim().length > 0);
+    if (categories.length === 0) {
+      categories.push("งานคอมพิวเตอร์/ไอที");
+    }
+    const finalPrivacy = (formData.get("privacy") as "public" | "private") || privacy || "public";
     try {
       await saveGate({
-        firstName: formData.get("firstName"),
-        lastName: formData.get("lastName"),
-        address: formData.get("address"),
+        firstName: String(formData.get("firstName") || "").trim(),
+        lastName: String(formData.get("lastName") || "").trim(),
+        address: String(formData.get("address") || "").trim(),
         desiredJobCategories: categories,
-        privacy: formData.get("privacy"),
+        privacy: finalPrivacy,
       });
       setStatus("saved");
       await refreshUser();

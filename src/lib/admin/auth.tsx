@@ -30,6 +30,7 @@ interface AuthContextValue {
   status: Status;
   user: AdminUser | null;
   login: (email: string, password: string) => Promise<void>;
+  logout: () => void;
   /** เรียก API ของ admin พร้อมแนบ token และต่ออายุให้เองหนึ่งครั้งเมื่อได้ 401 */
   adminFetch: (path: string, init?: RequestInit) => Promise<Response>;
 }
@@ -54,8 +55,9 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AdminUser | null>(null);
   const tokenRef = useRef<string | null>(null);
 
-  const accept = useCallback((result: AuthResult) => {
-    if (result.user.role !== "ADMIN") {
+  const accept = useCallback((raw: any) => {
+    const result = raw?.result ?? raw;
+    if (!result?.user || result.user.role !== "ADMIN") {
       tokenRef.current = null;
       setUser(null);
       setStatus("signed-out");
@@ -102,6 +104,13 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
     [accept],
   );
 
+  const logout = useCallback(() => {
+    tokenRef.current = null;
+    setUser(null);
+    setStatus("signed-out");
+    fetch(`${AUTH_API_URL}/auth/logout`, { method: "POST", credentials: "include" }).catch(() => null);
+  }, []);
+
   const adminFetch = useCallback(
     async (path: string, init: RequestInit = {}) => {
       const send = () =>
@@ -126,7 +135,7 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
     [refresh],
   );
 
-  const value = useMemo(() => ({ status, user, login, adminFetch }), [status, user, login, adminFetch]);
+  const value = useMemo(() => ({ status, user, login, logout, adminFetch }), [status, user, login, logout, adminFetch]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

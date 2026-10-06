@@ -134,6 +134,28 @@ export function JobDetailView({
           </Link>
         </p>
 
+        {/* Badges for Work Style & Compensation (Emoji) */}
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          {style && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 border border-blue-200">
+              {job.workStyle === 'remote' ? '💻 Remote' : job.workStyle === 'hybrid' ? '🔄 Hybrid' : '🏢 On-site'}
+            </span>
+          )}
+          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 border border-emerald-200">
+            💰 {formatSalary(job, t('job.negotiable'))}
+          </span>
+          {employment && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700 border border-slate-200">
+              ⏱️ {label(employment)}
+            </span>
+          )}
+          {job.openings > 1 && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700 border border-amber-200">
+              👥 รับ {job.openings} อัตรา
+            </span>
+          )}
+        </div>
+
         {/* ข้อมูลสรุปของประกาศ */}
         <dl className="mt-4 grid gap-x-6 gap-y-2 text-[13px] text-slate-600 sm:grid-cols-2">
           <Meta icon={<MapPinIcon width={15} height={15} />}>

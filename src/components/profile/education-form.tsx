@@ -1,4 +1,4 @@
-import { useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 
 type EducationFormProps = {
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
@@ -92,6 +92,16 @@ export function EducationForm({ onSubmit, saved, initialData = {} }: EducationFo
   const initialCount = Math.max(1, ...[1, 2, 3].filter((index) => initialData[`education${index}Institution`]));
   const [records, setRecords] = useState<EducationRecord[]>(Array.from({ length: initialCount }, (_, index) => ({ id: index, status: initialData[`education${index + 1}Status`] === "graduated" ? "graduated" : "studying" })));
 
+  useEffect(() => {
+    const hasData = [1, 2, 3].some((index) => initialData[`education${index}Institution`]);
+    if (!hasData) return;
+    const count = Math.max(1, ...[1, 2, 3].filter((index) => initialData[`education${index}Institution`]));
+    setRecords(Array.from({ length: count }, (_, index) => ({
+      id: index,
+      status: initialData[`education${index + 1}Status`] === "graduated" ? "graduated" : "studying"
+    })));
+  }, [initialData]);
+
   const updateStatus = (id: number, status: EducationStatus) => {
     setRecords((current) => current.map((record) => record.id === id ? { ...record, status } : record));
   };
@@ -124,7 +134,7 @@ export function EducationForm({ onSubmit, saved, initialData = {} }: EducationFo
 
       <div className="save-row">
         <button className="primary-button save-button" type="submit">บันทึก</button>
-        {saved && <p className="save-message" role="status">บันทึกตัวอย่างเรียบร้อยแล้ว</p>}
+        {saved && <p className="save-message" role="status">บันทึกข้อมูลเรียบร้อยแล้ว</p>}
       </div>
     </form>
   );

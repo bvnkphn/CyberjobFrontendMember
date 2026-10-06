@@ -1,1124 +1,672 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import {
-  SearchIcon,
-  DownloadIcon,
-  EyeIcon,
-  EditIcon,
-  CloseIcon,
-  DotsIcon,
-} from "../icons";
-import { Modal } from "../ui/Modal";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { readError, useAdminAuth } from "@/lib/admin/auth";
+import { SearchIcon, DownloadIcon, EditIcon, CloseIcon } from "../icons";
+import { TableFooter, type PageSize } from "../ui/TableFooter";
 import styles from "./Packages.module.css";
+import ui from "../ui/ui.module.css";
 
-export type PackageTier = "free" | "gold" | "platinum";
-export type PackageStatus = "active" | "expiring" | "expired" | "suspended";
-export type PaymentStatus = "paid" | "failed" | "none";
+// ─── Types ────────────────────────────────────────────────────────────────────
 
-export interface CompanyPackageItem {
+type Plan = "FREE" | "GOLD" | "PLATINUM";
+type SubStatus = "active" | "expiring" | "expired" | "free";
+type PaymentStatus = "PENDING" | "APPROVED" | "REJECTED";
+
+interface PackageTier {
   id: string;
-  companyName: string;
-  avatarText: string;
-  avatarBg: string;
-  imageUrl?: string;
-  email: string;
-  tier: PackageTier;
-  startDateEn: string;
-  startDateTh: string;
-  expiryDateEn: string;
-  expiryDateTh: string;
-  expiryDateInput: string; // YYYY-MM-DD
-  countdownEn: string;
-  countdownTh: string;
-  countdownType: "expired" | "warning" | "normal";
-  status: PackageStatus;
-  paymentStatus: PaymentStatus;
-  taxId: string;
-  contactPerson: string;
-  phone: string;
-  autoRenew: boolean;
-  history: Array<{ date: string; event: string; detail: string }>;
-  activityLog: Array<{ timestamp: string; action: string; ip: string }>;
+  plan: Plan;
+  name: string;
+  price: number;
+  billingCycle: string;
+  quotaJobs: number;
+  highlightJobs: number;
+  candidateViews: number;
+  aiMatching: boolean;
+  inviteCandidates: boolean;
+  dedicatedSupport: boolean;
+  popular: boolean;
+  sortOrder: number;
+  features: string[];
 }
 
-const INITIAL_SUBSCRIBERS: CompanyPackageItem[] = [
-  {
-    id: "PKG-001",
-    companyName: "Lumen Biotech",
-    avatarText: "LB",
-    avatarBg: "#f59e0b",
-    email: "ap@lumenbio.com",
-    tier: "gold",
-    startDateEn: "Mar 20, 2025",
-    startDateTh: "20 มี.ค. 2025",
-    expiryDateEn: "Mar 20, 2026",
-    expiryDateTh: "20 มี.ค. 2026",
-    expiryDateInput: "2026-03-20",
-    countdownEn: "Expired 144d ago",
-    countdownTh: "หมดอายุเมื่อ 144 วันก่อน",
-    countdownType: "expired",
-    status: "expired",
-    paymentStatus: "failed",
-    taxId: "0105561008123",
-    contactPerson: "คุณกิตติศักดิ์ เจริญพร",
-    phone: "02-555-0199",
-    autoRenew: false,
-    history: [
-      { date: "20 มี.ค. 2025", event: "เริ่มต้นใช้งาน Gold Plan", detail: "ยอดชำระ ฿12,900 / ปี" },
-    ],
-    activityLog: [
-      { timestamp: "20 มี.ค. 2026 00:00", action: "ตัดเงินต่ออายุอัตโนมัติล้มเหลว (Payment Failed)", ip: "System" },
-    ],
-  },
-  {
-    id: "PKG-002",
-    companyName: "Quanta Cloud",
-    avatarText: "QC",
-    avatarBg: "#f59e0b",
-    email: "finance@quantacloud.dev",
-    tier: "platinum",
-    startDateEn: "May 22, 2025",
-    startDateTh: "22 พ.ค. 2025",
-    expiryDateEn: "May 22, 2026",
-    expiryDateTh: "22 พ.ค. 2026",
-    expiryDateInput: "2026-05-22",
-    countdownEn: "Expired 81d ago",
-    countdownTh: "หมดอายุเมื่อ 81 วันก่อน",
-    countdownType: "expired",
-    status: "expired",
-    paymentStatus: "failed",
-    taxId: "0105562099312",
-    contactPerson: "คุณวิภาดา อริยะกุล",
-    phone: "089-123-4567",
-    autoRenew: false,
-    history: [
-      { date: "22 พ.ค. 2025", event: "สมัครแพ็กเกจ Platinum Plan", detail: "ยอดชำระ ฿24,900 / ปี" },
-    ],
-    activityLog: [
-      { timestamp: "22 พ.ค. 2026 00:00", action: "ตัดเงินล้มเหลว (Card Expired)", ip: "System" },
-    ],
-  },
-  {
-    id: "PKG-003",
-    companyName: "Vertex Robotics",
-    avatarText: "VR",
-    avatarBg: "#8b5cf6",
-    email: "finance@vertexrobotics.ai",
-    tier: "platinum",
-    startDateEn: "Aug 1, 2024",
-    startDateTh: "1 ส.ค. 2024",
-    expiryDateEn: "Aug 9, 2026",
-    expiryDateTh: "9 ส.ค. 2026",
-    expiryDateInput: "2026-08-09",
-    countdownEn: "Expired 2d ago",
-    countdownTh: "หมดอายุเมื่อ 2 วันก่อน",
-    countdownType: "expired",
-    status: "expiring",
-    paymentStatus: "paid",
-    taxId: "0105559098712",
-    contactPerson: "คุณภาณุวัชร วงศ์ษา",
-    phone: "02-987-6543",
-    autoRenew: true,
-    history: [
-      { date: "01 ส.ค. 2025", event: "ต่ออายุ Platinum Plan", detail: "ยอดชำระ ฿24,900 / ปี" },
-    ],
-    activityLog: [
-      { timestamp: "09 ส.ค. 2026 12:00", action: "ส่งอีเมลแจ้งเตือนหมดอายุรอบบิล", ip: "System" },
-    ],
-  },
-  {
-    id: "PKG-004",
-    companyName: "Harbor Logistics",
-    avatarText: "HL",
-    avatarBg: "#0f766e",
-    email: "accounts@harborlog.co",
-    tier: "gold",
-    startDateEn: "Jun 1, 2025",
-    startDateTh: "1 มิ.ย. 2025",
-    expiryDateEn: "Aug 15, 2026",
-    expiryDateTh: "15 ส.ค. 2026",
-    expiryDateInput: "2026-08-15",
-    countdownEn: "4d left",
-    countdownTh: "เหลือ 4 วัน",
-    countdownType: "warning",
-    status: "expiring",
-    paymentStatus: "paid",
-    taxId: "0105560044556",
-    contactPerson: "คุณประวิทย์ สุทธิชัย",
-    phone: "02-777-8899",
-    autoRenew: true,
-    history: [
-      { date: "01 มิ.ย. 2025", event: "สมัคร Gold Plan", detail: "ยอดชำระ ฿12,900" },
-    ],
-    activityLog: [
-      { timestamp: "20 ส.ค. 2026 10:30", action: "เข้าสู่ระบบตรวจสอบสถานะประกาศงาน", ip: "119.46.12.5" },
-    ],
-  },
-  {
-    id: "PKG-005",
-    companyName: "Cascade Digital",
-    avatarText: "CD",
-    avatarBg: "#10b981",
-    email: "team@cascadedigital.studio",
-    tier: "free",
-    startDateEn: "Jul 1, 2026",
-    startDateTh: "1 ก.ค. 2026",
-    expiryDateEn: "Aug 20, 2026",
-    expiryDateTh: "20 ส.ค. 2026",
-    expiryDateInput: "2026-08-20",
-    countdownEn: "9d left",
-    countdownTh: "เหลือ 9 วัน",
-    countdownType: "warning",
-    status: "active",
-    paymentStatus: "none",
-    taxId: "0105558012399",
-    contactPerson: "คุณอารียา ปรีดากุล",
-    phone: "081-445-6677",
-    autoRenew: false,
-    history: [
-      { date: "01 ก.ค. 2026", event: "เริ่มต้นใช้งาน Free Tier", detail: "สิทธิประโยชน์ทดลองใช้" },
-    ],
-    activityLog: [
-      { timestamp: "15 ส.ค. 2026 14:15", action: "สร้างประกาศงานตำแหน่ง Frontend Engineer", ip: "49.228.10.42" },
-    ],
-  },
-  {
-    id: "PKG-006",
-    companyName: "Ironforge Manufacturing",
-    avatarText: "IM",
-    avatarBg: "#ea580c",
-    email: "billing@ironforgemfg.com",
-    tier: "gold",
-    startDateEn: "Sep 15, 2025",
-    startDateTh: "15 ก.ย. 2025",
-    expiryDateEn: "Sep 15, 2026",
-    expiryDateTh: "15 ก.ย. 2026",
-    expiryDateInput: "2026-09-15",
-    countdownEn: "35d left",
-    countdownTh: "เหลือ 35 วัน",
-    countdownType: "normal",
-    status: "suspended",
-    paymentStatus: "failed",
-    taxId: "0105557088211",
-    contactPerson: "คุณธนพล สมบูรณ์",
-    phone: "02-333-4455",
-    autoRenew: false,
-    history: [
-      { date: "15 ก.ย. 2025", event: "สมัคร Gold Plan", detail: "ยอดชำระ ฿12,900" },
-      { date: "10 ก.ย. 2026", event: "แอดมินระงับการเข้าใช้งาน", detail: "เหตุผล: ค้างชำระค่าบริการเกินกำหนด" },
-    ],
-    activityLog: [
-      { timestamp: "10 ก.ย. 2026 11:00", action: "ระงับการเข้าใช้งานชั่วคราว", ip: "Admin" },
-    ],
-  },
-  {
-    id: "PKG-007",
-    companyName: "Meridian Foods",
-    avatarText: "MF",
-    avatarBg: "#3b82f6",
-    email: "billing@meridianfoods.com",
-    tier: "free",
-    startDateEn: "Jun 15, 2026",
-    startDateTh: "15 มิ.ย. 2026",
-    expiryDateEn: "Sep 15, 2026",
-    expiryDateTh: "15 ก.ย. 2026",
-    expiryDateInput: "2026-09-15",
-    countdownEn: "35d left",
-    countdownTh: "เหลือ 35 วัน",
-    countdownType: "normal",
-    status: "active",
-    paymentStatus: "none",
-    taxId: "0105563012948",
-    contactPerson: "คุณสมหมาย มั่นคง",
-    phone: "084-555-1234",
-    autoRenew: false,
-    history: [
-      { date: "15 มิ.ย. 2026", event: "เริ่มต้นใช้งาน Free Tier", detail: "ฟรี" },
-    ],
-    activityLog: [
-      { timestamp: "12 ก.ย. 2026 09:10", action: "ดูรายการผู้สมัครงาน 8 คน", ip: "171.96.220.14" },
-    ],
-  },
-  {
-    id: "PKG-008",
-    companyName: "Solstice Media",
-    avatarText: "SM",
-    avatarBg: "#16a34a",
-    email: "accounts@solsticemedia.co",
-    tier: "gold",
-    startDateEn: "Oct 5, 2025",
-    startDateTh: "5 ต.ค. 2025",
-    expiryDateEn: "Oct 5, 2026",
-    expiryDateTh: "5 ต.ค. 2026",
-    expiryDateInput: "2026-10-05",
-    countdownEn: "55d left",
-    countdownTh: "เหลือ 55 วัน",
-    countdownType: "normal",
-    status: "active",
-    paymentStatus: "paid",
-    taxId: "0105564019283",
-    contactPerson: "คุณนภัสสร รัตนโชติ",
-    phone: "02-123-9988",
-    autoRenew: true,
-    history: [
-      { date: "05 ต.ค. 2025", event: "สมัคร Gold Plan", detail: "ยอดชำระ ฿12,900" },
-    ],
-    activityLog: [
-      { timestamp: "18 ก.ย. 2026 15:40", action: "ดาวน์โหลดเอกสารใบกำกับภาษี", ip: "182.52.88.19" },
-    ],
-  },
-  {
-    id: "PKG-009",
-    companyName: "Nimbus Systems",
-    avatarText: "NS",
-    avatarBg: "#1e40af",
-    email: "billing@nimbussys.io",
-    tier: "platinum",
-    startDateEn: "Nov 12, 2025",
-    startDateTh: "12 พ.ย. 2025",
-    expiryDateEn: "Nov 12, 2026",
-    expiryDateTh: "12 พ.ย. 2026",
-    expiryDateInput: "2026-11-12",
-    countdownEn: "93d left",
-    countdownTh: "เหลือ 93 วัน",
-    countdownType: "normal",
-    status: "active",
-    paymentStatus: "paid",
-    taxId: "0105562088190",
-    contactPerson: "คุณชานนท์ วงศ์วัฒนา",
-    phone: "02-888-9900",
-    autoRenew: true,
-    history: [
-      { date: "12 พ.ย. 2025", event: "สมัคร Platinum Plan", detail: "ยอดชำระ ฿24,900" },
-    ],
-    activityLog: [
-      { timestamp: "22 ก.ย. 2026 16:00", action: "เชื่อมต่อ Webhook ระบบ Matching", ip: "119.46.12.5" },
-    ],
-  },
-  {
-    id: "PKG-010",
-    companyName: "Polaris Analytics",
-    avatarText: "PA",
-    avatarBg: "#0f172a",
-    email: "ops@polarisanalytics.io",
-    tier: "platinum",
-    startDateEn: "Dec 10, 2025",
-    startDateTh: "10 ธ.ค. 2025",
-    expiryDateEn: "Dec 10, 2026",
-    expiryDateTh: "10 ธ.ค. 2026",
-    expiryDateInput: "2026-12-10",
-    countdownEn: "121d left",
-    countdownTh: "เหลือ 121 วัน",
-    countdownType: "normal",
-    status: "active",
-    paymentStatus: "paid",
-    taxId: "0107563000124",
-    contactPerson: "คุณธนารักษ์ ภูริทัศน์",
-    phone: "02-444-5566",
-    autoRenew: true,
-    history: [
-      { date: "10 ธ.ค. 2025", event: "สมัคร Platinum Plan", detail: "ยอดชำระ ฿24,900" },
-    ],
-    activityLog: [
-      { timestamp: "23 ก.ย. 2026 11:20", action: "ค้นหาผู้สมัครงาน Security Operations", ip: "49.228.10.42" },
-    ],
-  },
-];
+interface Subscriber {
+  id: string;
+  name: string;
+  slug: string;
+  email: string;
+  phone: string;
+  logoText: string;
+  logoColor: string;
+  plan: Plan;
+  planExpiresAt: string | null;
+  status: SubStatus;
+  daysLeft: number | null;
+  jobCount: number;
+  paymentCount: number;
+  pendingPayment: { id: string; plan: Plan; amount: number; status: string; createdAt: string } | null;
+  createdAt: string;
+}
+
+interface Payment {
+  id: string;
+  plan: Plan;
+  amount: number;
+  method: string;
+  proofPath: string;
+  proofName: string;
+  status: PaymentStatus;
+  createdAt: string;
+  company: { id: string; name: string; email: string; plan: Plan; logoText: string; logoColor: string };
+}
+
+interface Stats {
+  total: number;
+  gold: number;
+  platinum: number;
+  expiringIn7: number;
+  pendingPayments: number;
+}
+
+interface Paginated<T> { items: T[]; total: number; page: number; pageSize: number; totalPages: number; }
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+const PLAN_LABEL: Record<Plan, string> = { FREE: "ฟรี", GOLD: "Gold", PLATINUM: "Platinum" };
+const PLAN_COLOR: Record<Plan, string> = { FREE: "#6b7280", GOLD: "#f59e0b", PLATINUM: "#8b5cf6" };
+const STATUS_LABEL: Record<SubStatus, string> = { active: "ใช้งานอยู่", expiring: "หมดอายุเร็วๆ นี้", expired: "หมดอายุ", free: "ฟรี" };
+const STATUS_COLOR: Record<SubStatus, string> = { active: "var(--green)", expiring: "#f59e0b", expired: "var(--red)", free: "var(--gray-400)" };
+
+function formatBaht(n: number) {
+  return n === 0 ? "ฟรี" : `฿${n.toLocaleString()}`;
+}
+function formatDate(iso: string | null) {
+  if (!iso) return "–";
+  return new Date(iso).toLocaleDateString("th-TH", { day: "2-digit", month: "short", year: "numeric" });
+}
+
+// ─── Tier Card (Read-only) ──────────────────────────────────────────────────
+
+function TierCard({
+  tier,
+}: {
+  tier: PackageTier;
+  onSave?: (plan: Plan, data: Partial<PackageTier>) => Promise<void>;
+}) {
+  const planColor = PLAN_COLOR[tier.plan];
+
+  return (
+    <div className={styles.tierCard} style={{ borderTopColor: planColor }}>
+      {/* Header */}
+      <div className={styles.tierHeader}>
+        <div>
+          <span className={styles.tierBadge} style={{ background: planColor }}>{PLAN_LABEL[tier.plan]}</span>
+          {tier.popular && <span className={styles.tierPopular}>ยอดนิยม</span>}
+        </div>
+      </div>
+
+      <div className={styles.tierPrice}>
+        <span className={styles.tierPriceNum}>{formatBaht(tier.price)}</span>
+        {tier.price > 0 && <span className={styles.tierPricePer}>/{tier.billingCycle === "month" ? "เดือน" : tier.billingCycle === "year" ? "ปี" : ""}</span>}
+      </div>
+      <div className={styles.tierName}>{tier.name}</div>
+      <div className={styles.tierQuotas}>
+        <div className={styles.tierQuota}><span>📄</span> โพสต์งาน: <strong>{tier.quotaJobs}</strong> ตำแหน่ง</div>
+        <div className={styles.tierQuota}><span>⭐</span> Hot Job: <strong>{tier.highlightJobs}</strong> ตำแหน่ง</div>
+        <div className={styles.tierQuota}><span>👤</span> ดูโปรไฟล์: <strong>{tier.candidateViews}</strong> คน</div>
+        <div className={styles.tierQuota}><span>🤖</span> AI Match: <strong>{tier.aiMatching ? "✓" : "–"}</strong></div>
+        <div className={styles.tierQuota}><span>✉️</span> เชิญตรง: <strong>{tier.inviteCandidates ? "✓" : "–"}</strong></div>
+        <div className={styles.tierQuota}><span>🎧</span> Dedicated: <strong>{tier.dedicatedSupport ? "✓" : "–"}</strong></div>
+      </div>
+      <ul className={styles.tierFeatureList}>
+        {tier.features.map((f) => <li key={f}><span>✓</span>{f}</li>)}
+      </ul>
+    </div>
+  );
+}
+
+// ─── Edit Subscriber Modal ─────────────────────────────────────────────────
+
+function EditSubscriberModal({
+  sub,
+  onClose,
+  onSaved,
+}: {
+  sub: Subscriber;
+  onClose: () => void;
+  onSaved: () => void;
+}) {
+  const { adminFetch } = useAdminAuth();
+  const [plan, setPlan] = useState<Plan>(sub.plan);
+  const [expiresAt, setExpiresAt] = useState(sub.planExpiresAt?.slice(0, 10) ?? "");
+  const [saving, setSaving] = useState(false);
+  const [err, setErr] = useState("");
+
+  const save = async () => {
+    setSaving(true);
+    setErr("");
+    try {
+      const r = await adminFetch(`/admin/packages/subscribers/${sub.id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ plan, planExpiresAt: expiresAt || null }),
+      });
+      if (!r.ok) throw await readError(r, "บันทึกไม่สำเร็จ");
+      onSaved();
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "บันทึกไม่สำเร็จ");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const suspend = async () => {
+    if (!confirm(`ระงับ ${sub.name}?\nบริษัทจะถูกลดเป็น Free ทันที`)) return;
+    setSaving(true);
+    try {
+      const r = await adminFetch(`/admin/packages/subscribers/${sub.id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ suspend: true }),
+      });
+      if (!r.ok) throw await readError(r, "ระงับบัญชีไม่สำเร็จ");
+      onSaved();
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "ระงับบัญชีไม่สำเร็จ");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className={ui.backdrop} onClick={onClose}>
+      <div className={ui.modal} onClick={(e) => e.stopPropagation()}>
+        <div className={ui.modalHead}>
+          <h2>แก้ไขแพ็กเกจ — {sub.name}</h2>
+          <button type="button" className={ui.closeButton} onClick={onClose}><CloseIcon size={18} /></button>
+        </div>
+        <div className={ui.modalBody}>
+          {err && <p className={ui.error}>{err}</p>}
+          <div className={styles.editSubGrid}>
+            <div className={styles.editSubField}>
+              <label>แพ็กเกจ</label>
+              <select className={styles.editSelect} value={plan} onChange={(e) => setPlan(e.target.value as Plan)}>
+                <option value="FREE">ฟรี</option>
+                <option value="GOLD">Gold</option>
+                <option value="PLATINUM">Platinum</option>
+              </select>
+            </div>
+            <div className={styles.editSubField}>
+              <label>วันหมดอายุ</label>
+              <input type="date" className={styles.editInput} value={expiresAt} onChange={(e) => setExpiresAt(e.target.value)} disabled={plan === "FREE"} />
+            </div>
+          </div>
+          <p className={styles.editSubNote}>
+            บริษัท: {sub.name} · อีเมล: {sub.email}<br />
+            งานที่ประกาศ: {sub.jobCount} ตำแหน่ง · สถานะปัจจุบัน: {STATUS_LABEL[sub.status]}
+          </p>
+        </div>
+        <div className={ui.modalFoot}>
+          <button type="button" className={`${ui.button} ${ui.buttonDanger}`} onClick={suspend} disabled={saving}>ระงับบัญชี</button>
+          <button type="button" className={ui.button} onClick={onClose} disabled={saving}>ยกเลิก</button>
+          <button type="button" className={`${ui.button} ${ui.buttonPrimary}`} onClick={save} disabled={saving}>
+            {saving ? "กำลังบันทึก..." : "บันทึก"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Review Payment Modal ──────────────────────────────────────────────────
+
+function ReviewPaymentModal({
+  payment,
+  onClose,
+  onDone,
+}: {
+  payment: Payment;
+  onClose: () => void;
+  onDone: () => void;
+}) {
+  const { adminFetch } = useAdminAuth();
+  const [days, setDays] = useState(30);
+  const [saving, setSaving] = useState(false);
+  const [err, setErr] = useState("");
+
+  const review = async (status: "APPROVED" | "REJECTED") => {
+    setSaving(true);
+    setErr("");
+    try {
+      const r = await adminFetch(`/admin/packages/payments/${payment.id}/review`, {
+        method: "POST",
+        body: JSON.stringify({ status, durationDays: days }),
+      });
+      if (!r.ok) throw await readError(r, "ดำเนินการไม่สำเร็จ");
+      onDone();
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "ดำเนินการไม่สำเร็จ");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className={ui.backdrop} onClick={onClose}>
+      <div className={ui.modal} onClick={(e) => e.stopPropagation()}>
+        <div className={ui.modalHead}>
+          <h2>ตรวจสอบการชำระเงิน</h2>
+          <button type="button" className={ui.closeButton} onClick={onClose}><CloseIcon size={18} /></button>
+        </div>
+        <div className={ui.modalBody}>
+          {err && <p className={ui.error}>{err}</p>}
+          <div className={styles.paymentDetail}>
+            <div className={styles.paymentCompany}>
+              <span className={styles.companyAvatar} style={{ background: payment.company.logoColor }}>
+                {payment.company.logoText}
+              </span>
+              <div>
+                <strong>{payment.company.name}</strong>
+                <p>{payment.company.email}</p>
+              </div>
+            </div>
+            <div className={styles.paymentInfo}>
+              <div><span>แพ็กเกจที่สมัคร:</span><strong>{PLAN_LABEL[payment.plan]}</strong></div>
+              <div><span>ยอดชำระ:</span><strong>฿{payment.amount.toLocaleString()}</strong></div>
+              <div><span>วิธีชำระ:</span><strong>{payment.method}</strong></div>
+              <div><span>วันที่แจ้ง:</span><strong>{formatDate(payment.createdAt)}</strong></div>
+              <div><span>หลักฐาน:</span><strong>{payment.proofName}</strong></div>
+            </div>
+            {payment.status === "PENDING" && (
+              <div className={styles.editSubField} style={{ marginTop: 16 }}>
+                <label>ระยะเวลาเมื่ออนุมัติ (วัน)</label>
+                <input type="number" min={1} max={365} className={styles.editInput} value={days} onChange={(e) => setDays(Number(e.target.value))} />
+              </div>
+            )}
+          </div>
+        </div>
+        <div className={ui.modalFoot}>
+          <button type="button" className={ui.button} onClick={onClose} disabled={saving}>ปิด</button>
+          {payment.status === "PENDING" && (
+            <>
+              <button type="button" className={`${ui.button} ${ui.buttonDanger}`} onClick={() => review("REJECTED")} disabled={saving}>ปฏิเสธ</button>
+              <button type="button" className={`${ui.button} ${ui.buttonGold}`} onClick={() => review("APPROVED")} disabled={saving}>
+                {saving ? "กำลังอนุมัติ..." : "อนุมัติ"}
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Main Component ────────────────────────────────────────────────────────
 
 export function PackagesView() {
-  const [lang, setLang] = useState<"th" | "en">("th");
-  const [subscribers, setSubscribers] = useState<CompanyPackageItem[]>(INITIAL_SUBSCRIBERS);
+  const { adminFetch } = useAdminAuth();
+
+  // Package Tier Definitions
+  const [tiers, setTiers] = useState<PackageTier[]>([]);
+  const [tiersLoading, setTiersLoading] = useState(true);
+  const [tierError, setTierError] = useState("");
+
+  // Subscribers
+  const [stats, setStats] = useState<Stats | null>(null);
+  const [subscribers, setSubscribers] = useState<Paginated<Subscriber> | null>(null);
+  const [subLoading, setSubLoading] = useState(true);
+  const [subError, setSubError] = useState("");
+
+  // Filters
   const [search, setSearch] = useState("");
-  const [tierFilter, setTierFilter] = useState<string>("all");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [paymentFilter, setPaymentFilter] = useState<string>("all");
-  const [sortBy, setSortBy] = useState<string>("soonest");
+  const [planFilter, setPlanFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [sort, setSort] = useState("soonest");
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState<PageSize>(20);
 
-  // Modals state
-  const [editItem, setEditItem] = useState<CompanyPackageItem | null>(null);
-  const [suspendItem, setSuspendItem] = useState<CompanyPackageItem | null>(null);
-  const [detailItem, setDetailItem] = useState<CompanyPackageItem | null>(null);
+  // Payments
+  const [payments, setPayments] = useState<Payment[]>([]);
+  const [paymentFilter, setPaymentFilter] = useState("PENDING");
 
-  // Edit form states
-  const [newTier, setNewTier] = useState<PackageTier>("platinum");
-  const [newExpiryDate, setNewExpiryDate] = useState("2026-03-31");
-  const [editReason, setEditReason] = useState("");
+  // Modals
+  const [editSub, setEditSub] = useState<Subscriber | null>(null);
+  const [reviewPayment, setReviewPayment] = useState<Payment | null>(null);
 
-  // Suspend form states
-  const [suspendReason, setSuspendReason] = useState("");
-  const [suspendNote, setSuspendNote] = useState("");
+  // Active tab
+  const [tab, setTab] = useState<"subscribers" | "tiers" | "payments">("subscribers");
 
-  // Stats calculation
-  const stats = useMemo(() => {
-    const total = subscribers.length;
-    const gold = subscribers.filter((s) => s.tier === "gold").length;
-    const platinum = subscribers.filter((s) => s.tier === "platinum").length;
-    const expiringIn7 = subscribers.filter((s) => s.status === "expiring" && s.countdownType === "warning").length;
-    const failed = subscribers.filter((s) => s.paymentStatus === "failed").length;
-    return { total, gold, platinum, expiringIn7, failed };
-  }, [subscribers]);
+  // ─── Load Tiers ───────────────────────────────────────────────────────────
+  const loadTiers = useCallback(async () => {
+    setTiersLoading(true);
+    setTierError("");
+    try {
+      const r = await adminFetch("/admin/packages/tiers");
+      if (!r.ok) throw await readError(r, "โหลดข้อมูลแพ็กเกจไม่สำเร็จ");
+      setTiers(await r.json());
+    } catch (e) {
+      setTierError(e instanceof Error ? e.message : "โหลดไม่สำเร็จ");
+    } finally {
+      setTiersLoading(false);
+    }
+  }, [adminFetch]);
 
-  // Filtering
-  const filtered = useMemo(() => {
-    return subscribers.filter((item) => {
-      const matchSearch =
-        search.trim() === "" ||
-        item.companyName.toLowerCase().includes(search.toLowerCase()) ||
-        item.email.toLowerCase().includes(search.toLowerCase());
+  // ─── Load Stats + Subscribers ─────────────────────────────────────────────
+  const loadSubscribers = useCallback(async () => {
+    setSubLoading(true);
+    setSubError("");
+    try {
+      const qs = new URLSearchParams({ sort, page: String(page), pageSize: String(pageSize) });
+      if (search) qs.set("q", search);
+      if (planFilter !== "all") qs.set("plan", planFilter);
+      if (statusFilter !== "all") qs.set("status", statusFilter);
 
-      const matchTier = tierFilter === "all" || item.tier === tierFilter;
-      const matchStatus = statusFilter === "all" || item.status === statusFilter;
-      const matchPayment = paymentFilter === "all" || item.paymentStatus === paymentFilter;
+      const [statsR, subsR] = await Promise.all([
+        adminFetch("/admin/packages/stats"),
+        adminFetch(`/admin/packages/subscribers?${qs}`),
+      ]);
+      if (!statsR.ok) throw await readError(statsR, "โหลดสถิติไม่สำเร็จ");
+      if (!subsR.ok) throw await readError(subsR, "โหลดรายชื่อบริษัทไม่สำเร็จ");
+      setStats(await statsR.json());
+      setSubscribers(await subsR.json());
+    } catch (e) {
+      setSubError(e instanceof Error ? e.message : "โหลดไม่สำเร็จ");
+    } finally {
+      setSubLoading(false);
+    }
+  }, [adminFetch, search, planFilter, statusFilter, sort, page, pageSize]);
 
-      return matchSearch && matchTier && matchStatus && matchPayment;
+  // ─── Load Payments ────────────────────────────────────────────────────────
+  const loadPayments = useCallback(async () => {
+    try {
+      const r = await adminFetch(`/admin/packages/payments?status=${paymentFilter}`);
+      if (!r.ok) throw await readError(r, "โหลดการชำระเงินไม่สำเร็จ");
+      setPayments(await r.json());
+    } catch (_) {
+      // silently fail for payments
+    }
+  }, [adminFetch, paymentFilter]);
+
+  useEffect(() => { void loadTiers(); }, [loadTiers]);
+  useEffect(() => { void loadSubscribers(); }, [loadSubscribers]);
+  useEffect(() => { void loadPayments(); }, [loadPayments]);
+
+  // Save tier
+  const saveTier = async (plan: Plan, data: Partial<PackageTier>) => {
+    const r = await adminFetch(`/admin/packages/tiers/${plan}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
     });
-  }, [subscribers, search, tierFilter, statusFilter, paymentFilter]);
-
-  // Open Edit Modal
-  const openEdit = (item: CompanyPackageItem) => {
-    setEditItem(item);
-    setNewTier(item.tier);
-    setNewExpiryDate(item.expiryDateInput || "2026-03-31");
-    setEditReason("");
-  };
-
-  // Save Edit Modal
-  const handleSaveEdit = () => {
-    if (!editItem) return;
-    setSubscribers((prev) =>
-      prev.map((s) => {
-        if (s.id !== editItem.id) return s;
-        return {
-          ...s,
-          tier: newTier,
-          expiryDateInput: newExpiryDate,
-          expiryDateEn: newExpiryDate,
-          expiryDateTh: newExpiryDate,
-        };
-      })
-    );
-    setEditItem(null);
-  };
-
-  // Open Suspend Modal
-  const openSuspend = (item: CompanyPackageItem) => {
-    setSuspendItem(item);
-    setSuspendReason("");
-    setSuspendNote("");
-  };
-
-  // Confirm Suspend
-  const handleConfirmSuspend = () => {
-    if (!suspendItem) return;
-    setSubscribers((prev) =>
-      prev.map((s) => {
-        if (s.id !== suspendItem.id) return s;
-        return {
-          ...s,
-          status: "suspended",
-        };
-      })
-    );
-    setSuspendItem(null);
+    if (!r.ok) throw await readError(r, "บันทึกไม่สำเร็จ");
+    await loadTiers();
   };
 
   // Export CSV
-  const handleExportCSV = () => {
-    const headers = [
-      "Subscriber",
-      "Email",
-      "Plan",
-      "Start Date",
-      "Expiry Date",
-      "Status",
-      "Payment",
-    ];
-    const rows = filtered.map((s) => [
-      `"${s.companyName}"`,
-      s.email,
-      s.tier.toUpperCase(),
-      s.startDateEn,
-      s.expiryDateEn,
-      s.status.toUpperCase(),
-      s.paymentStatus.toUpperCase(),
-    ]);
-
-    const csvContent = "\uFEFF" + [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const exportCsv = () => {
+    const items = subscribers?.items ?? [];
+    const header = "ชื่อบริษัท,อีเมล,แพ็กเกจ,วันหมดอายุ,สถานะ,จำนวนงาน\r\n";
+    const rows = items.map((s) =>
+      `"${s.name}","${s.email}",${s.plan},${s.planExpiresAt?.slice(0, 10) ?? ""},${s.status},${s.jobCount}`
+    ).join("\r\n");
+    const blob = new Blob(["\uFEFF" + header + rows], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", `subscribers-${new Date().toISOString().slice(0, 10)}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const a = document.createElement("a");
+    a.href = url; a.download = `subscribers-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click(); URL.revokeObjectURL(url);
   };
 
-  const isTh = lang === "th";
-
   return (
-    <div className={styles.container}>
-      {/* ── Page Header Row ── */}
-      <div className={styles.headerRow}>
-        <div className={styles.titleArea}>
-          <h1>{isTh ? "การจัดการแพ็กเกจของบริษัท" : "Subscription Management"}</h1>
-          <p>
-            {isTh
-              ? "ติดตามและจัดการการสมัครสมาชิกของนายจ้างทั่ว Cyber Job."
-              : "Monitor and manage employer subscriptions across Cyber Job."}
+    <div className={styles.root}>
+      {/* ─── Page Header ─────────────────────────────────────── */}
+      <div className={ui.pageHead}>
+        <div>
+          <h1>จัดการแพ็กเกจ</h1>
+          <p>กำหนดคำนิยาม Package Tier, ติดตามสมาชิก Owner, และตรวจสอบการชำระเงิน</p>
+        </div>
+      </div>
+
+      {/* ─── Stat Cards ──────────────────────────────────────── */}
+      <div className={ui.statsGrid}>
+        {[
+          { label: "สมาชิกที่ชำระเงิน", value: stats?.total ?? "–", icon: "💼", color: "var(--navy-900)" },
+          { label: "สมาชิก Gold", value: stats?.gold ?? "–", icon: "🎖️", color: "#f59e0b" },
+          { label: "สมาชิก Platinum", value: stats?.platinum ?? "–", icon: "👑", color: "#8b5cf6" },
+          { label: "หมดอายุใน 7 วัน", value: stats?.expiringIn7 ?? "–", icon: "⏰", color: "var(--red)" },
+          { label: "รอตรวจสอบชำระเงิน", value: stats?.pendingPayments ?? "–", icon: "💳", color: "#0ea5e9" },
+        ].map((c) => (
+          <div key={c.label} className={ui.statCard}>
+            <span className={ui.statIcon} style={{ background: c.color }}>{c.icon}</span>
+            <span>
+              <span className={ui.statLabel}>{c.label}</span>
+              <span className={ui.statValue}>{c.value}</span>
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* ─── Tab Bar ─────────────────────────────────────────── */}
+      <div className={ui.tabList}>
+        {(["subscribers", "tiers", "payments"] as const).map((t) => (
+          <button
+            key={t}
+            type="button"
+            className={`${ui.tabBtn} ${tab === t ? ui.tabBtnActive : ""}`}
+            onClick={() => setTab(t)}
+          >
+            {t === "subscribers" ? "🏢 รายชื่อบริษัทสมาชิก" : t === "tiers" ? "⚙️ กำหนด Package Tier" : "💳 ตรวจสอบการชำระเงิน"}
+            {t === "payments" && stats && stats.pendingPayments > 0 && (
+              <span className={styles.badge}>{stats.pendingPayments}</span>
+            )}
+          </button>
+        ))}
+      </div>
+
+      {/* ════════════════════════════════════════
+          TAB: Subscribers
+         ════════════════════════════════════════ */}
+      {tab === "subscribers" && (
+        <section className={ui.card}>
+          {/* Filter Bar */}
+          <div className={ui.toolbar}>
+            <label className={ui.search}>
+              <SearchIcon size={18} />
+              <input value={search} placeholder="ค้นหาชื่อบริษัทหรืออีเมล..." onChange={(e) => { setSearch(e.target.value); setPage(1); }} />
+            </label>
+            <select className={ui.select} value={planFilter} onChange={(e) => { setPlanFilter(e.target.value); setPage(1); }}>
+              <option value="all">แพ็กเกจทั้งหมด</option>
+              <option value="FREE">ฟรี</option>
+              <option value="GOLD">Gold</option>
+              <option value="PLATINUM">Platinum</option>
+            </select>
+            <select className={ui.select} value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}>
+              <option value="all">สถานะทั้งหมด</option>
+              <option value="active">ใช้งานอยู่</option>
+              <option value="expiring">หมดอายุเร็วๆ นี้</option>
+              <option value="expired">หมดอายุ</option>
+            </select>
+            <select className={ui.select} value={sort} onChange={(e) => setSort(e.target.value)}>
+              <option value="soonest">หมดอายุ: เร็วสุด</option>
+              <option value="latest">หมดอายุ: ช้าสุด</option>
+              <option value="name_asc">ชื่อ A → Z</option>
+            </select>
+            <button type="button" className={ui.button} onClick={exportCsv}>
+              <DownloadIcon size={16} /> Export CSV
+            </button>
+          </div>
+
+          {subError ? (
+            <div className={ui.empty} role="alert">{subError}</div>
+          ) : (
+            <div className={ui.tableScroll}>
+              <table className={ui.table}>
+                <thead>
+                  <tr>
+                    <th>บริษัท</th>
+                    <th>แพ็กเกจ</th>
+                    <th>วันหมดอายุ</th>
+                    <th>คงเหลือ</th>
+                    <th>สถานะ</th>
+                    <th>งาน</th>
+                    <th style={{ textAlign: "right" }}>จัดการ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {subscribers?.items.length === 0 && (
+                    <tr><td colSpan={7} className={ui.empty}>{subLoading ? "กำลังโหลด..." : "ไม่พบบริษัทที่ตรงกับเงื่อนไข"}</td></tr>
+                  )}
+                  {subscribers?.items.map((s) => (
+                    <tr key={s.id} style={{ opacity: subLoading ? 0.6 : 1 }}>
+                      <td>
+                        <div className={styles.subCompany}>
+                          <span className={styles.companyAvatar} style={{ background: s.logoColor }}>{s.logoText}</span>
+                          <div>
+                            <div className={ui.strong}>{s.name}</div>
+                            <div className={styles.companyEmail}>{s.email}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <span className={styles.planBadge} style={{ background: PLAN_COLOR[s.plan] + "22", color: PLAN_COLOR[s.plan], border: `1px solid ${PLAN_COLOR[s.plan]}44` }}>
+                          {PLAN_LABEL[s.plan]}
+                        </span>
+                        {s.pendingPayment && <span className={styles.pendingDot} title="มีการชำระเงินรอตรวจสอบ">●</span>}
+                      </td>
+                      <td>{formatDate(s.planExpiresAt)}</td>
+                      <td>
+                        {s.daysLeft === null ? "–" : s.daysLeft < 0
+                          ? <span style={{ color: "var(--red)" }}>หมดอายุ {Math.abs(s.daysLeft)} วัน</span>
+                          : s.daysLeft <= 7
+                            ? <span style={{ color: "#f59e0b" }}>เหลือ {s.daysLeft} วัน</span>
+                            : <span>เหลือ {s.daysLeft} วัน</span>
+                        }
+                      </td>
+                      <td>
+                        <span className={styles.statusDot} style={{ color: STATUS_COLOR[s.status] }}>● {STATUS_LABEL[s.status]}</span>
+                      </td>
+                      <td>{s.jobCount} ตำแหน่ง</td>
+                      <td style={{ textAlign: "right" }}>
+                        <button type="button" className={styles.actionBtn} onClick={() => setEditSub(s)} title="แก้ไขแพ็กเกจ">
+                          <EditIcon size={15} /> แก้ไข
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* Pagination */}
+          {subscribers && (
+            <TableFooter
+              page={subscribers.page}
+              pageSize={pageSize}
+              total={subscribers.total}
+              totalPages={subscribers.totalPages}
+              onPageChange={setPage}
+              onPageSizeChange={setPageSize}
+            />
+          )}
+        </section>
+      )}
+
+      {/* ════════════════════════════════════════
+          TAB: Tier Definitions
+         ════════════════════════════════════════ */}
+      {tab === "tiers" && (
+        <div>
+          <p className={styles.tierNote}>
+            ⚙️ กำหนดรายละเอียดแต่ละ Package Tier ที่ Owner เห็นบนหน้าเลือกแพ็กเกจ การเปลี่ยนแปลงมีผลทันทีกับหน้าแสดงราคา
           </p>
+          {tierError ? (
+            <div className={ui.empty}>{tierError}</div>
+          ) : tiersLoading ? (
+            <div className={ui.empty}>กำลังโหลด...</div>
+          ) : (
+            <div className={styles.tierGrid}>
+              {tiers.map((tier) => (
+                <TierCard key={tier.plan} tier={tier} onSave={saveTier} />
+              ))}
+            </div>
+          )}
         </div>
+      )}
 
-        <div className={styles.langToggle}>
-          <button
-            type="button"
-            className={`${styles.langBtn} ${isTh ? styles.langBtnActive : ""}`}
-            onClick={() => setLang("th")}
-          >
-            ไทย
-          </button>
-          <button
-            type="button"
-            className={`${styles.langBtn} ${!isTh ? styles.langBtnActive : ""}`}
-            onClick={() => setLang("en")}
-          >
-            EN
-          </button>
-        </div>
-      </div>
-
-      {/* ── 5 Stat Cards (Matching Screenshots) ── */}
-      <div className={styles.statsGrid}>
-        {/* Total Subscribers */}
-        <div className={styles.statCard}>
-          <div className={styles.statCardHead}>
-            <span className={styles.statCardLabel}>
-              {isTh ? "จำนวนสมาชิกทั้งหมด" : "Total Subscribers"}
-            </span>
-            <span className={`${styles.statIconBox} ${styles.statIconBlue}`}>
-              👥
-            </span>
+      {/* ════════════════════════════════════════
+          TAB: Payments
+         ════════════════════════════════════════ */}
+      {tab === "payments" && (
+        <section className={ui.card}>
+          <div className={ui.toolbar}>
+            <select className={ui.select} value={paymentFilter} onChange={(e) => setPaymentFilter(e.target.value)}>
+              <option value="PENDING">รอตรวจสอบ</option>
+              <option value="APPROVED">อนุมัติแล้ว</option>
+              <option value="REJECTED">ปฏิเสธแล้ว</option>
+              <option value="all">ทั้งหมด</option>
+            </select>
           </div>
-          <div className={styles.statNumber}>{stats.total}</div>
-        </div>
-
-        {/* Gold Members */}
-        <div className={styles.statCard}>
-          <div className={styles.statCardHead}>
-            <span className={styles.statCardLabel}>
-              {isTh ? "สมาชิกทอง" : "Gold Members"}
-            </span>
-            <span className={`${styles.statIconBox} ${styles.statIconGold}`}>
-              🎖️
-            </span>
-          </div>
-          <div className={styles.statNumber}>{stats.gold}</div>
-        </div>
-
-        {/* Platinum Members */}
-        <div className={styles.statCard}>
-          <div className={styles.statCardHead}>
-            <span className={styles.statCardLabel}>
-              {isTh ? "สมาชิกแพลตตินัม" : "Platinum Members"}
-            </span>
-            <span className={`${styles.statIconBox} ${styles.statIconPurple}`}>
-              👑
-            </span>
-          </div>
-          <div className={styles.statNumber}>{stats.platinum}</div>
-        </div>
-
-        {/* Expiring in 7 Days */}
-        <div className={styles.statCard}>
-          <div className={styles.statCardHead}>
-            <span className={styles.statCardLabel}>
-              {isTh ? "หมดอายุใน 7 วัน" : "Expiring in 7 Days"}
-            </span>
-            <span className={`${styles.statIconBox} ${styles.statIconOrange}`}>
-              🕒
-            </span>
-          </div>
-          <div className={styles.statNumber}>{stats.expiringIn7}</div>
-        </div>
-
-        {/* Failed Payments */}
-        <div className={styles.statCard}>
-          <div className={styles.statCardHead}>
-            <span className={styles.statCardLabel}>
-              {isTh ? "การชำระเงินที่ล้มเหลว" : "Failed Payments"}
-            </span>
-            <span className={`${styles.statIconBox} ${styles.statIconRed}`}>
-              ⚠️
-            </span>
-          </div>
-          <div className={styles.statNumber}>{stats.failed}</div>
-        </div>
-      </div>
-
-      {/* ── Filter Bar ── */}
-      <div className={styles.filterBar}>
-        <div className={styles.searchWrap}>
-          <span className={styles.searchIcon}>
-            <SearchIcon size={16} />
-          </span>
-          <input
-            type="text"
-            className={styles.searchInput}
-            placeholder={isTh ? "ค้นหาบริษัทหรืออีเมล" : "Search company or email"}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-
-        <select
-          className={styles.filterSelect}
-          value={tierFilter}
-          onChange={(e) => setTierFilter(e.target.value)}
-        >
-          <option value="all">{isTh ? "แพ็กเกจ" : "All plans"}</option>
-          <option value="gold">{isTh ? "โกลด์" : "Gold"}</option>
-          <option value="platinum">{isTh ? "แพลตตินัม" : "Platinum"}</option>
-          <option value="free">{isTh ? "ฟรี" : "Free"}</option>
-        </select>
-
-        <select
-          className={styles.filterSelect}
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-        >
-          <option value="all">{isTh ? "สถานะทั้งหมด" : "All statuses"}</option>
-          <option value="active">{isTh ? "ใช้งานอยู่" : "Active"}</option>
-          <option value="expiring">{isTh ? "หมดอายุเร็ว ๆ นี้" : "Expiring Soon"}</option>
-          <option value="expired">{isTh ? "หมดอายุ" : "Expired"}</option>
-          <option value="suspended">{isTh ? "ถูกระงับ" : "Suspended"}</option>
-        </select>
-
-        <select
-          className={styles.filterSelect}
-          value={paymentFilter}
-          onChange={(e) => setPaymentFilter(e.target.value)}
-        >
-          <option value="all">{isTh ? "การชำระเงินทั้งหมด" : "All payments"}</option>
-          <option value="paid">{isTh ? "ชำระเงินแล้ว" : "Paid"}</option>
-          <option value="failed">{isTh ? "ล้มเหลว" : "Failed"}</option>
-          <option value="none">{isTh ? "ไม่มี" : "None"}</option>
-        </select>
-
-        <select
-          className={styles.filterSelect}
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
-        >
-          <option value="soonest">
-            {isTh ? "☵ หมดอายุ: เร็วที่สุด" : "☵ Expiry: soonest"}
-          </option>
-          <option value="latest">
-            {isTh ? "☵ หมดอายุ: ช้าที่สุด" : "☵ Expiry: latest"}
-          </option>
-        </select>
-
-        <button type="button" className={styles.exportBtn} onClick={handleExportCSV}>
-          <DownloadIcon size={16} />
-          {isTh ? "ส่งออก CSV" : "Export CSV"}
-        </button>
-      </div>
-
-      {/* ── Table Card ── */}
-      <div className={styles.tableCard}>
-        <div className={styles.tableWrap}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>{isTh ? "สมาชิก" : "SUBSCRIBER"}</th>
-                <th>{isTh ? "แผน" : "PLAN"}</th>
-                <th>{isTh ? "วันที่เริ่มต้น" : "START DATE"}</th>
-                <th>{isTh ? "วันที่หมดอายุ" : "EXPIRY DATE"}</th>
-                <th>{isTh ? "สถานะ" : "STATUS"}</th>
-                <th>{isTh ? "การชำระเงิน" : "PAYMENT"}</th>
-                <th style={{ textAlign: "right" }}>{isTh ? "การดำเนินการ" : "ACTIONS"}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((item) => (
-                <tr key={item.id}>
-                  {/* Subscriber */}
-                  <td>
-                    <div className={styles.subscriberCell}>
-                      <div
-                        className={styles.avatarCircle}
-                        style={{ backgroundColor: item.avatarBg }}
-                      >
-                        {item.avatarText}
-                      </div>
-                      <div>
-                        <div className={styles.companyName}>{item.companyName}</div>
-                        <div className={styles.companyEmail}>{item.email}</div>
-                      </div>
-                    </div>
-                  </td>
-
-                  {/* Plan */}
-                  <td>
-                    {item.tier === "gold" && (
-                      <span className={`${styles.planBadge} ${styles.planGold}`}>
-                        <span className={styles.planDot} />
-                        {isTh ? "โกลด์" : "Gold"}
-                      </span>
-                    )}
-                    {item.tier === "platinum" && (
-                      <span className={`${styles.planBadge} ${styles.planPlatinum}`}>
-                        <span className={styles.planDot} />
-                        {isTh ? "แพลตตินัม" : "Platinum"}
-                      </span>
-                    )}
-                    {item.tier === "free" && (
-                      <span className={`${styles.planBadge} ${styles.planFree}`}>
-                        <span className={styles.planDot} />
-                        {isTh ? "ฟรี" : "Free"}
-                      </span>
-                    )}
-                  </td>
-
-                  {/* Start Date */}
-                  <td>
-                    <span className={styles.startDateText}>
-                      {isTh ? item.startDateTh : item.startDateEn}
-                    </span>
-                  </td>
-
-                  {/* Expiry Date */}
-                  <td>
-                    <div className={styles.expiryCell}>
-                      <span className={styles.expiryDateText}>
-                        {isTh ? item.expiryDateTh : item.expiryDateEn}
-                      </span>
-                      <span
-                        className={`${styles.countdownText} ${
-                          item.countdownType === "expired"
-                            ? styles.countdownExpired
-                            : item.countdownType === "warning"
-                            ? styles.countdownWarning
-                            : styles.countdownNormal
-                        }`}
-                      >
-                        {isTh ? item.countdownTh : item.countdownEn}
-                      </span>
-                    </div>
-                  </td>
-
-                  {/* Status */}
-                  <td>
-                    {item.status === "expired" && (
-                      <span className={`${styles.statusBadge} ${styles.statusExpired}`}>
-                        <span className={styles.statusDot} />
-                        {isTh ? "หมดอายุ" : "Expired"}
-                      </span>
-                    )}
-                    {item.status === "expiring" && (
-                      <span className={`${styles.statusBadge} ${styles.statusExpiring}`}>
-                        <span className={styles.statusDot} />
-                        {isTh ? "หมดอายุเร็ว ๆ นี้" : "Expiring Soon"}
-                      </span>
-                    )}
-                    {item.status === "active" && (
-                      <span className={`${styles.statusBadge} ${styles.statusActive}`}>
-                        <span className={styles.statusDot} />
-                        {isTh ? "ใช้งานอยู่" : "Active"}
-                      </span>
-                    )}
-                    {item.status === "suspended" && (
-                      <span className={`${styles.statusBadge} ${styles.statusSuspended}`}>
-                        <span className={styles.statusDot} />
-                        {isTh ? "ถูกระงับ" : "Suspended"}
-                      </span>
-                    )}
-                  </td>
-
-                  {/* Payment */}
-                  <td>
-                    {item.paymentStatus === "failed" && (
-                      <span className={`${styles.paymentBadge} ${styles.paymentFailed}`}>
-                        {isTh ? "ล้มเหลว" : "Failed"}
-                      </span>
-                    )}
-                    {item.paymentStatus === "paid" && (
-                      <span className={`${styles.paymentBadge} ${styles.paymentPaid}`}>
-                        {isTh ? "ชำระเงินแล้ว" : "Paid"}
-                      </span>
-                    )}
-                    {item.paymentStatus === "none" && (
-                      <span className={`${styles.paymentBadge} ${styles.paymentNone}`}>
-                        {isTh ? "ไม่มี" : "None"}
-                      </span>
-                    )}
-                  </td>
-
-                  {/* Actions */}
-                  <td>
-                    <div className={styles.actionsRow} style={{ justifyContent: "flex-end" }}>
-                      <button
-                        type="button"
-                        className={styles.actionIconBtn}
-                        title={isTh ? "ดูรายละเอียด" : "View details"}
-                        onClick={() => setDetailItem(item)}
-                      >
-                        <EyeIcon size={18} />
-                      </button>
-                      <button
-                        type="button"
-                        className={styles.actionIconBtn}
-                        title={isTh ? "แก้ไขแผนและวันหมดอายุ" : "Edit plan & expiry"}
-                        onClick={() => openEdit(item)}
-                      >
-                        <EditIcon size={18} />
-                      </button>
-                      <button
-                        type="button"
-                        className={styles.actionIconBtn}
-                        title={isTh ? "ระงับการสมัครสมาชิก" : "Suspend subscription"}
-                        onClick={() => openSuspend(item)}
-                      >
-                        <DotsIcon size={18} />
-                      </button>
-                    </div>
-                  </td>
+          <div className={ui.tableScroll}>
+            <table className={ui.table}>
+              <thead>
+                <tr>
+                  <th>บริษัท</th>
+                  <th>แพ็กเกจ</th>
+                  <th>ยอดชำระ</th>
+                  <th>วิธีชำระ</th>
+                  <th>วันที่แจ้ง</th>
+                  <th>สถานะ</th>
+                  <th style={{ textAlign: "right" }}>ตรวจสอบ</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Table Bottom Footer Bar */}
-        <div className={styles.tableBottomBar}>
-          <div>
-            {isTh
-              ? `แสดง ${filtered.length} จาก ${subscribers.length} สมาชิก`
-              : `Showing ${filtered.length} of ${subscribers.length} subscribers`}
+              </thead>
+              <tbody>
+                {payments.length === 0 && (
+                  <tr><td colSpan={7} className={ui.empty}>ไม่มีรายการที่ตรงกับเงื่อนไข</td></tr>
+                )}
+                {payments.map((p) => (
+                  <tr key={p.id}>
+                    <td>
+                      <div className={styles.subCompany}>
+                        <span className={styles.companyAvatar} style={{ background: p.company.logoColor }}>{p.company.logoText}</span>
+                        <div>
+                          <div className={ui.strong}>{p.company.name}</div>
+                          <div className={styles.companyEmail}>{p.company.email}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td><span className={styles.planBadge} style={{ background: PLAN_COLOR[p.plan] + "22", color: PLAN_COLOR[p.plan] }}>{PLAN_LABEL[p.plan]}</span></td>
+                    <td className={ui.strong}>฿{p.amount.toLocaleString()}</td>
+                    <td>{p.method}</td>
+                    <td>{formatDate(p.createdAt)}</td>
+                    <td>
+                      {p.status === "PENDING" && <span className={`${ui.badge} ${ui.badgeGold}`}>รอตรวจสอบ</span>}
+                      {p.status === "APPROVED" && <span className={`${ui.badge} ${ui.badgeGreen}`}>อนุมัติแล้ว</span>}
+                      {p.status === "REJECTED" && <span className={`${ui.badge} ${ui.badgeRed}`}>ปฏิเสธแล้ว</span>}
+                    </td>
+                    <td style={{ textAlign: "right" }}>
+                      <button type="button" className={styles.actionBtn} onClick={() => setReviewPayment(p)}>
+                        {p.status === "PENDING" ? "ตรวจสอบ" : "ดูรายละเอียด"}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-          <div>
-            {isTh
-              ? "การระงับอัตโนมัติ & การเตือนจะทำงานโดยอัตโนมัติในพื้นหลัง"
-              : "Auto-suspend & reminders run automatically in the background"}
-          </div>
-        </div>
-      </div>
-
-      {/* ── MODAL 1: แก้ไขแผนและวันหมดอายุ (media_1790170209375.png) ── */}
-      {editItem && (
-        <div
-          className={styles.modalBackdrop}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setEditItem(null);
-          }}
-        >
-          <div className={styles.modalBox}>
-            <div className={styles.modalHead}>
-              <h2 className={styles.modalTitle}>แก้ไขแผนและวันหมดอายุ</h2>
-              <p className={styles.modalSubtitle}>
-                ปรับระดับการสมัครสมาชิกและวันหมดอายุด้วยตนเอง
-              </p>
-              <button
-                type="button"
-                className={styles.modalCloseBtn}
-                onClick={() => setEditItem(null)}
-              >
-                <CloseIcon size={18} />
-              </button>
-            </div>
-
-            <div className={styles.modalBody}>
-              {/* Company Info Box */}
-              <div className={styles.modalCompanyCard}>
-                <div
-                  className={styles.avatarCircle}
-                  style={{ backgroundColor: editItem.avatarBg }}
-                >
-                  {editItem.avatarText}
-                </div>
-                <div>
-                  <div className={styles.companyName}>{editItem.companyName}</div>
-                  <div className={styles.companyEmail}>{editItem.email}</div>
-                </div>
-              </div>
-
-              {/* ระดับ */}
-              <div className={styles.modalFieldGroup}>
-                <label className={styles.modalFieldLabel}>ระดับ</label>
-                <select
-                  className={styles.modalSelect}
-                  value={newTier}
-                  onChange={(e) => setNewTier(e.target.value as PackageTier)}
-                >
-                  <option value="platinum">Platinum</option>
-                  <option value="gold">Gold</option>
-                  <option value="free">Free</option>
-                </select>
-              </div>
-
-              {/* วันหมดอายุ */}
-              <div className={styles.modalFieldGroup}>
-                <label className={styles.modalFieldLabel}>วันหมดอายุ</label>
-                <div className={styles.dateInputWrap}>
-                  <input
-                    type="date"
-                    className={styles.modalInput}
-                    value={newExpiryDate}
-                    onChange={(e) => setNewExpiryDate(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              {/* เหตุผล */}
-              <div className={styles.modalFieldGroup}>
-                <label className={styles.modalFieldLabel}>เหตุผล</label>
-                <select
-                  className={styles.modalSelect}
-                  value={editReason}
-                  onChange={(e) => setEditReason(e.target.value)}
-                >
-                  <option value="" disabled>
-                    เลือกเหตุผล
-                  </option>
-                  <option value="promo">โปรโมชั่นพิเศษ (Special Promotion)</option>
-                  <option value="comp">ชดเชยระบบขัดข้อง (System Compensation)</option>
-                  <option value="partner">สิทธิพิเศษพันธมิตร (Partner Privilege)</option>
-                  <option value="trial">ขยายเวลาทดลองใช้งาน (Trial Extension)</option>
-                  <option value="other">อื่น ๆ (Other)</option>
-                </select>
-              </div>
-
-              {/* Actions */}
-              <div className={styles.modalFoot}>
-                <button
-                  type="button"
-                  className={styles.btnCancel}
-                  onClick={() => setEditItem(null)}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  className={styles.btnBlue}
-                  onClick={handleSaveEdit}
-                >
-                  Save changes
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        </section>
       )}
 
-      {/* ── MODAL 2: ระงับการสมัครสมาชิก (media_1790170209395.png) ── */}
-      {suspendItem && (
-        <div
-          className={styles.modalBackdrop}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setSuspendItem(null);
-          }}
-        >
-          <div className={styles.modalBox}>
-            <div className={styles.modalHead}>
-              <h2 className={styles.modalTitle}>ระงับการสมัครสมาชิก</h2>
-              <p className={styles.modalSubtitle}>
-                เพิกถอนสิทธิ์การเข้าถึงสำหรับสมาชิกรายนี้ด้วยตนเอง
-                {"\n"}การดำเนินการนี้จะไม่คืนเงินให้
-              </p>
-              <button
-                type="button"
-                className={styles.modalCloseBtn}
-                onClick={() => setSuspendItem(null)}
-              >
-                <CloseIcon size={18} />
-              </button>
-            </div>
-
-            <div className={styles.modalBody}>
-              {/* Company Info Box */}
-              <div className={styles.modalCompanyCard}>
-                <div
-                  className={styles.avatarCircle}
-                  style={{ backgroundColor: suspendItem.avatarBg }}
-                >
-                  {suspendItem.avatarText}
-                </div>
-                <div>
-                  <div className={styles.companyName}>{suspendItem.companyName}</div>
-                  <div className={styles.companyEmail}>{suspendItem.email}</div>
-                </div>
-              </div>
-
-              {/* เหตุผล */}
-              <div className={styles.modalFieldGroup}>
-                <label className={styles.modalFieldLabel}>เหตุผล</label>
-                <select
-                  className={styles.modalSelect}
-                  value={suspendReason}
-                  onChange={(e) => setSuspendReason(e.target.value)}
-                >
-                  <option value="" disabled>
-                    เลือกเหตุผล
-                  </option>
-                  <option value="tos">ละเมิดข้อตกลงและเงื่อนไขการใช้งาน</option>
-                  <option value="payment">ค้างชำระค่าบริการเกินกำหนด</option>
-                  <option value="fraud">ตรวจพบพฤติกรรมน่าสงสัย</option>
-                  <option value="request">ลูกค้าร้องขอให้ระงับบัญชี</option>
-                  <option value="other">อื่น ๆ</option>
-                </select>
-              </div>
-
-              {/* หมายเหตุเพิ่มเติม */}
-              <div className={styles.modalFieldGroup}>
-                <label className={styles.modalFieldLabel}>หมายเหตุเพิ่มเติม</label>
-                <textarea
-                  className={styles.modalTextarea}
-                  placeholder="หมายเหตุเพิ่มเติม"
-                  value={suspendNote}
-                  onChange={(e) => setSuspendNote(e.target.value)}
-                />
-              </div>
-
-              {/* Actions */}
-              <div className={styles.modalFoot}>
-                <button
-                  type="button"
-                  className={styles.btnCancel}
-                  onClick={() => setSuspendItem(null)}
-                >
-                  ยกเลิก
-                </button>
-                <button
-                  type="button"
-                  className={styles.btnCoral}
-                  onClick={handleConfirmSuspend}
-                >
-                  ระงับการเข้าถึง
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+      {/* ─── Modals ────────────────────────────────────── */}
+      {editSub && (
+        <EditSubscriberModal
+          sub={editSub}
+          onClose={() => setEditSub(null)}
+          onSaved={() => { setEditSub(null); void loadSubscribers(); }}
+        />
       )}
-
-      {/* ── POPUP: รายละเอียดผู้สมัครสมาชิก (View Details) ── */}
-      {detailItem && (
-        <Modal
-          title={isTh ? "รายละเอียดผู้สมัครสมาชิกและประวัติแพ็กเกจ" : "Subscriber & Subscription Details"}
-          wide
-          onClose={() => setDetailItem(null)}
-          footer={
-            <div style={{ display: "flex", justifyContent: "flex-end", gap: 10 }}>
-              <button
-                type="button"
-                className={styles.btnCancel}
-                onClick={() => setDetailItem(null)}
-              >
-                {isTh ? "ปิดหน้าต่าง" : "Close"}
-              </button>
-              <button
-                type="button"
-                className={styles.btnBlue}
-                onClick={() => {
-                  const target = detailItem;
-                  setDetailItem(null);
-                  openEdit(target);
-                }}
-              >
-                {isTh ? "แก้ไขแผนสมาชิก" : "Edit Subscription"}
-              </button>
-            </div>
-          }
-        >
-          <div>
-            <div className={styles.modalCompanyCard} style={{ background: "#f8fafc", padding: 18 }}>
-              <div
-                className={styles.avatarCircle}
-                style={{ backgroundColor: detailItem.avatarBg, width: 48, height: 48, fontSize: 16 }}
-              >
-                {detailItem.avatarText}
-              </div>
-              <div style={{ flex: 1 }}>
-                <h3 style={{ margin: 0, fontSize: 16, color: "#0f172a", fontWeight: 800 }}>
-                  {detailItem.companyName}
-                </h3>
-                <div style={{ fontSize: 13, color: "#64748b" }}>
-                  {detailItem.email} · {detailItem.phone}
-                </div>
-              </div>
-              <div>
-                {detailItem.tier === "platinum" && (
-                  <span className={`${styles.planBadge} ${styles.planPlatinum}`}>
-                    <span className={styles.planDot} /> Platinum
-                  </span>
-                )}
-                {detailItem.tier === "gold" && (
-                  <span className={`${styles.planBadge} ${styles.planGold}`}>
-                    <span className={styles.planDot} /> Gold
-                  </span>
-                )}
-                {detailItem.tier === "free" && (
-                  <span className={`${styles.planBadge} ${styles.planFree}`}>
-                    <span className={styles.planDot} /> Free
-                  </span>
-                )}
-              </div>
-            </div>
-
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, margin: "16px 0 20px" }}>
-              <div style={{ background: "#f8fafc", padding: "12px 16px", borderRadius: 8, border: "1px solid #e2e8f0" }}>
-                <div style={{ fontSize: 12, color: "#64748b", marginBottom: 2 }}>{isTh ? "เลขประจำตัวผู้เสียภาษี" : "Tax ID"}</div>
-                <div style={{ fontWeight: 700, color: "#0f172a", fontSize: 14 }}>{detailItem.taxId}</div>
-              </div>
-              <div style={{ background: "#f8fafc", padding: "12px 16px", borderRadius: 8, border: "1px solid #e2e8f0" }}>
-                <div style={{ fontSize: 12, color: "#64748b", marginBottom: 2 }}>{isTh ? "ผู้ติดต่อหลัก" : "Contact Person"}</div>
-                <div style={{ fontWeight: 700, color: "#0f172a", fontSize: 14 }}>{detailItem.contactPerson}</div>
-              </div>
-              <div style={{ background: "#f8fafc", padding: "12px 16px", borderRadius: 8, border: "1px solid #e2e8f0" }}>
-                <div style={{ fontSize: 12, color: "#64748b", marginBottom: 2 }}>{isTh ? "สถานะการชำระเงิน" : "Payment Status"}</div>
-                <div style={{ fontWeight: 700, color: detailItem.paymentStatus === "paid" ? "#16a34a" : "#dc2626", fontSize: 14 }}>
-                  {detailItem.paymentStatus === "paid" ? "✓ Paid (ชำระแล้ว)" : detailItem.paymentStatus === "failed" ? "✕ Failed (ล้มเหลว)" : "None"}
-                </div>
-              </div>
-              <div style={{ background: "#f8fafc", padding: "12px 16px", borderRadius: 8, border: "1px solid #e2e8f0" }}>
-                <div style={{ fontSize: 12, color: "#64748b", marginBottom: 2 }}>{isTh ? "ต่ออายุอัตโนมัติ" : "Auto-Renew"}</div>
-                <div style={{ fontWeight: 700, color: "#0f172a", fontSize: 14 }}>
-                  {detailItem.autoRenew ? "เปิดใช้งาน (Auto-Renew On)" : "ปิดใช้งาน (Off)"}
-                </div>
-              </div>
-            </div>
-
-            <h4 style={{ margin: "0 0 12px", fontSize: 14, fontWeight: 700, color: "#0f172a" }}>
-              {isTh ? "ประวัติแพ็กเกจ (Plan History)" : "Plan History"}
-            </h4>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
-              {detailItem.history.map((h, i) => (
-                <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start", fontSize: 13 }}>
-                  <span style={{ color: "#2563eb", fontWeight: 700 }}>●</span>
-                  <div>
-                    <div style={{ fontWeight: 700, color: "#0f172a" }}>{h.event} · <span style={{ color: "#64748b", fontWeight: 400 }}>{h.date}</span></div>
-                    <div style={{ color: "#64748b" }}>{h.detail}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <h4 style={{ margin: "0 0 12px", fontSize: 14, fontWeight: 700, color: "#0f172a" }}>
-              {isTh ? "บันทึกกิจกรรมล่าสุด (Activity Log)" : "Recent Activity"}
-            </h4>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {detailItem.activityLog.map((act, i) => (
-                <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start", fontSize: 13 }}>
-                  <span style={{ color: "#94a3b8" }}>○</span>
-                  <div>
-                    <div style={{ fontWeight: 600, color: "#0f172a" }}>{act.action}</div>
-                    <div style={{ color: "#94a3b8", fontSize: 12 }}>{act.timestamp} · IP: {act.ip}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Modal>
+      {reviewPayment && (
+        <ReviewPaymentModal
+          payment={reviewPayment}
+          onClose={() => setReviewPayment(null)}
+          onDone={() => { setReviewPayment(null); void loadSubscribers(); void loadPayments(); }}
+        />
       )}
     </div>
   );

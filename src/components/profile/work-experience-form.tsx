@@ -1,4 +1,4 @@
-import { useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 
 type WorkExperienceFormProps = {
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
@@ -67,6 +67,13 @@ export function WorkExperienceForm({ onSubmit, saved, initialData = {} }: WorkEx
   const initialCount = Math.max(1, ...[1, 2, 3].filter((index) => initialData[`workExperience${index}Company`]));
   const [records, setRecords] = useState<WorkRecord[]>(Array.from({ length: initialCount }, (_, id) => ({ id })));
 
+  useEffect(() => {
+    const hasData = [1, 2, 3].some((index) => initialData[`workExperience${index}Company`]);
+    if (!hasData) return;
+    const count = Math.max(1, ...[1, 2, 3].filter((index) => initialData[`workExperience${index}Company`]));
+    setRecords(Array.from({ length: count }, (_, id) => ({ id })));
+  }, [initialData]);
+
   const addRecord = () => {
     setRecords((current) => current.length < 3 ? [...current, { id: Math.max(...current.map(({ id }) => id)) + 1 }] : current);
   };
@@ -85,7 +92,7 @@ export function WorkExperienceForm({ onSubmit, saved, initialData = {} }: WorkEx
 
       <div className="save-row">
         <button className="primary-button save-button" type="submit">บันทึก</button>
-        {saved && <p className="save-message" role="status">บันทึกตัวอย่างเรียบร้อยแล้ว</p>}
+        {saved && <p className="save-message" role="status">บันทึกข้อมูลเรียบร้อยแล้ว</p>}
       </div>
     </form>
   );

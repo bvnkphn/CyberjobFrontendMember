@@ -42,20 +42,21 @@
 .line-action span { margin-left: 8px; }
 
 .contact-methods { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 22px; }
-.contact-methods a { display: flex; align-items: center; gap: 16px; min-width: 0; padding: 22px; border: 1px solid #e2e8f0; border-radius: 16px; background: #fff; box-shadow: 0 8px 24px rgb(15 42 107 / 5%); transition: border-color .2s, box-shadow .2s, transform .2s; }
+.contact-methods a, .contact-method-card { display: flex; align-items: center; gap: 16px; min-width: 0; padding: 22px; border: 1px solid #e2e8f0; border-radius: 16px; background: #fff; box-shadow: 0 8px 24px rgb(15 42 107 / 5%); transition: border-color .2s, box-shadow .2s, transform .2s; }
 .contact-methods a:hover { border-color: #bcd0f6; box-shadow: 0 14px 30px rgb(15 42 107 / 10%); transform: translateY(-2px); }
+.contact-method-card { cursor: default; }
 .contact-icon { display: grid; width: 52px; height: 52px; flex: 0 0 52px; place-items: center; border-radius: 14px; }
 .contact-icon svg { width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .mail-icon { background: #fff3d9; color: #d99000; }.phone-icon { background: #ffe7ec; color: #df5268; }
-.contact-methods a > span:last-child { min-width: 0; }
+.contact-methods a > span:last-child, .contact-method-card > span:last-child { min-width: 0; }
 .contact-methods small, .contact-methods strong, .contact-methods em { display: block; }
 .contact-methods small { color: #94a3b8; font-size: 12px; }
-.contact-methods strong { overflow-wrap: anywhere; color: #1e293b; font-size: 17px; }
+.contact-methods strong { overflow-wrap: anywhere; color: #1e293b; font-size: 17px; font-weight: 700; user-select: text; }
 .contact-methods em { margin-top: 3px; color: #94a3b8; font-size: 12px; font-style: normal; }
 
 /* ── FAQ ── */
 .faq-section { display: grid; grid-template-columns: minmax(220px, .72fr) minmax(0, 1.5fr); gap: 48px; margin-top: 56px; padding: 38px; border: 1px solid #e2e8f0; border-radius: 22px; background: #fff; box-shadow: 0 14px 40px rgb(15 42 107 / 6%); }
-.faq-heading h2 { margin: 7px 0 8px; color: var(--navy); font-size: 26px; }
+.faq-heading h2 { margin: 7px 0 8px; color: var(--navy); font-size: 26px; font-weight: 800; font-family: var(--font-display), "Prompt", "Noto Sans Thai", sans-serif; }
 .faq-heading p { margin: 0; color: #64748b; font-size: 14px; line-height: 1.7; }
 .faq-list { min-width: 0; }
 

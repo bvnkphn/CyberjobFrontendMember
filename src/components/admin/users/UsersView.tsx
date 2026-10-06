@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { readError, useAdminAuth } from "@/lib/admin/auth";
-import type { AdminUser, CandidateSource, Paginated, UserStats } from "@/lib/admin/types";
+import type { AdminUser, CandidateSource, Paginated, UserStats } from "@/lib/types";
 import { BuildingIcon, DotsIcon, DownloadIcon, GradCapIcon, SearchIcon, UsersIcon } from "../icons";
 import { ConfirmDialog } from "../ui/Modal";
 import { TableFooter, type PageSize } from "../ui/TableFooter";
@@ -47,7 +47,8 @@ export function UsersView() {
   const [loadError, setLoadError] = useState("");
   const [exporting, setExporting] = useState(false);
 
-  const [menuFor, setMenuFor] = useState<string | null>(null);
+  const [menuUser, setMenuUser] = useState<AdminUser | null>(null);
+  const [menuPos, setMenuPos] = useState<{ top?: number; bottom?: number; right: number } | null>(null);
   const [dialog, setDialog] = useState<Dialog>(null);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState("");
@@ -95,15 +96,51 @@ export function UsersView() {
     setPage(1);
   }, [debouncedSearch, source, sort, pageSize]);
 
-  // ปิดเมนู ⋮ เมื่อคลิกนอกเมนู
+  // ปิดเมนู ⋮ เมื่อคลิกนอกเมนู หรือเมื่อมีการเลื่อนหน้าจอ/ปรับขนาดหน้าต่าง
   useEffect(() => {
-    if (!menuFor) return;
-    const onClick = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) setMenuFor(null);
+    if (!menuUser) return;
+    const close = () => {
+      setMenuUser(null);
+      setMenuPos(null);
     };
-    document.addEventListener("mousedown", onClick);
-    return () => document.removeEventListener("mousedown", onClick);
-  }, [menuFor]);
+    const onClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        close();
+      }
+    };
+    const onScrollOrResize = () => {
+      close();
+    };
+
+    document.addEventListener("mousedown", onClickOutside);
+    window.addEventListener("scroll", onScrollOrResize, true);
+    window.addEventListener("resize", onScrollOrResize);
+    return () => {
+      document.removeEventListener("mousedown", onClickOutside);
+      window.removeEventListener("scroll", onScrollOrResize, true);
+      window.removeEventListener("resize", onScrollOrResize);
+    };
+  }, [menuUser]);
+
+  const toggleMenu = (event: React.MouseEvent<HTMLButtonElement>, user: AdminUser) => {
+    event.stopPropagation();
+    if (menuUser?.id === user.id) {
+      setMenuUser(null);
+      setMenuPos(null);
+      return;
+    }
+    const rect = event.currentTarget.getBoundingClientRect();
+    const dropdownEstimatedHeight = 220;
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const openUp = spaceBelow < dropdownEstimatedHeight && rect.top > dropdownEstimatedHeight;
+
+    setMenuPos({
+      top: openUp ? undefined : rect.bottom + 6,
+      bottom: openUp ? window.innerHeight - rect.top + 6 : undefined,
+      right: Math.max(16, window.innerWidth - rect.right),
+    });
+    setMenuUser(user);
+  };
 
   /** ปุ่มดาวน์โหลดต้องแนบ token จึงโหลดเป็น blob แล้วค่อยสั่งบันทึกไฟล์ */
   const exportCsv = async () => {
@@ -141,7 +178,8 @@ export function UsersView() {
   };
 
   const open = (kind: NonNullable<Dialog>["kind"], user: AdminUser) => {
-    setMenuFor(null);
+    setMenuUser(null);
+    setMenuPos(null);
     setDeleteError("");
     setDialog({ kind, user });
   };
@@ -175,15 +213,15 @@ export function UsersView() {
         </button>
       </div>
 
-      <div className={styles.stats}>
+      <div className={ui.statsGrid}>
         {statCards.map((card) => (
-          <article key={card.label} className={`${ui.card} ${styles.stat}`}>
-            <span className={styles.statIcon} style={{ background: card.color }} aria-hidden>
+          <article key={card.label} className={ui.statCard}>
+            <span className={ui.statIcon} style={{ background: card.color }} aria-hidden>
               {card.icon}
             </span>
             <span>
-              <span className={styles.statLabel}>{card.label}</span>
-              <span className={styles.statValue}>{card.value}</span>
+              <span className={ui.statLabel}>{card.label}</span>
+              <span className={ui.statValue}>{card.value}</span>
             </span>
           </article>
         ))}
@@ -281,33 +319,12 @@ export function UsersView() {
                         type="button"
                         className={styles.menuButton}
                         aria-haspopup="menu"
-                        aria-expanded={menuFor === user.id}
+                        aria-expanded={menuUser?.id === user.id}
                         aria-label={`จัดการ ${user.name}`}
-                        onClick={() => setMenuFor(menuFor === user.id ? null : user.id)}
+                        onClick={(e) => toggleMenu(e, user)}
                       >
                         <DotsIcon size={18} />
                       </button>
-                      {menuFor === user.id && (
-                        <div ref={menuRef} className={styles.menu} role="menu">
-                          <button type="button" role="menuitem" onClick={() => open("resume", user)}>
-                            ดู Resume
-                          </button>
-                          <button type="button" role="menuitem" onClick={() => open("certificates", user)}>
-                            ดูใบประกาศนียบัตร ({user.certificateCount})
-                          </button>
-                          <button type="button" role="menuitem" onClick={() => open("edit", user)}>
-                            แก้ไขข้อมูลผู้สมัคร
-                          </button>
-                          <button
-                            type="button"
-                            role="menuitem"
-                            className={styles.menuDanger}
-                            onClick={() => open("delete", user)}
-                          >
-                            ลบผู้สมัคร
-                          </button>
-                        </div>
-                      )}
                     </td>
                   </tr>
                 ))}
@@ -354,6 +371,50 @@ export function UsersView() {
           onConfirm={confirmDelete}
           onCancel={() => setDialog(null)}
         />
+      )}
+
+      {menuUser && menuPos && (
+        <div
+          ref={menuRef}
+          className={styles.menu}
+          style={{
+            position: "fixed",
+            top: menuPos.top,
+            bottom: menuPos.bottom,
+            right: menuPos.right,
+            zIndex: 9999,
+          }}
+          role="menu"
+          aria-label="เมนูจัดการผู้สมัคร"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className={styles.menuHeader}>
+            <span className={styles.menuUserCode}>{menuUser.code}</span>
+            <span className={styles.menuUserName}>{menuUser.name}</span>
+          </div>
+          <button type="button" role="menuitem" onClick={() => open("resume", menuUser)}>
+            <span className={styles.menuItemIcon}>📄</span>
+            <span>ดู Resume</span>
+          </button>
+          <button type="button" role="menuitem" onClick={() => open("certificates", menuUser)}>
+            <span className={styles.menuItemIcon}>🏆</span>
+            <span>ดูใบประกาศนียบัตร ({menuUser.certificateCount})</span>
+          </button>
+          <button type="button" role="menuitem" onClick={() => open("edit", menuUser)}>
+            <span className={styles.menuItemIcon}>✏️</span>
+            <span>แก้ไขข้อมูลผู้สมัคร</span>
+          </button>
+          <div className={styles.menuDivider} />
+          <button
+            type="button"
+            role="menuitem"
+            className={styles.menuDanger}
+            onClick={() => open("delete", menuUser)}
+          >
+            <span className={styles.menuItemIcon}>🗑️</span>
+            <span>ลบผู้สมัคร</span>
+          </button>
+        </div>
       )}
     </>
   );

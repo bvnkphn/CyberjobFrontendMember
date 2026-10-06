@@ -1,4 +1,4 @@
-import { useRef, useState, type ChangeEvent, type DragEvent, type FormEvent } from "react";
+import { useEffect, useRef, useState, type ChangeEvent, type DragEvent, type FormEvent } from "react";
 
 type CertificateFormProps = {
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
@@ -17,6 +17,22 @@ export function CertificateForm({ onSubmit, saved, initialData = {} }: Certifica
   const [files, setFiles] = useState<CertificateFile[]>(() => [1, 2, 3, 4, 5]
     .filter((index) => initialData[`certificate${index}FileName`])
     .map((index) => ({ id: nextId.current++, title: String(initialData[`certificate${index}Title`] ?? ""), fileName: String(initialData[`certificate${index}FileName`] ?? ""), fileSize: Number(initialData[`certificate${index}FileSize`] ?? 0), fileType: String(initialData[`certificate${index}FileType`] ?? "") })));
+
+  useEffect(() => {
+    const list = [1, 2, 3, 4, 5]
+      .filter((index) => initialData[`certificate${index}FileName`])
+      .map((index) => ({
+        id: nextId.current++,
+        title: String(initialData[`certificate${index}Title`] ?? ""),
+        fileName: String(initialData[`certificate${index}FileName`] ?? ""),
+        fileSize: Number(initialData[`certificate${index}FileSize`] ?? 0),
+        fileType: String(initialData[`certificate${index}FileType`] ?? "")
+      }));
+    if (list.length > 0) {
+      setFiles(list);
+    }
+  }, [initialData]);
+
   const [error, setError] = useState("");
   const [dragging, setDragging] = useState(false);
 
@@ -93,7 +109,7 @@ export function CertificateForm({ onSubmit, saved, initialData = {} }: Certifica
 
       <div className="save-row certificate-save-row">
         <button className="primary-button save-button" type="submit" disabled={files.length === 0}>บันทึก</button>
-        {saved && <p className="save-message" role="status">บันทึกตัวอย่างเรียบร้อยแล้ว</p>}
+        {saved && <p className="save-message" role="status">บันทึกข้อมูลเรียบร้อยแล้ว</p>}
       </div>
     </form>
   );

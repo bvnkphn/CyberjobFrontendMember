@@ -2,9 +2,9 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { readError, useAdminAuth } from "@/lib/admin/auth";
-import type { AdminJob, ExperienceLevel, JobFilterOptions, Paginated } from "@/lib/admin/types";
+import type { AdminJob, ExperienceLevel, JobFilterOptions, Paginated } from "@/lib/types";
 import { SearchIcon, TrashIcon } from "../icons";
-import { ConfirmDialog } from "../ui/Modal";
+import { ConfirmDialog, Modal } from "../ui/Modal";
 import { TableFooter, type PageSize } from "../ui/TableFooter";
 import ui from "../ui/ui.module.css";
 import styles from "./Jobs.module.css";
@@ -41,6 +41,8 @@ export function JobsView() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
 
+  const [menuJobId, setMenuJobId] = useState<string | null>(null);
+  const [detailJob, setDetailJob] = useState<AdminJob | null>(null);
   const [pendingDelete, setPendingDelete] = useState<AdminJob | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState("");
@@ -77,6 +79,13 @@ export function JobsView() {
   useEffect(() => {
     void load();
   }, [load]);
+
+  // ปิดเมนูเมื่อคลิกข้างนอก
+  useEffect(() => {
+    const handleOutside = () => setMenuJobId(null);
+    window.addEventListener("click", handleOutside);
+    return () => window.removeEventListener("click", handleOutside);
+  }, []);
 
   // เปลี่ยนตัวกรองแล้วกลับไปหน้าแรกเสมอ
   useEffect(() => {
@@ -212,18 +221,46 @@ export function JobsView() {
                       </span>
                     </td>
                     <td style={{ textAlign: "right" }}>
-                      <button
-                        type="button"
-                        className={styles.deleteButton}
-                        aria-label={`ลบประกาศงาน ${job.title} ของ ${job.companyName}`}
-                        title="ลบประกาศงาน"
-                        onClick={() => {
-                          setDeleteError("");
-                          setPendingDelete(job);
-                        }}
+                      {/* จุดสามจุด (3-dots) Dropdown Menu */}
+                      <div
+                        className={styles.actionMenuWrapper}
+                        onClick={(e) => e.stopPropagation()}
                       >
-                        <TrashIcon size={18} />
-                      </button>
+                        <button
+                          type="button"
+                          className={styles.dotsButton}
+                          aria-label="เมนูจัดการ"
+                          title="เมนูจัดการ"
+                          onClick={() => setMenuJobId(menuJobId === job.id ? null : job.id)}
+                        >
+                          ⋮
+                        </button>
+                        {menuJobId === job.id && (
+                          <div className={styles.dropdownMenu} role="menu">
+                            <button
+                              type="button"
+                              className={styles.dropdownItem}
+                              onClick={() => {
+                                setMenuJobId(null);
+                                setDetailJob(job);
+                              }}
+                            >
+                              <span>👁️</span> ดูรายละเอียด
+                            </button>
+                            <button
+                              type="button"
+                              className={`${styles.dropdownItem} ${styles.dropdownItemDanger}`}
+                              onClick={() => {
+                                setMenuJobId(null);
+                                setDeleteError("");
+                                setPendingDelete(job);
+                              }}
+                            >
+                              <span>🗑️</span> ลบประกาศ
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -243,6 +280,60 @@ export function JobsView() {
           />
         )}
       </section>
+
+      {/* Modal ดูรายละเอียดประกาศงาน */}
+      {detailJob && (
+        <Modal
+          title={`รายละเอียดงาน: ${detailJob.title}`}
+          subtitle={`บริษัท ${detailJob.companyName}`}
+          wide
+          onClose={() => setDetailJob(null)}
+          footer={
+            <button
+              type="button"
+              className={`${ui.button} ${ui.buttonPrimary}`}
+              onClick={() => setDetailJob(null)}
+            >
+              ปิด
+            </button>
+          }
+        >
+          <div className={styles.detailGrid}>
+            <div className={styles.detailField}>
+              <small>ตำแหน่ง</small>
+              <strong>{detailJob.title}</strong>
+            </div>
+            <div className={styles.detailField}>
+              <small>ชื่อบริษัท</small>
+              <strong>{detailJob.companyName}</strong>
+            </div>
+            <div className={styles.detailField}>
+              <small>เงินเดือนขั้นต่ำ</small>
+              <strong>{formatBaht(detailJob.salaryMin)}</strong>
+            </div>
+            <div className={styles.detailField}>
+              <small>ประสบการณ์ขั้นต่ำ</small>
+              <strong>{experienceLabel(detailJob.experienceMinYears)}</strong>
+            </div>
+            <div className={styles.detailField}>
+              <small>รูปแบบการทำงาน</small>
+              <strong>{detailJob.workStyle}</strong>
+            </div>
+            <div className={styles.detailField}>
+              <small>สถานะประกาศ</small>
+              <strong>{detailJob.isActive ? "เปิดรับสมัคร" : "ปิดรับสมัคร"}</strong>
+            </div>
+          </div>
+          <div>
+            <h4 style={{ margin: "0 0 8px", fontSize: "14px", fontWeight: 700, color: "var(--navy-950)" }}>
+              รายละเอียดของตำแหน่งงาน
+            </h4>
+            <div className={styles.detailDesc}>
+              {detailJob.description || "ไม่มีรายละเอียดเพิ่มเติม"}
+            </div>
+          </div>
+        </Modal>
+      )}
 
       {pendingDelete && (
         <ConfirmDialog

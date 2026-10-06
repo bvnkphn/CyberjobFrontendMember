@@ -1,93 +1,59 @@
 "use client";
 
-import { useMemo, useState, type KeyboardEvent } from "react";
+import { useCallback, useEffect, useMemo, useState, type KeyboardEvent } from "react";
+import { readError, useAdminAuth } from "@/lib/admin/auth";
 import {
   SearchIcon,
   PlusIcon,
   EditIcon,
   TrashIcon,
   CloseIcon,
-  BookIcon,
   ChevronIcon,
   WarningIcon,
   WrenchIcon,
+  DownloadIcon,
 } from "../icons";
 import styles from "./Synonyms.module.css";
+import ui from "../ui/ui.module.css";
+import { TableFooter, type PageSize } from "../ui/TableFooter";
 
 export interface SynonymGroup {
   id: string;
   mainKeyword: string;
+  category: string;
   synonyms: string[];
   updatedAt: string;
   updatedBy: string;
 }
 
-const INITIAL_GROUPS: SynonymGroup[] = [
-  {
-    id: "SYN-001",
-    mainKeyword: "โปรแกรมเมอร์",
-    synonyms: ["นักเขียนโปรแกรม", "Developer", "Programmer", "Coder"],
-    updatedAt: "27/7/2569",
-    updatedBy: "Super Admin",
-  },
-  {
-    id: "SYN-002",
-    mainKeyword: "เครือข่าย",
-    synonyms: ["Network", "ระบบเครือข่าย", "Networking"],
-    updatedAt: "27/7/2569",
-    updatedBy: "Super Admin",
-  },
-  {
-    id: "SYN-003",
-    mainKeyword: "นักวิเคราะห์ข้อมูล",
-    synonyms: ["Data Analyst", "Data Scientist", "นักวิทยาศาสตร์ข้อมูล"],
-    updatedAt: "27/7/2569",
-    updatedBy: "Super Admin",
-  },
-  {
-    id: "SYN-004",
-    mainKeyword: "ความปลอดภัยไซเบอร์",
-    synonyms: ["Cyber Security", "Cybersecurity", "ความมั่นคงปลอดภัยทางไซเบอร์"],
-    updatedAt: "27/7/2569",
-    updatedBy: "Admin",
-  },
-  {
-    id: "SYN-005",
-    mainKeyword: "ผู้ดูแลระบบ",
-    synonyms: ["System Admin", "Administrator", "SysAdmin", "ผู้บริหารระบบ"],
-    updatedAt: "27/7/2569",
-    updatedBy: "Admin",
-  },
-  {
-    id: "SYN-006",
-    mainKeyword: "DevOps",
-    synonyms: ["Development Operations", "DevOps Engineer", "วิศวกร DevOps"],
-    updatedAt: "27/7/2569",
-    updatedBy: "Super Admin",
-  },
-  {
-    id: "SYN-007",
-    mainKeyword: "ผู้ทดสอบระบบ",
-    synonyms: ["Software Tester", "QA Engineer", "Quality Assurance", "Test Automation"],
-    updatedAt: "27/7/2569",
-    updatedBy: "Super Admin",
-  },
-  {
-    id: "SYN-008",
-    mainKeyword: "สถาปัตยกรรมคลาวด์",
-    synonyms: ["Cloud Architect", "Cloud Solutions", "AWS Architect", "Azure Specialist"],
-    updatedAt: "27/7/2569",
-    updatedBy: "Admin",
-  },
+const COMMON_CATEGORIES = [
+  "Security",
+  "Development",
+  "Frontend",
+  "DevOps & Cloud",
+  "Data",
+  "Network",
+  "Infrastructure",
+  "QA & Testing",
+  "Cloud",
+  "General",
 ];
 
 export function SynonymsView() {
-  const [groups, setGroups] = useState<SynonymGroup[]>(INITIAL_GROUPS);
+  const { adminFetch } = useAdminAuth();
+
+  const [groups, setGroups] = useState<SynonymGroup[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [aiLoading, setAiLoading] = useState(false);
+  const [toastMsg, setToastMsg] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
   // Pagination
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(20);
+  const [pageSize, setPageSize] = useState<PageSize>(20);
 
   // Modal States
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -97,20 +63,121 @@ export function SynonymsView() {
 
   // Form States
   const [formMainKeyword, setFormMainKeyword] = useState("");
+  const [formCategory, setFormCategory] = useState("General");
   const [formSynonyms, setFormSynonyms] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
   const [validationError, setValidationError] = useState<string | null>(null);
 
+  const notify = (msg: string) => {
+    setToastMsg(msg);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
+  };
+
+  // Load from backend API
+  const loadGroups = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await adminFetch("/admin/synonyms");
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          const mapped: SynonymGroup[] = data.map((d: any) => ({
+            id: d.id,
+            mainKeyword: d.name,
+            category: d.category || "General",
+            synonyms: d.synonyms || [],
+            updatedAt: d.updatedAt ? new Date(d.updatedAt).toLocaleDateString("th-TH") : "–",
+            updatedBy: d.updatedBy || "Admin",
+          }));
+          setGroups(mapped);
+        }
+      }
+    } catch {
+      //
+    } finally {
+      setLoading(false);
+    }
+  }, [adminFetch]);
+
+  useEffect(() => {
+    void loadGroups();
+  }, [loadGroups]);
+
+  // AI Suggestion Handler
+  const handleAiSuggest = async () => {
+    if (!formMainKeyword.trim()) return;
+    setAiLoading(true);
+    try {
+      const res = await adminFetch("/admin/synonyms/ai-suggest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ keyword: formMainKeyword.trim() }),
+      });
+      if (res.ok) {
+        const json = await res.json();
+        if (json.suggestions && Array.isArray(json.suggestions)) {
+          // Merge unique suggestions
+          const combined = Array.from(new Set([...formSynonyms, ...json.suggestions]));
+          setFormSynonyms(combined);
+          notify(`AI แนะนำ ${json.suggestions.length} คำพ้องสำหรับ "${formMainKeyword.trim()}"`);
+        }
+      }
+    } catch {
+      //
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  // Seed default taxonomy from server
+  const handleSeedDefaults = async () => {
+    if (!confirm("ต้องการโหลดคำศัพท์และทักษะเริ่มต้นสาย IT & Cyber หรือไม่?")) return;
+    setLoading(true);
+    try {
+      const res = await adminFetch("/admin/synonyms/seed-defaults", { method: "POST" });
+      if (!res.ok) throw await readError(res, "โหลดคำศัพท์เริ่มต้นไม่สำเร็จ");
+      await loadGroups();
+      notify("โหลดคำศัพท์และทักษะเริ่มต้นเรียบร้อยแล้ว");
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "เกิดข้อผิดพลาด");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Export CSV
+  const handleExportCsv = () => {
+    const header = "Main Keyword,Category,Synonyms,วันที่แก้ไขล่าสุด,ผู้แก้ไข\r\n";
+    const rows = groups
+      .map((g) =>
+        `"${g.mainKeyword}","${g.category}","${g.synonyms.join(", ")}","${g.updatedAt}","${g.updatedBy}"`
+      )
+      .join("\r\n");
+    const blob = new Blob(["\uFEFF" + header + rows], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `synonyms-dictionary-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   // Filtering
   const filtered = useMemo(() => {
+    let result = groups;
+    if (categoryFilter !== "all") {
+      result = result.filter((g) => g.category.toLowerCase() === categoryFilter.toLowerCase());
+    }
     const q = search.trim().toLowerCase();
-    if (!q) return groups;
-    return groups.filter((g) => {
+    if (!q) return result;
+    return result.filter((g) => {
       const matchMain = g.mainKeyword.toLowerCase().includes(q);
+      const matchCategory = g.category.toLowerCase().includes(q);
       const matchSyn = g.synonyms.some((s) => s.toLowerCase().includes(q));
-      return matchMain || matchSyn;
+      return matchMain || matchCategory || matchSyn;
     });
-  }, [groups, search]);
+  }, [groups, search, categoryFilter]);
 
   // Paginated
   const paginated = useMemo(() => {
@@ -120,19 +187,23 @@ export function SynonymsView() {
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
 
+  // Compute total synonyms
+  const totalSynonymsCount = useMemo(() => {
+    return groups.reduce((acc, g) => acc + g.synonyms.length, 0);
+  }, [groups]);
+
   // Check if a word already exists in other groups
   const checkWordExistsInSystem = (word: string, currentGroupId?: string) => {
     const target = word.trim().toLowerCase();
     for (const g of groups) {
       if (currentGroupId && g.id === currentGroupId) {
-        // In the same group, check duplicate inside synonyms
         continue;
       }
       if (g.mainKeyword.toLowerCase() === target) {
-        return `"${word.trim()}" มีอยู่ในระบบแล้ว`;
+        return `"${word.trim()}" มีอยู่ในระบบแล้ว (เป็น Main Keyword)`;
       }
       if (g.synonyms.some((s) => s.toLowerCase() === target)) {
-        return `"${word.trim()}" มีอยู่ในระบบแล้ว`;
+        return `"${word.trim()}" มีอยู่ในระบบแล้ว (ในกลุ่ม ${g.mainKeyword})`;
       }
     }
     return null;
@@ -153,7 +224,6 @@ export function SynonymsView() {
     const errorMsg = checkWordExistsInSystem(clean, editingGroup?.id);
     if (errorMsg) {
       setValidationError(errorMsg);
-      // still add tag so user sees error banner as shown in media_1790170323408.png
       setFormSynonyms([...formSynonyms, clean]);
       setTagInput("");
       return;
@@ -174,7 +244,6 @@ export function SynonymsView() {
   const handleRemoveTag = (tagToRemove: string) => {
     const next = formSynonyms.filter((s) => s !== tagToRemove);
     setFormSynonyms(next);
-    // Re-check validation
     let hasErr: string | null = null;
     for (const s of next) {
       const err = checkWordExistsInSystem(s, editingGroup?.id);
@@ -189,6 +258,7 @@ export function SynonymsView() {
   // Open Add Modal
   const openAdd = () => {
     setFormMainKeyword("");
+    setFormCategory("General");
     setFormSynonyms([]);
     setTagInput("");
     setValidationError(null);
@@ -199,24 +269,26 @@ export function SynonymsView() {
   const openEdit = (group: SynonymGroup) => {
     setEditingGroup(group);
     setFormMainKeyword(group.mainKeyword);
+    setFormCategory(group.category || "General");
     setFormSynonyms([...group.synonyms]);
     setTagInput("");
     setValidationError(null);
   };
 
-  // Trigger Save Add (Validates and opens confirmation dialog)
+  // Trigger Save Add
   const handleSaveAdd = () => {
     const mainClean = formMainKeyword.trim();
-    if (!mainClean) return;
+    if (!mainClean) {
+      setValidationError("กรุณาระบุ Main Keyword");
+      return;
+    }
 
-    // Check if main keyword exists
     const mainErr = checkWordExistsInSystem(mainClean);
     if (mainErr) {
       setValidationError(mainErr);
       return;
     }
 
-    // Check if any synonym exists
     for (const s of formSynonyms) {
       const synErr = checkWordExistsInSystem(s);
       if (synErr) {
@@ -229,20 +301,21 @@ export function SynonymsView() {
     setConfirmSaveTarget("add");
   };
 
-  // Trigger Save Edit (Validates and opens confirmation dialog)
+  // Trigger Save Edit
   const handleSaveEdit = () => {
     if (!editingGroup) return;
     const mainClean = formMainKeyword.trim();
-    if (!mainClean) return;
+    if (!mainClean) {
+      setValidationError("กรุณาระบุ Main Keyword");
+      return;
+    }
 
-    // Check main keyword duplicate
     const mainErr = checkWordExistsInSystem(mainClean, editingGroup.id);
     if (mainErr) {
       setValidationError(mainErr);
       return;
     }
 
-    // Check synonyms duplicate
     for (const s of formSynonyms) {
       const synErr = checkWordExistsInSystem(s, editingGroup.id);
       if (synErr) {
@@ -255,205 +328,245 @@ export function SynonymsView() {
     setConfirmSaveTarget("edit");
   };
 
-  // Execute Save after confirmation in media_1790170329104.png
-  const executeConfirmSave = () => {
+  // Execute Save to PostgreSQL DB
+  const executeConfirmSave = async () => {
     const mainClean = formMainKeyword.trim();
     if (!mainClean) return;
 
-    if (confirmSaveTarget === "add") {
-      const newGroup: SynonymGroup = {
-        id: `SYN-${String(groups.length + 1).padStart(3, "0")}`,
-        mainKeyword: mainClean,
-        synonyms: formSynonyms,
-        updatedAt: "27/7/2569",
-        updatedBy: "Admin",
-      };
-      setGroups([newGroup, ...groups]);
-      setIsAddOpen(false);
-      setConfirmSaveTarget(null);
-    } else if (confirmSaveTarget === "edit" && editingGroup) {
-      setGroups((prev) =>
-        prev.map((g) => {
-          if (g.id !== editingGroup.id) return g;
-          return {
-            ...g,
-            mainKeyword: mainClean,
+    setSaving(true);
+    try {
+      if (confirmSaveTarget === "add") {
+        const res = await adminFetch("/admin/synonyms", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: mainClean,
+            category: formCategory || "General",
             synonyms: formSynonyms,
-            updatedAt: "27/7/2569",
-            updatedBy: "Super Admin",
-          };
-        })
-      );
+          }),
+        });
+        if (!res.ok) throw await readError(res, "เพิ่มกลุ่มคำไม่สำเร็จ");
+        notify(`เพิ่มกลุ่มคำ "${mainClean}" ลงฐานข้อมูลเรียบร้อยแล้ว`);
+      } else if (confirmSaveTarget === "edit" && editingGroup) {
+        const res = await adminFetch("/admin/synonyms", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: editingGroup.id,
+            name: mainClean,
+            category: formCategory || editingGroup.category || "General",
+            synonyms: formSynonyms,
+          }),
+        });
+        if (!res.ok) throw await readError(res, "แก้ไขกลุ่มคำไม่สำเร็จ");
+        notify(`บันทึกการแก้ไข "${mainClean}" สำเร็จ`);
+      }
+
+      setIsAddOpen(false);
       setEditingGroup(null);
       setConfirmSaveTarget(null);
+      await loadGroups();
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "เกิดข้อผิดพลาดในการบันทึก");
+    } finally {
+      setSaving(false);
     }
   };
 
-  // Confirm Delete
-  const handleConfirmDelete = () => {
+  // Confirm Delete from PostgreSQL DB
+  const handleConfirmDelete = async () => {
     if (!deletingGroup) return;
-    setGroups((prev) => prev.filter((g) => g.id !== deletingGroup.id));
-    setDeletingGroup(null);
+    setSaving(true);
+    try {
+      const res = await adminFetch(`/admin/synonyms/${deletingGroup.id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw await readError(res, "ลบกลุ่มคำไม่สำเร็จ");
+      notify(`ลบกลุ่มคำ "${deletingGroup.mainKeyword}" ออกจากฐานข้อมูลแล้ว`);
+      setDeletingGroup(null);
+      await loadGroups();
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "เกิดข้อผิดพลาดในการลบ");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
     <div className={styles.container}>
-      {/* ── Page Header (Matching Screenshot 1 & 4) ── */}
-      <div className={styles.header}>
-        <h1 className={styles.title}>Synonym & Keyword Dictionary</h1>
-        <p className={styles.subtitle}>จัดการกลุ่มคำเหมือนและคำสำคัญสำหรับระบบค้นหา</p>
-      </div>
-
-      {/* ── Stat Card (Matching Screenshot 1 & 4) ── */}
-      <div className={styles.statCard}>
-        <div className={styles.statIconBox}>
-          📖
-        </div>
-        <div className={styles.statInfo}>
-          <span className={styles.statLabel}>กลุ่มคำทั้งหมด</span>
-          <span className={styles.statValue}>{groups.length}</span>
+      {/* ── Page Header ── */}
+      <div className={ui.pageHead}>
+        <div>
+          <h1>Synonym & Keyword Dictionary</h1>
+          <p>จัดการกลุ่มคำเหมือน คำค้นหาทางเลือก และทักษะที่เกี่ยวข้องสำหรับระบบค้นหางานและ AI Matching</p>
         </div>
       </div>
 
-      {/* ── Search Bar & Add Button Row ── */}
-      <div className={styles.actionBar}>
-        <div className={styles.searchWrap}>
-          <span className={styles.searchIcon}>
-            <SearchIcon size={16} />
+      {/* ── Stat Cards ── */}
+      <div className={ui.statsGrid}>
+        <div className={ui.statCard}>
+          <span className={ui.statIcon} style={{ background: "var(--navy-900)" }}>📖</span>
+          <span>
+            <span className={ui.statLabel}>กลุ่มคำหลัก (Main Keywords)</span>
+            <span className={ui.statValue}>{groups.length}</span>
           </span>
-          <input
-            type="text"
-            className={styles.searchInput}
-            placeholder="ค้นหาด้วย Main Keyword หรือ Synonyms..."
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setPage(1);
-            }}
-          />
         </div>
 
-        <button type="button" className={styles.addBtn} onClick={openAdd}>
-          <PlusIcon size={16} />
-          เพิ่มกลุ่มคำใหม่
-        </button>
+        <div className={ui.statCard}>
+          <span className={ui.statIcon} style={{ background: "var(--blue)" }}>🏷️</span>
+          <span>
+            <span className={ui.statLabel}>คำพ้องในระบบทั้งหมด</span>
+            <span className={ui.statValue}>{totalSynonymsCount}</span>
+          </span>
+        </div>
+
+        <div className={ui.statCard}>
+          <span className={ui.statIcon} style={{ background: "var(--green)" }}>🗂️</span>
+          <span>
+            <span className={ui.statLabel}>หมวดหมู่สายงาน</span>
+            <span className={ui.statValue}>{new Set(groups.map((g) => g.category)).size}</span>
+          </span>
+        </div>
       </div>
 
       {/* ── Table Card ── */}
-      <div className={styles.tableCard}>
-        <div className={styles.tableWrap}>
-          <table className={styles.table}>
+      <section className={ui.card}>
+        <div className={ui.toolbar}>
+          <label className={ui.search}>
+            <SearchIcon size={18} />
+            <input
+              type="text"
+              placeholder="ค้นหาด้วย Main Keyword, หมวดหมู่ หรือ Synonyms..."
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
+            />
+          </label>
+
+          <select
+            className={ui.select}
+            value={categoryFilter}
+            onChange={(e) => {
+              setCategoryFilter(e.target.value);
+              setPage(1);
+            }}
+          >
+            <option value="all">ทุกหมวดหมู่ (All Categories)</option>
+            {COMMON_CATEGORIES.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+
+          <button
+            type="button"
+            className={ui.button}
+            onClick={handleExportCsv}
+            title="ส่งออกรายการคำพ้องเป็น CSV"
+          >
+            <DownloadIcon size={16} /> Export CSV
+          </button>
+
+          <button
+            type="button"
+            className={ui.button}
+            onClick={handleSeedDefaults}
+            title="รีเซ็ตหรือเติมคำศัพท์เริ่มต้น"
+          >
+            🔄 รีเซ็ตค่าเริ่มต้น
+          </button>
+
+          <button type="button" className={`${ui.button} ${ui.buttonGold}`} onClick={openAdd}>
+            <PlusIcon size={16} /> เพิ่มกลุ่มคำใหม่
+          </button>
+        </div>
+
+        <div className={ui.tableScroll}>
+          <table className={ui.table}>
             <thead>
               <tr>
-                <th style={{ width: "22%" }}>Main Keyword</th>
+                <th style={{ width: "20%" }}>Main Keyword</th>
+                <th style={{ width: "16%" }}>หมวดหมู่</th>
                 <th>Synonyms</th>
-                <th style={{ width: "16%" }}>วันที่แก้ไขล่าสุด</th>
-                <th style={{ width: "16%" }}>ผู้แก้ไขล่าสุด</th>
-                <th style={{ width: "10%" }}>จัดการ</th>
+                <th style={{ width: "14%" }}>วันที่แก้ไขล่าสุด</th>
+                <th style={{ width: "14%" }}>ผู้แก้ไขล่าสุด</th>
+                <th style={{ width: "10%", textAlign: "right" }}>จัดการ</th>
               </tr>
             </thead>
             <tbody>
-              {paginated.map((item) => (
-                <tr key={item.id}>
-                  {/* Main Keyword */}
-                  <td>
-                    <span className={styles.mainKeywordText}>{item.mainKeyword}</span>
-                  </td>
-
-                  {/* Synonyms Pills */}
-                  <td>
-                    <div className={styles.tagsRow}>
-                      {item.synonyms.map((tag, idx) => (
-                        <span key={idx} className={styles.tagPill}>
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </td>
-
-                  {/* วันที่แก้ไขล่าสุด */}
-                  <td>
-                    <span className={styles.dateText}>{item.updatedAt}</span>
-                  </td>
-
-                  {/* ผู้แก้ไขล่าสุด */}
-                  <td>
-                    <span className={styles.userText}>{item.updatedBy}</span>
-                  </td>
-
-                  {/* จัดการ (Actions) */}
-                  <td>
-                    <div className={styles.actionBtns}>
-                      <button
-                        type="button"
-                        className={styles.iconBtn}
-                        title="แก้ไขกลุ่มคำ"
-                        onClick={() => openEdit(item)}
-                      >
-                        <EditIcon size={16} />
-                      </button>
-                      <button
-                        type="button"
-                        className={`${styles.iconBtn} ${styles.iconBtnDanger}`}
-                        title="ลบกลุ่มคำ"
-                        onClick={() => setDeletingGroup(item)}
-                      >
-                        <TrashIcon size={16} />
-                      </button>
-                    </div>
+              {loading && groups.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className={ui.empty}>
+                    กำลังโหลดข้อมูลจากฐานข้อมูล...
                   </td>
                 </tr>
-              ))}
+              ) : paginated.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className={ui.empty}>
+                    ไม่พบกลุ่มคำพ้องที่ตรงกับเงื่อนไขการค้นหา
+                  </td>
+                </tr>
+              ) : (
+                paginated.map((item) => (
+                  <tr key={item.id}>
+                    <td>
+                      <span className={ui.strong}>{item.mainKeyword}</span>
+                    </td>
+                    <td>
+                      <span className={`${ui.badge} ${ui.badgeGray}`}>{item.category}</span>
+                    </td>
+                    <td>
+                      <div className={styles.tagsRow}>
+                        {item.synonyms.map((tag, idx) => (
+                          <span key={idx} className={styles.tagPill}>
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </td>
+                    <td>{item.updatedAt}</td>
+                    <td>{item.updatedBy}</td>
+                    <td style={{ textAlign: "right" }}>
+                      <div className={styles.actionBtns} style={{ justifyContent: "flex-end" }}>
+                        <button
+                          type="button"
+                          className={styles.iconBtn}
+                          title="แก้ไขกลุ่มคำ"
+                          onClick={() => openEdit(item)}
+                        >
+                          <EditIcon size={16} />
+                        </button>
+                        <button
+                          type="button"
+                          className={`${styles.iconBtn} ${styles.iconBtnDanger}`}
+                          title="ลบกลุ่มคำ"
+                          onClick={() => setDeletingGroup(item)}
+                        >
+                          <TrashIcon size={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
 
-        {/* ── Table Footer (Matching Screenshot) ── */}
-        <div className={styles.tableFooter}>
-          <div className={styles.footerLeft}>
-            <span>แสดง</span>
-            <select
-              className={styles.pageSelect}
-              value={pageSize}
-              onChange={(e) => {
-                setPageSize(Number(e.target.value));
-                setPage(1);
-              }}
-            >
-              <option value={20}>20</option>
-              <option value={50}>50</option>
-              <option value={100}>100</option>
-            </select>
-            <span>
-              รายการต่อหน้า | 1–{filtered.length} จาก {groups.length}
-            </span>
-          </div>
+        <TableFooter
+          page={page}
+          pageSize={pageSize}
+          total={filtered.length}
+          totalPages={totalPages}
+          onPageChange={setPage}
+          onPageSizeChange={setPageSize}
+        />
+      </section>
 
-          <div className={styles.pager}>
-            <button
-              type="button"
-              className={styles.pagerBtn}
-              disabled={page <= 1}
-              onClick={() => setPage(page - 1)}
-            >
-              <ChevronIcon size={14} dir="left" />
-            </button>
-            <span>
-              {page} / {totalPages}
-            </span>
-            <button
-              type="button"
-              className={styles.pagerBtn}
-              disabled={page >= totalPages}
-              onClick={() => setPage(page + 1)}
-            >
-              <ChevronIcon size={14} dir="right" />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* ── MODAL: เพิ่มกลุ่มคำใหม่ (media_1790170323418.png) ── */}
+      {/* ── MODAL: เพิ่มกลุ่มคำใหม่ ── */}
       {isAddOpen && (
         <div
           className={styles.modalBackdrop}
@@ -475,21 +588,58 @@ export function SynonymsView() {
 
             <div className={styles.modalBody}>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Main Keyword</label>
+                <label className={styles.fieldLabel}>Main Keyword (คำหลัก)</label>
                 <input
                   type="text"
                   className={styles.inputField}
-                  placeholder="คำหลัก"
+                  placeholder="คำหลัก (เช่น React, Cybersecurity, Pentester)"
                   value={formMainKeyword}
                   onChange={(e) => {
                     setFormMainKeyword(e.target.value);
                     setValidationError(null);
                   }}
                 />
+                <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
+                  <button
+                    type="button"
+                    style={{
+                      background: "linear-gradient(135deg, #0ea5e9, #0284c7)",
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: "6px",
+                      padding: "6px 12px",
+                      fontSize: "12px",
+                      fontWeight: 600,
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "6px",
+                    }}
+                    onClick={handleAiSuggest}
+                    disabled={aiLoading || !formMainKeyword.trim()}
+                  >
+                    ✨ {aiLoading ? "AI กำลังวิเคราะห์คำพ้อง..." : "ให้ AI แนะนำคำพ้องอัตโนมัติ"}
+                  </button>
+                </div>
               </div>
 
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Synonyms</label>
+                <label className={styles.fieldLabel}>หมวดหมู่สายงาน (Category)</label>
+                <select
+                  className={styles.inputField}
+                  value={formCategory}
+                  onChange={(e) => setFormCategory(e.target.value)}
+                >
+                  {COMMON_CATEGORIES.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className={styles.fieldGroup}>
+                <label className={styles.fieldLabel}>Synonyms (คำพ้อง/ทักษะที่เกี่ยวข้อง)</label>
                 <div className={styles.tagContainer}>
                   {formSynonyms.map((tag, idx) => (
                     <span key={idx} className={styles.modalDarkTag}>
@@ -513,7 +663,7 @@ export function SynonymsView() {
                     onBlur={handleAddTag}
                   />
                 </div>
-                <div className={styles.helperText}>พิมพ์แล้วกด Enter เพื่อเพิ่มเป็น Tag</div>
+                <div className={styles.helperText}>พิมพ์แล้วกด Enter หรือเครื่องหมายจุลภาค (,) เพื่อเพิ่มเป็น Tag</div>
 
                 {validationError && (
                   <div className={styles.errorAlert}>
@@ -528,6 +678,7 @@ export function SynonymsView() {
                   type="button"
                   className={styles.btnCancel}
                   onClick={() => setIsAddOpen(false)}
+                  disabled={saving}
                 >
                   ยกเลิก
                 </button>
@@ -535,8 +686,9 @@ export function SynonymsView() {
                   type="button"
                   className={styles.btnGold}
                   onClick={handleSaveAdd}
+                  disabled={saving}
                 >
-                  บันทึก
+                  {saving ? "กำลังบันทึก..." : "บันทึก"}
                 </button>
               </div>
             </div>
@@ -544,7 +696,7 @@ export function SynonymsView() {
         </div>
       )}
 
-      {/* ── MODAL: แก้ไขกลุ่มคำ (media_1790170323405.png & media_1790170323408.png) ── */}
+      {/* ── MODAL: แก้ไขกลุ่มคำ ── */}
       {editingGroup && (
         <div
           className={styles.modalBackdrop}
@@ -566,7 +718,7 @@ export function SynonymsView() {
 
             <div className={styles.modalBody}>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Main Keyword</label>
+                <label className={styles.fieldLabel}>Main Keyword (คำหลัก)</label>
                 <input
                   type="text"
                   className={styles.inputField}
@@ -576,10 +728,47 @@ export function SynonymsView() {
                     setValidationError(null);
                   }}
                 />
+                <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
+                  <button
+                    type="button"
+                    style={{
+                      background: "linear-gradient(135deg, #0ea5e9, #0284c7)",
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: "6px",
+                      padding: "6px 12px",
+                      fontSize: "12px",
+                      fontWeight: 600,
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "6px",
+                    }}
+                    onClick={handleAiSuggest}
+                    disabled={aiLoading || !formMainKeyword.trim()}
+                  >
+                    ✨ {aiLoading ? "AI กำลังวิเคราะห์คำพ้อง..." : "ให้ AI แนะนำคำพ้องอัตโนมัติ"}
+                  </button>
+                </div>
               </div>
 
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Synonyms</label>
+                <label className={styles.fieldLabel}>หมวดหมู่สายงาน (Category)</label>
+                <select
+                  className={styles.inputField}
+                  value={formCategory}
+                  onChange={(e) => setFormCategory(e.target.value)}
+                >
+                  {COMMON_CATEGORIES.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className={styles.fieldGroup}>
+                <label className={styles.fieldLabel}>Synonyms (คำพ้อง/ทักษะที่เกี่ยวข้อง)</label>
                 <div className={styles.tagContainer}>
                   {formSynonyms.map((tag, idx) => (
                     <span key={idx} className={styles.modalDarkTag}>
@@ -618,6 +807,7 @@ export function SynonymsView() {
                   type="button"
                   className={styles.btnCancel}
                   onClick={() => setEditingGroup(null)}
+                  disabled={saving}
                 >
                   ยกเลิก
                 </button>
@@ -625,8 +815,9 @@ export function SynonymsView() {
                   type="button"
                   className={styles.btnGold}
                   onClick={handleSaveEdit}
+                  disabled={saving}
                 >
-                  บันทึก
+                  {saving ? "กำลังบันทึก..." : "บันทึก"}
                 </button>
               </div>
             </div>
@@ -634,7 +825,7 @@ export function SynonymsView() {
         </div>
       )}
 
-      {/* ── MODAL: ยืนยันการลบกลุ่มคำ (media_1790170323411.png) ── */}
+      {/* ── MODAL: ยืนยันการลบกลุ่มคำ ── */}
       {deletingGroup && (
         <div
           className={styles.modalBackdrop}
@@ -650,15 +841,16 @@ export function SynonymsView() {
             <h3 className={styles.deleteTitle}>ยืนยันการลบกลุ่มคำ</h3>
 
             <p className={styles.deleteDesc}>
-              คุณแน่ใจหรือไม่ว่าต้องการลบกลุ่มคำ &ldquo;{deletingGroup.mainKeyword}&rdquo; ?
+              คุณแน่ใจหรือไม่ว่าต้องการลบกลุ่มคำ &ldquo;{deletingGroup.mainKeyword}&rdquo; ออกจากฐานข้อมูล?
             </p>
-            <p className={styles.deleteSubdesc}>การกระทำนี้ไม่สามารถยกเลิกได้</p>
+            <p className={styles.deleteSubdesc}>การกระทำนี้จะลบข้อมูลออกจากระบบทันที</p>
 
             <div className={styles.deleteActions}>
               <button
                 type="button"
                 className={styles.btnCancel}
                 onClick={() => setDeletingGroup(null)}
+                disabled={saving}
               >
                 ยกเลิก
               </button>
@@ -666,15 +858,16 @@ export function SynonymsView() {
                 type="button"
                 className={styles.btnRed}
                 onClick={handleConfirmDelete}
+                disabled={saving}
               >
-                ยืนยันการลบ
+                {saving ? "กำลังลบ..." : "ยืนยันการลบ"}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* ── MODAL: ยืนยันการบันทึกกลุ่มคำ (media_1790170329104.png) ── */}
+      {/* ── MODAL: ยืนยันการบันทึกกลุ่มคำ ── */}
       {confirmSaveTarget && (
         <div
           className={styles.modalBackdrop}
@@ -692,7 +885,7 @@ export function SynonymsView() {
             </h3>
 
             <p className={styles.deleteDesc} style={{ marginBottom: 24, color: "#64748b", fontSize: 13.5 }}>
-              คุณต้องการบันทึกกลุ่มคำ {formMainKeyword} ใช่หรือไม่
+              คุณต้องการบันทึกกลุ่มคำ &ldquo;{formMainKeyword}&rdquo; ลงฐานข้อมูลใช่หรือไม่?
             </p>
 
             <div className={styles.deleteActions}>
@@ -700,6 +893,7 @@ export function SynonymsView() {
                 type="button"
                 className={styles.btnCancel}
                 onClick={() => setConfirmSaveTarget(null)}
+                disabled={saving}
               >
                 ยกเลิก
               </button>
@@ -707,13 +901,17 @@ export function SynonymsView() {
                 type="button"
                 className={styles.btnGold}
                 onClick={executeConfirmSave}
+                disabled={saving}
               >
-                บันทึก
+                {saving ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
               </button>
             </div>
           </div>
         </div>
       )}
+
+      {/* ── Toast Notification ── */}
+      {showToast && <div className={styles.toast}>✓ {toastMsg}</div>}
     </div>
   );
 }

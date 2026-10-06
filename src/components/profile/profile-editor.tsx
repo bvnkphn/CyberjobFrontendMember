@@ -199,7 +199,7 @@ export function ProfileEditor() {
   return (
     <main className="profile-page">
       <div className="profile-layout member-page-container">
-        <ProfilePageHeading title="แก้ไข Resume" description="เติมข้อมูลแต่ละส่วนให้ครบ เพื่อเพิ่มโอกาสให้ผู้ประกอบการค้นพบคุณ" />
+        <ProfilePageHeading title="แก้ไข Resume" description="เติมข้อมูลแต่ละส่วนให้ครบ เพื่อเพิ่มโอกาสให้ผู้ประกอบการค้นพบคุณ" hideBack />
         <aside className="profile-sidebar" aria-label="ส่วนของประวัติ">
           <section className="completion-card">
             <div className="completion-main">

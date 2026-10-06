@@ -13,6 +13,7 @@ export interface AdminJob {
   id: string;
   companyName: string;
   title: string;
+  description?: string;
   experienceLevel: ExperienceLevel;
   experienceMinYears: number;
   salaryMin: number;

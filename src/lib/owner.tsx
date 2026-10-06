@@ -102,10 +102,11 @@ export function OwnerProvider({ children }: { children: ReactNode }) {
       try {
         const response = await fetch(`${AUTH_API_URL}/auth/refresh`, { method: "POST", credentials: "include", cache: "no-store" });
         if (!response.ok) return null;
-        const body = (await response.json()) as { accessToken: string; user: { role: string } };
-        if (body.user.role !== "EMPLOYER") return null;
-        token.current = body.accessToken;
-        return body.accessToken;
+        const body = (await response.json()) as any;
+        const data = body?.result ?? body;
+        if (data?.user?.role !== "EMPLOYER") return null;
+        token.current = data.accessToken;
+        return data.accessToken;
       } catch {
         return null;
       } finally {

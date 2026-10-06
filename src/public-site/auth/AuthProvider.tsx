@@ -85,8 +85,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(
     async (email: string, password: string): Promise<LoginStepResult> => {
-      const result = await authService.login({ email, password });
-      if ('accessToken' in result) {
+      const rawResult = await authService.login({ email, password });
+      const result: any =
+        rawResult && typeof rawResult === 'object' && 'result' in rawResult
+          ? (rawResult as any).result
+          : rawResult;
+      if (result && 'accessToken' in result) {
         await applyResult(result);
       }
       return result;

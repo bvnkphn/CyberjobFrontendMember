@@ -112,7 +112,7 @@ export function EmployerCta() {
       <div className="container-page flex flex-col items-center gap-3 py-12 text-center">
         <h2 className="text-xl font-bold sm:text-2xl">{t('employer.title')}</h2>
         <p className="max-w-2xl text-sm text-slate-600">{t('employer.body')}</p>
-        <Link href={process.env.NEXT_PUBLIC_OWNER_URL ?? 'http://localhost:3102/gate'} className="btn-brand mt-2">
+        <Link href="/gate/register?account=EMPLOYER" className="btn-brand mt-2">
           {t('employer.cta')}
         </Link>
       </div>

@@ -5,7 +5,7 @@
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .pageHead h1 {
@@ -13,6 +13,7 @@
   font-size: 26px;
   font-weight: 800;
   color: var(--navy-950);
+  letter-spacing: -0.02em;
 }
 
 .pageHead p {
@@ -21,10 +22,113 @@
   color: var(--gray-500);
 }
 
+.pageHeadActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .card {
   background: #fff;
   border: 1px solid var(--gray-200);
   border-radius: var(--radius);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+/* ---------- Stat Cards & Metric Cards ---------- */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.statCard {
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.statCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.statIcon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.statLabel {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-500);
+  margin-bottom: 2px;
+}
+
+.statValue {
+  display: block;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--navy-950);
+  line-height: 1.1;
+}
+
+/* ---------- Tabs Bar ---------- */
+.tabList {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--gray-200);
+  margin-bottom: 24px;
+}
+
+.tabBtn {
+  padding: 10px 18px;
+  border: none;
+  background: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-500);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.tabBtn:hover {
+  color: var(--navy-950);
+}
+
+.tabBtnActive {
+  color: var(--navy-950);
+  font-weight: 700;
+}
+
+.tabBtnActive::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2.5px;
+  background: var(--navy-950);
+  border-radius: 2px 2px 0 0;
 }
 
 /* ---------- แถบเครื่องมือ ---------- */

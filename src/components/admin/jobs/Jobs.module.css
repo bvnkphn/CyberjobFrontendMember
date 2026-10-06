@@ -12,43 +12,152 @@
 .slider {
   --fill: 0%;
   width: min(420px, 100%);
-  height: 6px;
+  height: 8px;
   appearance: none;
   border-radius: 999px;
-  background: linear-gradient(to right, var(--gray-300) var(--fill), var(--navy-900) var(--fill));
+  background: linear-gradient(to right, #f59e0b var(--fill), #e2e8f0 var(--fill));
   cursor: pointer;
+  outline: none;
+  transition: background 0.1s ease;
 }
 
 .slider::-webkit-slider-thumb {
   appearance: none;
   width: 18px;
   height: 18px;
-  border: 2px solid var(--navy-900);
+  border: 2.5px solid #f59e0b;
   border-radius: 50%;
   background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
 }
 
 .slider::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
-  border: 2px solid var(--navy-900);
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid #f59e0b;
   border-radius: 50%;
   background: #fff;
-}
-
-.deleteButton {
-  width: 34px;
-  height: 34px;
-  display: inline-grid;
-  place-items: center;
-  border: 0;
-  border-radius: 8px;
-  background: none;
-  color: var(--gray-400);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
   cursor: pointer;
 }
 
-.deleteButton:hover {
+/* 3-dots action menu */
+.actionMenuWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.dotsButton {
+  width: 32px;
+  height: 32px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--gray-600);
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.dotsButton:hover {
+  background: var(--gray-100);
+  color: var(--navy-950);
+  border-color: var(--gray-300);
+}
+
+.dropdownMenu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 50;
+  min-width: 150px;
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: 10px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: fadeIn 0.12s ease-out;
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--gray-700);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.1s ease;
+}
+
+.dropdownItem:hover {
+  background: var(--gray-100);
+  color: var(--navy-950);
+}
+
+.dropdownItemDanger {
+  color: var(--red);
+}
+
+.dropdownItemDanger:hover {
   background: var(--red-soft);
   color: var(--red);
+}
+
+/* Modal details */
+.detailGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.detailField {
+  background: #f8fafc;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.detailField small {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gray-500);
+  margin-bottom: 4px;
+}
+
+.detailField strong {
+  font-size: 14px;
+  color: var(--navy-950);
+}
+
+.detailDesc {
+  padding: 14px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--gray-700);
+  white-space: pre-wrap;
 }

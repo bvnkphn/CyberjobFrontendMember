@@ -7,11 +7,26 @@ import { BriefcaseIcon, EyeIcon, MailIcon, PencilIcon, UserIcon } from './Icons'
 import { useAuth } from '@/public-site/auth/AuthProvider';
 import { useRouter } from 'next/navigation';
 
+import { useState, useEffect } from 'react';
+import { RegisterModal } from './auth/RegisterModal';
+
 export function UserMenu() {
   const { user, loading, logout } = useAuth();
   const router = useRouter();
   const { t } = useI18n();
   const { open, toggle, setOpen, ref } = useDropdown();
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [registerRole, setRegisterRole] = useState<'JOBSEEKER' | 'EMPLOYER'>('JOBSEEKER');
+
+  useEffect(() => {
+    const handleOpen = (e: CustomEvent<{ role?: 'JOBSEEKER' | 'EMPLOYER' }>) => {
+      if (e.detail?.role) setRegisterRole(e.detail.role);
+      setShowRegisterModal(true);
+    };
+    window.addEventListener('open-register-modal' as any, handleOpen);
+    return () => window.removeEventListener('open-register-modal' as any, handleOpen);
+  }, []);
+
   const items = [
     { key: 'user.profile', href: '/profile', icon: UserIcon },
     { key: 'user.editProfile', href: '/profile/edit', icon: PencilIcon },
@@ -21,8 +36,17 @@ export function UserMenu() {
   ] as const;
 
   if (loading) return <span className="h-10 w-10 animate-pulse rounded-full bg-slate-100" />;
-  // ผู้ที่ยังไม่ล็อกอินเห็นเฉพาะปุ่มเข้าสู่ระบบ – ลิงก์สมัครสมาชิกอยู่ในหน้าเข้าสู่ระบบแล้ว
-  if (!user) return <Link href="/gate/login" className="rounded-lg border border-brand-600 px-4 py-2 text-sm font-semibold text-brand-700">{t('auth.login')}</Link>;
+  
+  if (!user) {
+    return (
+      <Link
+        href="/gate/login"
+        className="rounded-lg border border-brand-600 px-4 py-2 text-sm font-semibold text-brand-700 transition hover:bg-brand-50"
+      >
+        {t('auth.login')}
+      </Link>
+    );
+  }
 
   return (
     <div ref={ref} className="relative">

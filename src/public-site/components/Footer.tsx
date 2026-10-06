@@ -19,13 +19,9 @@ const COLUMNS: { title: DictKey; links: { key: DictKey; href: string }[] }[] = [
   {
     title: 'footer.employer',
     links: [
-      { key: 'footer.registerFree', href: process.env.NEXT_PUBLIC_OWNER_URL ?? '/contact' },
-      { key: 'footer.postJob', href: process.env.NEXT_PUBLIC_OWNER_URL ?? '/contact' },
+      { key: 'footer.registerFree', href: '/gate/register?account=EMPLOYER' },
+      { key: 'footer.postJob', href: '/job-postings/create' },
     ],
-  },
-  {
-    title: 'footer.aboutCol',
-    links: [{ key: 'footer.contactUs', href: '/contact' }],
   },
 ];
 
@@ -35,7 +31,7 @@ export function Footer() {
 
   return (
     <footer className="bg-brand-900 text-white">
-      <div className="container-page grid grid-cols-2 gap-x-6 gap-y-9 py-10 sm:gap-x-10 md:grid-cols-[1.4fr_repeat(3,1fr)] md:gap-10 md:py-12">
+      <div className="container-page grid grid-cols-2 gap-x-6 gap-y-9 py-10 sm:gap-x-10 md:grid-cols-[1.6fr_repeat(2,1fr)] md:gap-10 md:py-12">
         <div className="col-span-2 border-b border-white/10 pb-7 md:col-span-1 md:border-0 md:pb-0">
           <Logo variant="dark" />
           <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/70">

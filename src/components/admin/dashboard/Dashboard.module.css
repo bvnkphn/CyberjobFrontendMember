@@ -1,5 +1,5 @@
 .container {
-  padding: 32px 36px 64px;
+  width: 100%;
   max-width: 1360px;
   margin: 0 auto;
 }
@@ -218,7 +218,7 @@
 }
 
 .cardHead {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .cardHead h3 {
@@ -232,6 +232,146 @@
   margin: 0;
   font-size: 13px;
   color: var(--gray-400);
+}
+
+/* ── Modern Chart Header & Controls ── */
+.chartHeadRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.chartControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.segmentedControl {
+  display: inline-flex;
+  background: var(--gray-100);
+  padding: 3px;
+  border-radius: 999px;
+  border: 1px solid var(--gray-200);
+}
+
+.segmentBtn {
+  border: 0;
+  background: none;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-500);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  user-select: none;
+}
+
+.segmentBtn:hover {
+  color: var(--navy-950);
+}
+
+.segmentBtnActive {
+  background: #fff;
+  color: var(--navy-950);
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.metricChips {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.chipBlue {
+  background: rgba(30, 58, 138, 0.08);
+  color: #1e3a8a;
+  border: 1px solid rgba(30, 58, 138, 0.12);
+}
+
+.chipGold {
+  background: rgba(245, 158, 11, 0.1);
+  color: #b45309;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.chartWrapper {
+  position: relative;
+  width: 100%;
+  height: 250px;
+}
+
+.chartLegendBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--gray-100);
+  font-size: 12.5px;
+}
+
+.legendItems {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 600;
+  color: var(--navy-950);
+}
+
+.legendDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legendDotCand {
+  background: #1e3a8a;
+  box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.15);
+}
+
+.legendDotComp {
+  background: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+}
+
+.insightBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--gray-500);
+  font-size: 12px;
 }
 
 /* ── Gauges ── */

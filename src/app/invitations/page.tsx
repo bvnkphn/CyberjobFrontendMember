@@ -248,16 +248,6 @@ export default function InvitationsPage() {
           </div>
         </div>
 
-        {/* ── API Status Bar ── */}
-        <div className="invitations-api-bar">
-          <div className="api-bar-left">
-            <span className="api-live-dot" />
-            <span className="api-bar-text">
-              ระบบเชื่อมต่อ API: <strong>/api/me/invitations</strong>
-            </span>
-            <span className="api-status-chip">ออนไลน์ (Active)</span>
-          </div>
-        </div>
 
         {/* ── Demo Mode Active Banner ── */}
         {isDemoMode && (

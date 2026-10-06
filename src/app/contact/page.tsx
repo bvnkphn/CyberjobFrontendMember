@@ -38,6 +38,7 @@ export default function ContactPage() {
           description="มีคำถามหรือต้องการความช่วยเหลือ? ทีมงาน CyberJob พร้อมดูแลคุณ"
           fallbackHref="/"
           className="contact-heading"
+          hideBack
         />
 
         <a
@@ -71,14 +72,14 @@ export default function ContactPage() {
         </a>
 
         <section className="contact-methods" aria-label="ช่องทางติดต่ออื่น">
-          <a href="mailto:cyberpay.tech@gmail.com">
+          <div className="contact-method-card">
             <span className="contact-icon mail-icon"><MailIcon /></span>
             <span><small>อีเมล</small><strong>cyberpay.tech@gmail.com</strong><em>ตอบกลับภายใน 1 วันทำการ</em></span>
-          </a>
-          <a href="tel:02-6861-209">
+          </div>
+          <div className="contact-method-card">
             <span className="contact-icon phone-icon"><PhoneIcon /></span>
             <span><small>โทรศัพท์</small><strong>02-6861-209</strong><em>จันทร์–ศุกร์ เวลา 09:00–18:00 น.</em></span>
-          </a>
+          </div>
         </section>
 
         <section className="faq-section">

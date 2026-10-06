@@ -1,133 +1,228 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useAdminAuth } from "@/lib/admin/auth";
+import { BuildingIcon, SearchIcon } from "../icons";
+import { TableFooter, type PageSize } from "../ui/TableFooter";
+import ui from "../ui/ui.module.css";
 import styles from "./Companies.module.css";
 
-export interface CompanyVerificationItem {
+export interface CompanyItem {
   id: string;
   name: string;
-  location: string;
-  appliedDate: string;
-  status: "pending" | "approved" | "rejected";
+  legalName?: string;
+  province?: string;
+  district?: string;
+  verificationStatus: "NOT_SUBMITTED" | "PENDING" | "APPROVED" | "REJECTED";
+  verified: boolean;
+  createdAt: string;
+  owner?: {
+    name: string;
+    email: string;
+  };
 }
 
-export const VERIFICATION_REQUESTS: CompanyVerificationItem[] = [
-  { id: "req-01", name: "การไฟฟ้าส่วนภูมิภาค", location: "นนทบุรี", appliedDate: "4/8/2569", status: "pending" },
-  { id: "req-02", name: "บริษัท เทคโนโลยี ไทย จำกัด", location: "กรุงเทพมหานคร", appliedDate: "4/8/2569", status: "pending" },
-  { id: "req-03", name: "บริษัท ซีเบอร์โซลูชัน จำกัด (มหาชน)", location: "กรุงเทพมหานคร", appliedDate: "27/7/2569", status: "pending" },
-  { id: "req-04", name: "บริษัท คลาวด์ เซอร์วิส จำกัด", location: "ปทุมธานี", appliedDate: "27/7/2569", status: "pending" },
-  { id: "req-05", name: "บริษัท โค้ดแล็บ จำกัด", location: "เชียงใหม่", appliedDate: "27/7/2569", status: "pending" },
-  { id: "req-06", name: "บริษัท ไทยเทค โซลูชัน จำกัด", location: "กรุงเทพมหานคร", appliedDate: "27/7/2569", status: "pending" },
-  { id: "req-07", name: "บริษัท ดิจิทัล อินโนเวชั่น จำกัด", location: "ชลบุรี", appliedDate: "27/7/2569", status: "pending" },
-  { id: "req-08", name: "การไฟฟ้าส่วนภูมิภาค", location: "นนทบุรี", appliedDate: "27/7/2569", status: "pending" },
-  { id: "req-09", name: "สำนักงาน ก.พ.", location: "กรุงเทพมหานคร", appliedDate: "27/7/2569", status: "pending" },
-  { id: "req-10", name: "บริษัท เซฟเน็ต ซีเคียวริตี้ จำกัด", location: "กรุงเทพมหานคร", appliedDate: "27/7/2569", status: "pending" },
-];
-
 export function CompaniesView() {
-  const [activeTab, setActiveTab] = useState<"details" | "pending">("pending");
+  const { adminFetch } = useAdminAuth();
+  const [activeTab, setActiveTab] = useState<"pending" | "details">("pending");
+  const [companies, setCompanies] = useState<CompanyItem[]>([]);
+  const [counts, setCounts] = useState({ pending: 0, approved: 0, rejected: 0, total: 0 });
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState<PageSize>(20);
+  const [totalCount, setTotalCount] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [search, setSearch] = useState("");
+
+  const loadCompanies = useCallback(async () => {
+    setLoading(true);
+    try {
+      const statusParam = activeTab === "pending" ? "PENDING" : "ALL";
+      const params = new URLSearchParams({
+        status: statusParam,
+        page: String(page),
+        pageSize: String(pageSize),
+      });
+      if (search.trim()) params.set("search", search.trim());
+
+      const res = await adminFetch(`/admin/companies?${params.toString()}`);
+      if (res.ok) {
+        const json = await res.json();
+        setCompanies(json.items || []);
+        setCounts(json.counts || { pending: 0, approved: 0, rejected: 0, total: 0 });
+        setTotalCount(json.total || 0);
+        setTotalPages(json.totalPages || 1);
+      }
+    } catch {
+      // Fallback
+    } finally {
+      setLoading(false);
+    }
+  }, [adminFetch, activeTab, page, pageSize, search]);
+
+  useEffect(() => {
+    void loadCompanies();
+  }, [loadCompanies]);
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <h1>จัดการบริษัท</h1>
-        <p>จัดการข้อมูลบริษัททั้ง Partner และบริษัทภายนอก</p>
-      </header>
-
-      {/* ── Top Tabs ── */}
-      <div className={styles.tabList}>
-        <button
-          type="button"
-          className={`${styles.tabBtn} ${activeTab === "details" ? styles.tabBtnActive : ""}`}
-          onClick={() => setActiveTab("details")}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-          รายละเอียดบริษัท
-        </button>
-        <button
-          type="button"
-          className={`${styles.tabBtn} ${activeTab === "pending" ? styles.tabBtnActive : ""}`}
-          onClick={() => setActiveTab("pending")}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><line x1="9" y1="22" x2="9" y2="22.01"/><line x1="15" y1="22" x2="15" y2="22.01"/></svg>
-          บริษัทรอยืนยัน
-        </button>
-      </div>
-
-      {/* ── 3 Summary Stat Cards (ตามภาพ) ── */}
-      <div className={styles.summaryGrid}>
-        <div className={styles.summaryCard}>
-          <div className={`${styles.summaryIconBox} ${styles.iconYellow}`}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          </div>
-          <div className={styles.summaryContent}>
-            <span className={styles.summaryLabel}>รอดำเนินการ</span>
-            <span className={styles.summaryNumber}>12</span>
-          </div>
-        </div>
-
-        <div className={styles.summaryCard}>
-          <div className={`${styles.summaryIconBox} ${styles.iconGreen}`}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 11 12 14 22 4"/></svg>
-          </div>
-          <div className={styles.summaryContent}>
-            <span className={styles.summaryLabel}>ยืนยันแล้ว</span>
-            <span className={styles.summaryNumber}>14</span>
-          </div>
-        </div>
-
-        <div className={styles.summaryCard}>
-          <div className={`${styles.summaryIconBox} ${styles.iconNavy}`}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-          </div>
-          <div className={styles.summaryContent}>
-            <span className={styles.summaryLabel}>ปฏิเสธ</span>
-            <span className={styles.summaryNumber}>4</span>
-          </div>
+      {/* ── Page Header ── */}
+      <div className={ui.pageHead}>
+        <div>
+          <h1>จัดการบริษัท</h1>
+          <p>จัดการข้อมูลบริษัท ตรวจสอบเอกสารนิติบุคคล และสถานะการยืนยันตัวตน</p>
         </div>
       </div>
 
-      {/* ── Data Table (ตามภาพ) ── */}
-      <div className={styles.tableCard}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>ชื่อบริษัท</th>
-              <th>ที่ตั้ง</th>
-              <th>วันที่สมัคร</th>
-              <th>สถานะ</th>
-              <th>จัดการ</th>
-            </tr>
-          </thead>
-          <tbody>
-            {VERIFICATION_REQUESTS.map((item) => (
-              <tr key={item.id}>
-                <td className={styles.companyName}>{item.name}</td>
-                <td>{item.location}</td>
-                <td>{item.appliedDate}</td>
-                <td>
-                  <span className={styles.statusPending}>รอดำเนินการ</span>
-                </td>
-                <td>
-                  <Link href={`/companies/${item.id}`} className={styles.actionLink}>
-                    ดูรายละเอียด
-                  </Link>
-                </td>
+      {/* ── Tabs Bar ── */}
+      <div className={ui.tabList}>
+        <button
+          type="button"
+          className={`${ui.tabBtn} ${activeTab === "pending" ? ui.tabBtnActive : ""}`}
+          onClick={() => {
+            setActiveTab("pending");
+            setPage(1);
+          }}
+        >
+          <span>⏳</span> บริษัทรอยืนยัน ({counts.pending})
+        </button>
+        <button
+          type="button"
+          className={`${ui.tabBtn} ${activeTab === "details" ? ui.tabBtnActive : ""}`}
+          onClick={() => {
+            setActiveTab("details");
+            setPage(1);
+          }}
+        >
+          <span>🏢</span> บริษัททั้งหมด ({counts.total})
+        </button>
+      </div>
+
+      {/* ── Stat Cards ── */}
+      <div className={ui.statsGrid}>
+        <div className={ui.statCard}>
+          <span className={ui.statIcon} style={{ background: "var(--gold)" }}>
+            ⏳
+          </span>
+          <span>
+            <span className={ui.statLabel}>รอดำเนินการยืนยัน</span>
+            <span className={ui.statValue}>{counts.pending}</span>
+          </span>
+        </div>
+
+        <div className={ui.statCard}>
+          <span className={ui.statIcon} style={{ background: "var(--green)" }}>
+            ✓
+          </span>
+          <span>
+            <span className={ui.statLabel}>ยืนยันตัวตนแล้ว</span>
+            <span className={ui.statValue}>{counts.approved}</span>
+          </span>
+        </div>
+
+        <div className={ui.statCard}>
+          <span className={ui.statIcon} style={{ background: "var(--navy-900)" }}>
+            🏢
+          </span>
+          <span>
+            <span className={ui.statLabel}>บริษัททั้งหมดในระบบ</span>
+            <span className={ui.statValue}>{counts.total}</span>
+          </span>
+        </div>
+      </div>
+
+      {/* ── Data Table Card ── */}
+      <section className={ui.card}>
+        <div className={ui.toolbar}>
+          <label className={ui.search}>
+            <SearchIcon size={18} />
+            <input
+              type="text"
+              placeholder="ค้นหาชื่อบริษัท, นิติบุคคล, หรือที่ตั้ง..."
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
+            />
+          </label>
+        </div>
+
+        <div className={ui.tableScroll}>
+          <table className={ui.table}>
+            <thead>
+              <tr>
+                <th>ชื่อบริษัท</th>
+                <th>ที่ตั้ง</th>
+                <th>วันที่ลงทะเบียน</th>
+                <th>สถานะการยืนยัน</th>
+                <th style={{ textAlign: "right" }}>จัดการ</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-
-        <div className={styles.tableFooter}>
-          <span>แสดง 20 รายการต่อหน้า | 1-14 จาก 14</span>
-          <div className={styles.pageControls}>
-            <button type="button" className={styles.pageBtn} disabled>‹</button>
-            <span style={{ fontWeight: 600 }}>1 / 1</span>
-            <button type="button" className={styles.pageBtn} disabled>›</button>
-          </div>
+            </thead>
+            <tbody>
+              {loading && companies.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className={ui.empty}>
+                    กำลังโหลดข้อมูลจากฐานข้อมูล...
+                  </td>
+                </tr>
+              ) : companies.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className={ui.empty}>
+                    ไม่พบรายการบริษัทในหมวดนี้
+                  </td>
+                </tr>
+              ) : (
+                companies.map((item) => (
+                  <tr key={item.id}>
+                    <td>
+                      <div>
+                        <span className={ui.strong}>{item.name}</span>
+                        {item.legalName && (
+                          <div style={{ fontSize: "12px", color: "var(--gray-500)", marginTop: "2px" }}>
+                            {item.legalName}
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td>{item.province ? `${item.province}${item.district ? ` (${item.district})` : ""}` : "ไม่ระบุ"}</td>
+                    <td>{new Date(item.createdAt).toLocaleDateString("th-TH")}</td>
+                    <td>
+                      {item.verificationStatus === "PENDING" && (
+                        <span className={`${ui.badge} ${ui.badgeGold}`}>รอดำเนินการ</span>
+                      )}
+                      {item.verificationStatus === "APPROVED" && (
+                        <span className={`${ui.badge} ${ui.badgeGreen}`}>ยืนยันแล้ว</span>
+                      )}
+                      {item.verificationStatus === "REJECTED" && (
+                        <span className={`${ui.badge} ${ui.badgeRed}`}>ปฏิเสธ</span>
+                      )}
+                      {item.verificationStatus === "NOT_SUBMITTED" && (
+                        <span className={`${ui.badge} ${ui.badgeGray}`}>ยังไม่ยื่นเอกสาร</span>
+                      )}
+                    </td>
+                    <td style={{ textAlign: "right" }}>
+                      <Link href={`/admin/companies/${item.id}`} className={styles.actionLink}>
+                        ดูรายละเอียด
+                      </Link>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
-      </div>
+
+        <TableFooter
+          page={page}
+          pageSize={pageSize}
+          total={totalCount || counts.total}
+          totalPages={totalPages}
+          onPageChange={setPage}
+          onPageSizeChange={setPageSize}
+        />
+      </section>
     </div>
   );
 }

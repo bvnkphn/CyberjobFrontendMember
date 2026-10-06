@@ -71,16 +71,20 @@ export default function LoginForm() {
     setLoading(true);
 
     try {
-      const res = await login(email, password);
+      const rawRes = await login(email, password);
+      const res: any =
+        rawRes && typeof rawRes === "object" && "result" in rawRes
+          ? (rawRes as any).result
+          : rawRes;
 
-      if ("requireOtp" in res && res.requireOtp) {
+      if (res && "requireOtp" in res && res.requireOtp) {
         setMaskedEmail(res.maskedEmail || email);
         setStep("otp");
         setCountdown(60);
         setCanResend(false);
         setOtp(new Array(6).fill(""));
         setInfoMessage(res.message || "กรุณากรอกรหัส OTP ที่ส่งไปยังอีเมลของคุณ");
-      } else if ("user" in res) {
+      } else if (res && "user" in res && res.user?.role) {
         redirectAfterLogin(res.user.role);
       }
     } catch (reason) {
@@ -204,7 +208,7 @@ export default function LoginForm() {
             <form onSubmit={submitCredentials}>
               <div className="input-group">
                 <input
-                  className="auth-input"
+                  className={`auth-input ${error ? "auth-input-error" : ""}`}
                   type="email"
                   autoComplete="email"
                   placeholder="อีเมล"
@@ -216,7 +220,7 @@ export default function LoginForm() {
 
               <div className="input-group">
                 <input
-                  className="auth-input"
+                  className={`auth-input ${error ? "auth-input-error" : ""}`}
                   type={showPassword ? "text" : "password"}
                   autoComplete="current-password"
                   placeholder="รหัสผ่าน"

@@ -1,4 +1,4 @@
-import { apiGet, apiPatch, apiPost } from "@/public-site/lib/api";
+import { apiGet, apiPatch, apiPost, getAccessToken, setAccessToken } from "@/public-site/lib/api";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 
@@ -11,10 +11,6 @@ export class ApiError extends Error {
   }
 }
 
-function getAccessToken() {
-  return typeof window === "undefined" ? null : window.localStorage.getItem("accessToken");
-}
-
 export function hasAccessToken() { return Boolean(getAccessToken()); }
 
 type AuthSession = { accessToken: string; user: { id: string; email: string; isDemo: boolean } };
@@ -25,13 +21,13 @@ export async function ensureDemoSession() {
   const response = await fetch(`${API_URL}/auth/demo`, { method: "POST", headers: { "Content-Type": "application/json" } });
   if (!response.ok) return null;
   const session = await response.json() as AuthSession;
-  window.localStorage.setItem("accessToken", session.accessToken);
+  setAccessToken(session.accessToken);
   window.localStorage.setItem("memberEmail", session.user.email);
   return session;
 }
 
 export function logout() {
-  window.localStorage.removeItem("accessToken");
+  setAccessToken(null);
   window.localStorage.removeItem("memberEmail");
   window.localStorage.removeItem("demoSessionDisabled");
   window.sessionStorage.setItem("demoSessionDisabled", "true");
@@ -42,7 +38,7 @@ export async function login(email: string, password: string) {
   const response = await fetch(`${API_URL}${isDevelopmentDemo ? "/auth/demo" : "/auth/login"}`, { method: "POST", headers: { "Content-Type": "application/json" }, ...(isDevelopmentDemo ? {} : { body: JSON.stringify({ email, password }) }) });
   if (!response.ok) throw new Error("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
   const session = await response.json() as AuthSession;
-  window.localStorage.setItem("accessToken", session.accessToken);
+  setAccessToken(session.accessToken);
   window.localStorage.setItem("memberEmail", session.user.email);
   window.sessionStorage.removeItem("demoSessionDisabled");
   return session;
@@ -76,7 +72,7 @@ export function register(data: RegisterPayload) {
 
 export async function verifyOtp(email: string, otp: string) {
   const session = await authRequest<AuthSession>("/auth/verify-otp", { email, otp });
-  window.localStorage.setItem("accessToken", session.accessToken);
+  setAccessToken(session.accessToken);
   window.localStorage.setItem("memberEmail", session.user.email);
   window.sessionStorage.removeItem("demoSessionDisabled");
   return session;
@@ -107,7 +103,7 @@ async function request<T>(path: string, init: RequestInit, retried = false): Pro
   });
 
   if (response.status === 401 && process.env.NODE_ENV === "development" && !retried && window.sessionStorage.getItem("demoSessionDisabled") !== "true") {
-    window.localStorage.removeItem("accessToken");
+    setAccessToken(null);
     await ensureDemoSession();
     return request<T>(path, init, true);
   }

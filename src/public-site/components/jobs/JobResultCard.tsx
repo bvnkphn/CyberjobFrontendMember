@@ -90,10 +90,17 @@ export function JobResultCard({
         )}
       </div>
 
-      <p className="mt-3 inline-block rounded-md bg-slate-100 px-2.5 py-1 text-[13px] font-semibold text-slate-700">
-        {formatSalary(job, t('job.negotiable'))}
-        {!job.salaryNegotiable && ` ${t('job.perMonth')}`}
-      </p>
+      <div className="mt-3 flex flex-wrap items-center gap-1.5">
+        <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2.5 py-1 text-[12px] font-semibold text-emerald-700 border border-emerald-200/60">
+          💰 {formatSalary(job, t('job.negotiable'))}
+          {!job.salaryNegotiable && ` ${t('job.perMonth')}`}
+        </span>
+        {style && (
+          <span className="inline-flex items-center gap-1 rounded-md bg-blue-50 px-2.5 py-1 text-[12px] font-semibold text-blue-700 border border-blue-200/60">
+            {job.workStyle === 'remote' ? '💻' : job.workStyle === 'hybrid' ? '🔄' : '🏢'} {label(style)}
+          </span>
+        )}
+      </div>
 
       <p className="mt-3 text-[13px] font-medium text-slate-600">
         {job.company.legalName}
@@ -108,24 +115,6 @@ export function JobResultCard({
           {postedLabel(job.postedAt, t)}
         </span>
         <div className="flex items-center gap-1.5">
-          {onHide && (
-            <button
-              type="button"
-              aria-label="ซ่อนประกาศนี้"
-              title="ซ่อนประกาศนี้"
-              onClick={(e) => {
-                e.stopPropagation();
-                onHide();
-              }}
-              className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-slate-400 hover:bg-red-50 hover:text-red-500 transition-colors"
-            >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                <line x1="1" y1="1" x2="23" y2="23" />
-              </svg>
-              <span className="text-[11px] font-medium">ซ่อน</span>
-            </button>
-          )}
           <button
             type="button"
             aria-label={bookmarked ? t('job.saved') : t('job.save')}

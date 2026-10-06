@@ -115,6 +115,7 @@ function ArticlesContent() {
           }
           fallbackHref="/"
           className="articles-title"
+          hideBack
         />
 
         {/* หมวดหมู่บทความ (Interactive Category Pills) */}
